@@ -1,0 +1,339 @@
+generated: '2026-08-12'
+method: derived
+source: >-
+  openapi/blueshift-openapi.yml — path structure, path/query parameters and
+  request/response schema properties across all 81 operations; enriched from
+  https://developer.blueshift.com/docs/data-types-and-attributes and the folder
+  descriptions in postman/blueshift-postman-collection.json.
+description: >-
+  The entity graph behind the Blueshift API. Everything hangs off two roots — the
+  Customer (a unified 360-degree profile) and the Campaign (the messaging unit) —
+  joined by the Event, which is both the ingestion primitive and the trigger
+  mechanism. Identity is almost entirely UUID-based: 55 distinct schema
+  properties are named `uuid` and the API's path parameters are UUIDs
+  (campaign_uuid, catalog_uuid, segment_uuid, template_uuid, promotion_uuid,
+  data_connector_uuid, group_id, list_id). There are no typed id prefixes — a
+  Blueshift UUID is an opaque v4 and carries no type information, so a bare
+  identifier cannot be resolved to an entity without knowing which endpoint
+  produced it.
+
+identifier_scheme:
+  format: UUID v4
+  typed_prefixes: false
+  note: >-
+    Unlike providers that prefix ids by type (cus_, camp_), Blueshift UUIDs are
+    untyped. Campaign UUIDs are also surfaced to users through the app URL
+    (app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details),
+    which the docs suggest as the way to find one.
+  customer_identifiers:
+    - email
+    - customer_id (the integrator's own identifier)
+    - uuid (Blueshift's identifier)
+    - device_id
+  customer_identifiers_note: >-
+    At least one identifier is required on customer and event writes. Multiple
+    identifier types coexist, which is why a merge operation exists.
+
+entities:
+  - name: Customer
+    description: >-
+      The 360-degree customer profile. Carries standard attributes plus arbitrary
+      custom attributes, and is the anchor for events, segments, lists,
+      subscriptions and campaign activity.
+    identifiers: [uuid, customer_id, email, device_id]
+    operations:
+      - getV1Customers
+      - postV1Customers
+      - getV1CustomersByUuid
+      - postV1CustomersBulk
+      - postV1CustomersMerge
+      - postV1CustomersDelete
+      - postV1CustomersForget
+      - postV1CustomersUnforget
+      - postV1CustomerAttributesTriggerImport
+    privacy_operations:
+      forget: >-
+        POST /api/v1/customers/forget — permanently deletes all personal data and
+        removes the customer from tracking.
+      unforget: >-
+        POST /api/v1/customers/unforget — re-enables tracking; the customer
+        becomes eligible for future campaigns.
+      delete: POST /api/v1/customers/delete — permanent deletion of personal data.
+    note: >-
+      The forget/unforget/delete trio is a genuine GDPR/CCPA affordance exposed
+      at the API level, not just in the console. Worth noting that all three sit
+      behind the same all-powerful User API key.
+
+  - name: Event
+    description: >-
+      A customer interaction or clickstream record. The ingestion primitive and
+      the trigger for event-triggered campaigns.
+    identifiers: [event_uuid, transaction_uuid, session_uuid]
+    operations:
+      - postV1Event
+      - postV1Bulkevents
+      - postV1EventSummaryJson
+      - getV1EventDebug
+      - getV1EventHistory
+      - getV1CustomerSearchShowEvents
+      - getV1DataConnectorsByDataConnectorUuidDebug
+    note: >-
+      Reserved attribute keys are prefixed _bsft_ (e.g. _bsft_high_priority).
+      Custom event properties are otherwise free-form.
+
+  - name: Campaign
+    description: >-
+      The messaging unit. Typed as one-time, recurring, segment-triggered,
+      event-triggered or live content. Has a schedule, a lifecycle and reporting.
+    identifiers: [campaign_uuid]
+    lifecycle_states: [draft, scheduled, running, paused, completed, archived]
+    operations:
+      - postV1CampaignsByCampaignType
+      - patchV1CampaignsByCampaignUuidUpdateSchedule
+      - patchV1CampaignsByCampaignUuidLaunch
+      - patchV1CampaignsByCampaignUuidPause
+      - putV1CampaignsByCampaignUuidArchive
+      - putV1CampaignsByCampaignUuidUnarchive
+      - putV1CampaignsBulkArchive
+      - putV1CampaignsBulkUnarchive
+      - postV1CampaignsExecute
+      - postV1CampaignsBulkExecute
+      - getV2CampaignsJson
+      - getV1CampaignsJson
+      - getV1CampaignsByCampaignUuidJson
+      - getV1CampaignsByCampaignUuidDetailJson
+
+  - name: Segment
+    description: A saved audience definition — the set of customers matching criteria.
+    identifiers: [segment_uuid]
+    operations:
+      - getV1SegmentsList
+      - getV1SegmentsBySegmentUuidMatchingUsersJson
+
+  - name: CustomUserList
+    description: >-
+      An explicit, manually-maintained list of users, distinct from a
+      criteria-driven segment. Includes seed lists used for deliverability
+      testing.
+    identifiers: [list_id, custom_user_list_id, seed_list_uuids]
+    operations:
+      - postV1CustomUserListsCreate
+      - getV1CustomUserListsIdByCustomUserListId
+      - putV1CustomUserListsAddUserToListByListId
+      - putV1CustomUserListsRemoveUserFromListByListId
+      - putV1CustomUserListsBulkAddUsersToListByListId
+      - putV1CustomUserListsBulkRemoveUsersFromListByListId
+      - putV1CustomUserListsOverwriteListByListId
+      - getV1CustomUserListsSeedLists
+
+  - name: Catalog
+    description: A collection of products or content items used for recommendations.
+    identifiers: [catalog_uuid, catalog_id]
+    operations:
+      - postV1Catalogs
+      - getV1Catalogs
+      - getV1CatalogsByCatalogUuidJson
+      - putV1CatalogsByCatalogUuidJson
+
+  - name: CatalogItem
+    description: A product or content item inside a catalog.
+    identifiers: [product_id, seed_item_ids, exclude_item_ids]
+    note: >-
+      Has no operations of its own — items are only reachable through the parent
+      catalog, which is why the MCP tools get_product_by_sku and
+      get_product_by_uuid have no REST counterpart.
+
+  - name: Template
+    description: >-
+      Message content for one channel. Three parallel entity families —
+      EmailTemplate, PushTemplate and SMSTemplate — with near-identical
+      lifecycles.
+    identifiers: [template_uuid]
+    variants:
+      - EmailTemplate
+      - PushTemplate
+      - SMSTemplate
+    operations:
+      - getV1EmailTemplatesJson
+      - postV1EmailTemplatesJson
+      - getV1EmailTemplatesByTemplateUuidJson
+      - putV1EmailTemplatesByTemplateUuidJson
+      - postV1EmailTemplatesTestSendJson
+      - getV1PushTemplatesJson
+      - postV1PushTemplatesJson
+      - putV1PushTemplatesByTemplateUuid
+      - postV1PushTemplatesTestPushJson
+      - getV1SmsTemplatesJson
+      - postV1SmsTemplatesJson
+      - putV1SmsTemplatesByTemplateUuid
+      - postV1SmsTemplatesTestSendJson
+
+  - name: SharedAsset
+    description: >-
+      Reusable content — HTML, rich text, subject lines and visual-editor
+      content — referenced by templates.
+    identifiers: [uuid]
+    operations:
+      - getV1SharedAssetsJson
+      - postV1SharedAssetsJson
+      - putV1SharedAssetsByUuidJson
+
+  - name: ExternalFetchTemplate
+    description: >-
+      A definition for fetching content from an external system at send time,
+      for inclusion in a message.
+    identifiers: [template_uuid]
+    operations:
+      - getV1ExternalFetchesJson
+      - postV1ExternalFetchesJson
+      - putV1ExternalFetchesByTemplateUuid
+
+  - name: LiveContentSlot
+    description: A named on-site personalization unit.
+    identifiers: [uuid]
+    operations:
+      - getV1OnsiteSlotsJson
+      - postLive
+
+  - name: Promotion
+    description: A promotion holding a pool of promo codes.
+    identifiers: [promotion_uuid]
+    operations:
+      - putV1PromotionsByPromotionUuidAddPromocodes
+      - putV1PromotionsByPromotionUuidOverwrite
+    note: No list or read operation is published for promotions.
+
+  - name: SubscriptionGroup
+    description: A messaging subscription grouping a customer can opt in or out of.
+    identifiers: [uuid, subscription_group_id]
+    operations:
+      - getV1SubscriptionGroups
+      - getV1SubscriptionGroupsIndexLite
+      - getV1SubscriptionGroupsByUuid
+
+  - name: Interest
+    description: A topic a customer subscribes to, used for interest alerts.
+    operations:
+      - postV1InterestsAlert
+      - getV1InterestsUserSubscriptions
+
+  - name: CustomerGroup
+    description: >-
+      Links multiple customer profiles to a common entity — households or
+      accounts.
+    identifiers: [group_id, user_uuid]
+    operations:
+      - deleteV1CustomerGroupByGroupId
+      - deleteV1CustomerGroupByGroupIdUserByUserUuid
+    note: Only delete operations are published; creation is not exposed via REST.
+
+  - name: Adapter
+    description: >-
+      An integration to a third-party delivery service (Mailgun for email,
+      Infobip for SMS). An account may hold several per channel.
+    identifiers: [account_adapter_uuid]
+    operations:
+      - getV1AccountAdapters
+
+  - name: Tag
+    description: Folder-based labels for organising Blueshift entities.
+    operations:
+      - getV1TagContextsList
+
+  - name: LiveActivity
+    description: An iOS Lock Screen / Dynamic Island activity driven remotely.
+    identifiers: [device_id, device_ids]
+    operations:
+      - postV1LiveActivityStart
+      - postV1LiveActivityUpdate
+
+  - name: DataConnector
+    description: An export pipeline for event data.
+    identifiers: [data_connector_uuid]
+    operations:
+      - getV1DataConnectorsByDataConnectorUuidDebug
+
+relationships:
+  - from: Customer
+    to: Event
+    type: has_many
+    via: customer_id / email / uuid on the event payload
+  - from: Customer
+    to: Segment
+    type: has_many
+    via: segment membership evaluated from customer attributes and events
+  - from: Customer
+    to: CustomUserList
+    type: has_many
+    via: list_id membership
+  - from: Customer
+    to: CustomerGroup
+    type: belongs_to
+    via: group_id
+  - from: Customer
+    to: SubscriptionGroup
+    type: has_many
+    via: subscription_group_id
+  - from: Customer
+    to: Interest
+    type: has_many
+    via: user_subscriptions
+  - from: Campaign
+    to: Segment
+    type: belongs_to
+    via: the audience a segment-triggered campaign targets
+  - from: Campaign
+    to: Template
+    type: has_many
+    via: template_uuid per channel
+  - from: Campaign
+    to: Event
+    type: belongs_to
+    via: the triggering event for event-triggered campaigns
+  - from: Campaign
+    to: Promotion
+    type: has_one
+    via: promotion_uuid
+  - from: Campaign
+    to: ExternalFetchTemplate
+    type: has_many
+    via: external fetch at send time
+  - from: Template
+    to: SharedAsset
+    type: has_many
+    via: asset reference inside template content
+  - from: Catalog
+    to: CatalogItem
+    type: has_many
+    via: items added through the catalog write operation
+  - from: LiveContentSlot
+    to: Catalog
+    type: belongs_to
+    via: the catalog a recommendation slot draws from
+  - from: Adapter
+    to: Campaign
+    type: has_many
+    via: the delivery channel a campaign sends through
+  - from: DataConnector
+    to: Event
+    type: has_many
+    via: exported event stream
+  - from: Tag
+    to: Campaign
+    type: has_many
+    via: tag_contexts
+
+observations:
+  - >-
+    Several entities are read-only or write-only through the REST API.
+    Promotions can only be mutated, never listed. Customer groups can only be
+    deleted, never created. Catalog items are not individually addressable. Each
+    of these asymmetries shows up in mcp/blueshift-tool-crosswalk.yml as a tool
+    with no REST counterpart.
+  - >-
+    Blueshift's OpenAPI declares NO components.schemas — every request and
+    response schema is inlined per operation. That means there is no shared,
+    named representation of Customer, Campaign or Event anywhere in the
+    contract, and a generated client would produce 81 unrelated anonymous types.
+    This graph was reconstructed from path structure and inlined properties for
+    that reason.

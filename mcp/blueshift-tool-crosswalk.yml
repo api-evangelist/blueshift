@@ -1,0 +1,1123 @@
+generated: '2026-08-12'
+method: derived
+source: mcp/blueshift-mcp.yml (Blueshift's published MCP tool catalogue) bound against openapi/blueshift-openapi.yml
+  (Blueshift's published REST OpenAPI, harvested per operation from developer.blueshift.com/reference/*.md)
+description: 'Binds every tool in Blueshift''s MCP catalogue to the REST operation(s) that back it, and
+  records the divergence in both directions. The live MCP tools/list is OAuth-gated, so bindings are made
+  on published tool names, descriptions and categories against operation summaries and paths — never on
+  an introspected schema. Confidence is set accordingly and is never higher than the evidence. The headline
+  finding is that the MCP server and the REST API are largely DIFFERENT products: the MCP server is a
+  read-heavy analyst surface over Blueshift''s AI, reporting, recommendation and schema features, most
+  of which have no public REST operations at all, while the REST API is a write-heavy ingestion and campaign-execution
+  surface that the MCP server barely touches. Only 31 of the 131 tools bind to a public operation, those
+  31 reach just 25 of the 81 operations, and 56 operations have no tool at all.'
+surfaces:
+  openapi:
+    path: openapi/blueshift-openapi.yml
+    operations: 81
+    gated: false
+    note: Public. Harvested verbatim from the per-operation OpenAPI documents embedded in each ReadMe
+      reference page.
+  mcp:
+    url: https://app.getblueshift.com/mcp
+    gated: true
+    note: OAuth 2.0. Anonymous tools/list returns 401 with an RFC 9728 challenge, so no inputSchema is
+      available.
+  graphql:
+    present: false
+    note: No GraphQL surface found on any Blueshift host.
+coverage:
+  mcp_tools: 131
+  rest_operations: 81
+  tools_bound: 31
+  tools_mcp_only: 100
+  operations_bound: 25
+  operations_rest_only: 56
+  confidence_high: 21
+  confidence_medium: 5
+  confidence_low: 5
+  input_schemas_available: 0
+crosswalk:
+- tool: list_campaigns_v2
+  category: Campaigns
+  access: read
+  published: true
+  rest:
+  - getV2CampaignsJson
+  binding: direct
+  confidence: high
+  note: Tool name carries the same v2 as the operation path.
+- tool: get_campaign_full
+  category: Campaigns
+  access: read
+  published: false
+  rest:
+  - getV1CampaignsByCampaignUuidDetailJson
+  binding: direct
+  confidence: high
+  note: REST summary is 'Detailed report with stats'.
+- tool: get_campaign_lite
+  category: Campaigns
+  access: read
+  published: true
+  rest:
+  - getV1CampaignsByCampaignUuidJson
+  binding: direct
+  confidence: high
+  note: REST summary is 'Detailed report without stats' — the lite read.
+- tool: get_campaign_statistics
+  category: Campaigns
+  access: read
+  published: true
+  rest:
+  - getV1CampaignsJson
+  - getV1CampaignsByCampaignUuidDetailJson
+  binding: composite
+  confidence: medium
+  note: Account-wide performance summary plus the per-campaign stats report.
+- tool: create_campaign
+  category: Campaigns
+  access: write
+  published: false
+  rest:
+  - postV1CampaignsByCampaignType
+  binding: direct
+  confidence: high
+- tool: update_campaign
+  category: Campaigns
+  access: write
+  published: false
+  rest:
+  - patchV1CampaignsByCampaignUuidUpdateSchedule
+  binding: partial
+  confidence: low
+  note: The only public campaign mutation is the schedule PATCH; the tool is described more broadly, so
+    the REST surface is narrower than the tool.
+- tool: list_segments_v1
+  category: Segments
+  access: read
+  published: true
+  rest:
+  - getV1SegmentsList
+  binding: direct
+  confidence: high
+- tool: search_users
+  category: Segments
+  access: read
+  published: true
+  rest:
+  - getV1Customers
+  binding: direct
+  confidence: medium
+  note: Same backing search operation as search_customer.
+- tool: matching_users_at_path_synchronous
+  category: Segments
+  access: read
+  published: true
+  rest:
+  - getV1SegmentsBySegmentUuidMatchingUsersJson
+  binding: direct
+  confidence: medium
+  note: 'Bound on semantics: both resolve segment membership.'
+- tool: list_email_templates
+  category: Templates
+  access: read
+  published: true
+  rest:
+  - getV1EmailTemplatesJson
+  binding: direct
+  confidence: high
+- tool: get_email_template
+  category: Templates
+  access: read
+  published: true
+  rest:
+  - getV1EmailTemplatesByTemplateUuidJson
+  binding: direct
+  confidence: high
+- tool: create_email_template
+  category: Templates
+  access: write
+  published: false
+  rest:
+  - postV1EmailTemplatesJson
+  binding: direct
+  confidence: high
+- tool: update_email_template
+  category: Templates
+  access: write
+  published: false
+  rest:
+  - putV1EmailTemplatesByTemplateUuidJson
+  binding: direct
+  confidence: high
+- tool: list_push_templates
+  category: Templates
+  access: read
+  published: true
+  rest:
+  - getV1PushTemplatesJson
+  binding: direct
+  confidence: high
+- tool: list_sms_templates
+  category: Templates
+  access: read
+  published: true
+  rest:
+  - getV1SmsTemplatesJson
+  binding: direct
+  confidence: high
+- tool: list_shared_assets
+  category: Shared assets
+  access: read
+  published: true
+  rest:
+  - getV1SharedAssetsJson
+  binding: direct
+  confidence: high
+- tool: search_customer
+  category: Customer profiles & data
+  access: read
+  published: false
+  rest:
+  - getV1Customers
+  binding: direct
+  confidence: high
+  note: REST summary is 'Search customer'.
+- tool: condensed_profile
+  category: Customer profiles & data
+  access: read
+  published: true
+  rest:
+  - getV1CustomersByUuid
+  binding: direct
+  confidence: high
+- tool: get_user_events
+  category: Customer profiles & data
+  access: read
+  published: false
+  rest:
+  - getV1CustomerSearchShowEvents
+  binding: direct
+  confidence: high
+- tool: get_campaign_activity
+  category: Customer profiles & data
+  access: read
+  published: false
+  rest:
+  - getV2CustomerCampaignActivity
+  binding: direct
+  confidence: medium
+  note: Same operation, account-level framing.
+- tool: get_user_campaign_activity
+  category: Customer profiles & data
+  access: read
+  published: false
+  rest:
+  - getV2CustomerCampaignActivity
+  binding: direct
+  confidence: high
+- tool: list_catalogs
+  category: Product catalog
+  access: read
+  published: true
+  rest:
+  - getV1Catalogs
+  binding: direct
+  confidence: high
+- tool: search_products
+  category: Product catalog
+  access: read
+  published: true
+  rest:
+  - getV1CatalogsByCatalogUuidJson
+  binding: partial
+  confidence: low
+  note: REST exposes catalog detail, not a product search; the tool is finer-grained than any public operation.
+- tool: get_product_by_sku
+  category: Product catalog
+  access: read
+  published: true
+  rest:
+  - getV1CatalogsByCatalogUuidJson
+  binding: partial
+  confidence: low
+  note: No per-product REST read exists; item lookup happens inside the catalog document.
+- tool: get_product_by_uuid
+  category: Product catalog
+  access: read
+  published: true
+  rest:
+  - getV1CatalogsByCatalogUuidJson
+  binding: partial
+  confidence: low
+  note: No per-product REST read exists.
+- tool: event_summary
+  category: Events & transactions
+  access: read
+  published: true
+  rest:
+  - postV1EventSummaryJson
+  binding: direct
+  confidence: high
+- tool: get_onsite_slots
+  category: Live content & onsite slots
+  access: read
+  published: false
+  rest:
+  - getV1OnsiteSlotsJson
+  binding: direct
+  confidence: high
+- tool: get_live_content
+  category: Live content & onsite slots
+  access: read
+  published: false
+  rest:
+  - postLive
+  binding: direct
+  confidence: high
+  note: The live-content endpoint is POST /live on the same hosts.
+- tool: list_tag_folders
+  category: Tags & organization
+  access: read
+  published: true
+  rest:
+  - getV1TagContextsList
+  binding: direct
+  confidence: high
+  note: REST returns tags and tag folders together.
+- tool: get_tag_folder
+  category: Tags & organization
+  access: read
+  published: true
+  rest:
+  - getV1TagContextsList
+  binding: partial
+  confidence: medium
+  note: No per-folder REST read; the list operation carries the folder.
+- tool: list_images
+  category: Image management
+  access: read
+  published: true
+  rest:
+  - getV1SharedAssetsJson
+  binding: partial
+  confidence: low
+  note: Shared assets cover HTML/rich text/subject lines/visual-editor content; image objects are not
+    separately exposed in REST.
+mcp_only:
+- tool: get_segment_details
+  category: Segments
+  access: read
+  published: true
+  reason: No per-segment REST read exists; the public spec exposes only the segment list and membership
+    counts.
+- tool: create_segment_v2
+  category: Segments
+  access: write
+  published: false
+  reason: Segment creation has no public REST operation.
+- tool: update_segment_v2
+  category: Segments
+  access: write
+  published: false
+  reason: Segment update has no public REST operation.
+- tool: show_query
+  category: Segments
+  access: read
+  published: false
+  reason: Segment query introspection has no public REST operation.
+- tool: render_email
+  category: Templates
+  access: read
+  published: false
+  reason: Template rendering has no public REST operation; the nearest public call sends a test message.
+- tool: get_personalizations
+  category: Templates
+  access: read
+  published: false
+  reason: No public REST operation for template personalizations.
+- tool: get_shared_asset
+  category: Shared assets
+  access: read
+  published: true
+  reason: No per-asset REST read; only list, create and update are public.
+- tool: get_shared_asset_templates
+  category: Shared assets
+  access: read
+  published: true
+  reason: No public REST operation for shared-asset templates.
+- tool: get_user_transactions
+  category: Customer profiles & data
+  access: read
+  published: false
+  reason: No public REST transactions read.
+- tool: get_schema
+  category: Schema & data discovery
+  access: read
+  published: true
+  reason: Schema introspection is MCP-native — the REST API publishes no schema-discovery endpoints.
+- tool: get_customer_attribute_schema_v2
+  category: Schema & data discovery
+  access: read
+  published: true
+  reason: Schema introspection is MCP-native — the REST API publishes no schema-discovery endpoints.
+- tool: get_data_studio_schema
+  category: Schema & data discovery
+  access: read
+  published: true
+  reason: Schema introspection is MCP-native — the REST API publishes no schema-discovery endpoints.
+- tool: get_events_schema
+  category: Schema & data discovery
+  access: read
+  published: true
+  reason: Schema introspection is MCP-native — the REST API publishes no schema-discovery endpoints.
+- tool: get_products_schema
+  category: Schema & data discovery
+  access: read
+  published: true
+  reason: Schema introspection is MCP-native — the REST API publishes no schema-discovery endpoints.
+- tool: get_user_schema
+  category: Schema & data discovery
+  access: read
+  published: true
+  reason: Schema introspection is MCP-native — the REST API publishes no schema-discovery endpoints.
+- tool: get_studio_schema
+  category: Schema & data discovery
+  access: read
+  published: false
+  reason: Schema introspection is MCP-native — the REST API publishes no schema-discovery endpoints.
+- tool: get_recommendation_authoring_schema
+  category: Schema & data discovery
+  access: read
+  published: false
+  reason: Schema introspection is MCP-native — the REST API publishes no schema-discovery endpoints.
+- tool: attribute_usage_statistics
+  category: Attributes & usage analytics
+  access: read
+  published: true
+  reason: Attribute-usage analytics have no public REST operations.
+- tool: attribute_usages
+  category: Attributes & usage analytics
+  access: read
+  published: true
+  reason: Attribute-usage analytics have no public REST operations.
+- tool: get_user_insight_attributes
+  category: Attributes & usage analytics
+  access: read
+  published: true
+  reason: Attribute-usage analytics have no public REST operations.
+- tool: get_product_attribute_stats
+  category: Product catalog
+  access: read
+  published: false
+  reason: No public REST operation for product attribute statistics.
+- tool: list_recommendation_schemes_v1
+  category: Recommendations
+  access: read
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: list_enriched_recommendation_schemes
+  category: Recommendations
+  access: read
+  published: true
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: get_recommendation_scheme
+  category: Recommendations
+  access: read
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: list_recommendation_block_themes
+  category: Recommendations
+  access: read
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: get_recommendation_block_theme
+  category: Recommendations
+  access: read
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: get_recommendations
+  category: Recommendations
+  access: read
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: get_recommended_products
+  category: Recommendations
+  access: read
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: create_account_algorithm
+  category: Recommendations
+  access: write
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: update_account_algorithm
+  category: Recommendations
+  access: write
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: compile_plasma_code
+  category: Recommendations
+  access: read
+  published: false
+  reason: Recommendation schemes, block themes and account algorithms have no public REST operations.
+- tool: list_opportunities
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: get_opportunity
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: get_opportunity_discovery_status
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: list_optimizer_runs
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: get_optimizer_run
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: get_optimizer_state
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: get_optimizer_landscape
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: get_optimizer_content_variants
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: get_optimizer_sample
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: render_optimizer_samples
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: list_optimizer_analyses
+  category: Campaign optimizer (AI)
+  access: read
+  published: false
+  reason: Campaign Optimizer is an AI surface with no public REST operations in Blueshift's published
+    spec.
+- tool: list_reports
+  category: Reports & dashboards
+  access: read
+  published: false
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: get_report
+  category: Reports & dashboards
+  access: read
+  published: false
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: create_report
+  category: Reports & dashboards
+  access: write
+  published: false
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: update_report
+  category: Reports & dashboards
+  access: write
+  published: false
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: list_dashboards
+  category: Reports & dashboards
+  access: read
+  published: false
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: get_dashboard
+  category: Reports & dashboards
+  access: read
+  published: false
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: create_dashboard
+  category: Reports & dashboards
+  access: write
+  published: false
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: update_dashboard
+  category: Reports & dashboards
+  access: write
+  published: false
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: list_metrics
+  category: Reports & dashboards
+  access: read
+  published: true
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: get_user_insights_statistics
+  category: Reports & dashboards
+  access: read
+  published: true
+  reason: Reports, dashboards and metrics have no public REST operations; the only public reporting is
+    the campaign performance export.
+- tool: get_transaction_config
+  category: Events & transactions
+  access: read
+  published: true
+  reason: No public REST transaction-config read.
+- tool: get_onsite_slot_details
+  category: Live content & onsite slots
+  access: read
+  published: false
+  reason: No per-slot REST read; only the slot list is public.
+- tool: create_onsite_slot
+  category: Live content & onsite slots
+  access: write
+  published: false
+  reason: Slot creation has no public REST operation.
+- tool: list_promotions_v1
+  category: Promotions
+  access: read
+  published: true
+  reason: REST exposes only promo-code mutation on an existing promotion; there is no public promotions
+    list.
+- tool: get_tag_usage_counts
+  category: Tags & organization
+  access: read
+  published: true
+  reason: No public REST operation for tag usage counts.
+- tool: list_audit_trails
+  category: Audit & change tracking
+  access: read
+  published: false
+  reason: Audit trails have no public REST operations.
+- tool: get_audit_detail
+  category: Audit & change tracking
+  access: read
+  published: false
+  reason: Audit trails have no public REST operations.
+- tool: get_account_info
+  category: Account & configuration
+  access: read
+  published: false
+  reason: Account info and notes have no public REST operations; the closest public read is the adapters
+    list.
+- tool: get_account_notes
+  category: Account & configuration
+  access: read
+  published: false
+  reason: Account info and notes have no public REST operations; the closest public read is the adapters
+    list.
+- tool: list_marketing_insights
+  category: Marketing insights & ideation
+  access: read
+  published: false
+  reason: Insights and ideation proposals have no public REST operations.
+- tool: get_marketing_insight
+  category: Marketing insights & ideation
+  access: read
+  published: false
+  reason: Insights and ideation proposals have no public REST operations.
+- tool: create_marketing_insight
+  category: Marketing insights & ideation
+  access: write
+  published: false
+  reason: Insights and ideation proposals have no public REST operations.
+- tool: update_marketing_insight
+  category: Marketing insights & ideation
+  access: write
+  published: false
+  reason: Insights and ideation proposals have no public REST operations.
+- tool: list_ideation_proposals
+  category: Marketing insights & ideation
+  access: read
+  published: false
+  reason: Insights and ideation proposals have no public REST operations.
+- tool: get_ideation_proposal
+  category: Marketing insights & ideation
+  access: read
+  published: false
+  reason: Insights and ideation proposals have no public REST operations.
+- tool: create_ideation_proposal
+  category: Marketing insights & ideation
+  access: write
+  published: false
+  reason: Insights and ideation proposals have no public REST operations.
+- tool: update_ideation_proposal
+  category: Marketing insights & ideation
+  access: write
+  published: false
+  reason: Insights and ideation proposals have no public REST operations.
+- tool: generate_chart
+  category: Content & document generation
+  access: write
+  published: false
+  reason: Chart/PDF/PowerPoint/spreadsheet generation is an assistant-side capability, not an API resource.
+- tool: generate_pdf
+  category: Content & document generation
+  access: write
+  published: false
+  reason: Chart/PDF/PowerPoint/spreadsheet generation is an assistant-side capability, not an API resource.
+- tool: generate_powerpoint
+  category: Content & document generation
+  access: write
+  published: false
+  reason: Chart/PDF/PowerPoint/spreadsheet generation is an assistant-side capability, not an API resource.
+- tool: generate_spreadsheet
+  category: Content & document generation
+  access: write
+  published: false
+  reason: Chart/PDF/PowerPoint/spreadsheet generation is an assistant-side capability, not an API resource.
+- tool: create_image
+  category: Image management
+  access: write
+  published: false
+  reason: Image objects have no public REST operations.
+- tool: update_image
+  category: Image management
+  access: write
+  published: false
+  reason: Image objects have no public REST operations.
+- tool: analyze_image
+  category: Image management
+  access: read
+  published: false
+  reason: Image objects have no public REST operations.
+- tool: generate_image
+  category: Image management
+  access: write
+  published: false
+  reason: Image objects have no public REST operations.
+- tool: search_articles
+  category: Documentation & help
+  access: read
+  published: true
+  reason: Backed by the Blueshift help centre, not by the REST API.
+- tool: get_article
+  category: Documentation & help
+  access: read
+  published: true
+  reason: Backed by the Blueshift help centre, not by the REST API.
+- tool: load_domain_reference
+  category: Documentation & help
+  access: read
+  published: true
+  reason: Backed by the Blueshift help centre, not by the REST API.
+- tool: generate_link
+  category: Utilities & system
+  access: read
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: generate_uuid
+  category: Utilities & system
+  access: read
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: resource
+  category: Utilities & system
+  access: write
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: request_permission
+  category: Utilities & system
+  access: write
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: tool_search
+  category: Utilities & system
+  access: read
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: phase_handoff
+  category: Utilities & system
+  access: read
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: update_agents_md
+  category: Utilities & system
+  access: write
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: web_research
+  category: Utilities & system
+  access: read
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: github_issues
+  category: Utilities & system
+  access: read
+  published: false
+  reason: Agent-runtime plumbing (uuid generation, permission requests, tool search, handoff, web research)
+    with no API resource behind it.
+- tool: list_pages
+  category: Pages & scripts
+  access: read
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: get_page
+  category: Pages & scripts
+  access: read
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: create_internal_page
+  category: Pages & scripts
+  access: write
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: create_external_page
+  category: Pages & scripts
+  access: write
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: update_internal_page
+  category: Pages & scripts
+  access: write
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: update_external_page
+  category: Pages & scripts
+  access: write
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: run_page
+  category: Pages & scripts
+  access: write
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: run_tool_script
+  category: Pages & scripts
+  access: write
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: present_page
+  category: Pages & scripts
+  access: read
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: archive_page
+  category: Pages & scripts
+  access: write
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+- tool: get_personalized_url
+  category: Pages & scripts
+  access: read
+  published: false
+  reason: Pages, scripts and personalized-URL tooling have no public REST operations.
+rest_only:
+- operationId: getV1AccountAdapters
+  method: GET
+  path: /api/v1/account_adapters
+  tag: Adapters
+  summary: List adapters
+- operationId: putV1CampaignsBulkArchive
+  method: PUT
+  path: /api/v1/campaigns/bulk_archive
+  tag: Campaigns
+  summary: Bulk archive campaigns
+- operationId: postV1CampaignsBulkExecute
+  method: POST
+  path: /api/v1/campaigns/bulk_execute
+  tag: Campaigns
+  summary: Bulk trigger campaigns
+- operationId: putV1CampaignsBulkUnarchive
+  method: PUT
+  path: /api/v1/campaigns/bulk_unarchive
+  tag: Campaigns
+  summary: Bulk unarchive campaigns
+- operationId: postV1CampaignsExecute
+  method: POST
+  path: /api/v1/campaigns/execute
+  tag: Campaigns
+  summary: Trigger a campaign
+- operationId: putV1CampaignsByCampaignUuidArchive
+  method: PUT
+  path: /api/v1/campaigns/{campaign_uuid}/archive
+  tag: Campaigns
+  summary: Archive a single campaign
+- operationId: patchV1CampaignsByCampaignUuidLaunch
+  method: PATCH
+  path: /api/v1/campaigns/{campaign_uuid}/launch
+  tag: Campaigns
+  summary: Launch a campaign
+- operationId: patchV1CampaignsByCampaignUuidPause
+  method: PATCH
+  path: /api/v1/campaigns/{campaign_uuid}/pause
+  tag: Campaigns
+  summary: Pause a campaign
+- operationId: putV1CampaignsByCampaignUuidUnarchive
+  method: PUT
+  path: /api/v1/campaigns/{campaign_uuid}/unarchive
+  tag: Campaigns
+  summary: Unarchive a single campaign
+- operationId: postV1Catalogs
+  method: POST
+  path: /api/v1/catalogs
+  tag: Catalog
+  summary: Create a catalog
+- operationId: putV1CatalogsByCatalogUuidJson
+  method: PUT
+  path: /api/v1/catalogs/{catalog_uuid}.json
+  tag: Catalog
+  summary: Add items to a catalog
+- operationId: putV1CustomUserListsAddUserToListByListId
+  method: PUT
+  path: /api/v1/custom_user_lists/add_user_to_list/{list_id}
+  tag: Custom user lists
+  summary: Add user to list
+- operationId: putV1CustomUserListsBulkAddUsersToListByListId
+  method: PUT
+  path: /api/v1/custom_user_lists/bulk_add_users_to_list/{list_id}
+  tag: Custom user lists
+  summary: Bulk add users to list
+- operationId: putV1CustomUserListsBulkRemoveUsersFromListByListId
+  method: PUT
+  path: /api/v1/custom_user_lists/bulk_remove_users_from_list/{list_id}
+  tag: Custom user lists
+  summary: Bulk remove users from list
+- operationId: postV1CustomUserListsCreate
+  method: POST
+  path: /api/v1/custom_user_lists/create
+  tag: Custom user lists
+  summary: Create empty list
+- operationId: getV1CustomUserListsIdByCustomUserListId
+  method: GET
+  path: /api/v1/custom_user_lists/id/{custom_user_list_id}
+  tag: Custom user lists
+  summary: Get customer list details
+- operationId: putV1CustomUserListsOverwriteListByListId
+  method: PUT
+  path: /api/v1/custom_user_lists/overwrite_list/{list_id}
+  tag: Custom user lists
+  summary: Overwrite users in a list
+- operationId: putV1CustomUserListsRemoveUserFromListByListId
+  method: PUT
+  path: /api/v1/custom_user_lists/remove_user_from_list/{list_id}
+  tag: Custom user lists
+  summary: Remove user from list
+- operationId: getV1CustomUserListsSeedLists
+  method: GET
+  path: /api/v1/custom_user_lists/seed_lists
+  tag: Custom user lists
+  summary: Get seed lists from your account
+- operationId: postV1CustomerAttributesTriggerImport
+  method: POST
+  path: /api/v1/customer_attributes/trigger_import
+  tag: Customer
+  summary: Trigger customer import
+- operationId: postV1Customers
+  method: POST
+  path: /api/v1/customers
+  tag: Customer
+  summary: Create or update customer
+- operationId: postV1CustomersBulk
+  method: POST
+  path: /api/v1/customers/bulk
+  tag: Customer
+  summary: Bulk create/update customer
+- operationId: postV1CustomersDelete
+  method: POST
+  path: /api/v1/customers/delete
+  tag: Customer
+  summary: Delete a customer
+- operationId: postV1CustomersForget
+  method: POST
+  path: /api/v1/customers/forget
+  tag: Customer
+  summary: Stop tracking a customer
+- operationId: postV1CustomersMerge
+  method: POST
+  path: /api/v1/customers/merge
+  tag: Customer
+  summary: Merge customers
+- operationId: postV1CustomersUnforget
+  method: POST
+  path: /api/v1/customers/unforget
+  tag: Customer
+  summary: Start tracking a customer
+- operationId: deleteV1CustomerGroupByGroupId
+  method: DELETE
+  path: /api/v1/customer_group/{group_id}
+  tag: Customer groups
+  summary: Delete customer group
+- operationId: deleteV1CustomerGroupByGroupIdUserByUserUuid
+  method: DELETE
+  path: /api/v1/customer_group/{group_id}/user/{user_uuid}
+  tag: Customer groups
+  summary: Remove user from customer group
+- operationId: postV1EmailTemplatesTestSendJson
+  method: POST
+  path: /api/v1/email_templates/test_send.json
+  tag: Email template
+  summary: Send a test mail
+- operationId: postV1EmailsBulkValidate
+  method: POST
+  path: /api/v1/emails/bulk_validate
+  tag: Email validation
+  summary: Validate multiple email addresses
+- operationId: getV1EmailsValidate
+  method: GET
+  path: /api/v1/emails/validate
+  tag: Email validation
+  summary: Validate a single email address
+- operationId: postV1Bulkevents
+  method: POST
+  path: /api/v1/bulkevents
+  tag: Event
+  summary: Send bulk events
+- operationId: getV1DataConnectorsByDataConnectorUuidDebug
+  method: GET
+  path: /api/v1/data_connectors/{data_connector_uuid}/debug
+  tag: Event
+  summary: Debug event exports
+- operationId: postV1Event
+  method: POST
+  path: /api/v1/event
+  tag: Event
+  summary: Send an event
+- operationId: getV1EventDebug
+  method: GET
+  path: /api/v1/event/debug
+  tag: Event
+  summary: Most recent event
+- operationId: getV1EventHistory
+  method: GET
+  path: /api/v1/event/history
+  tag: Event
+  summary: Get event history
+- operationId: getV1ExternalFetchesJson
+  method: GET
+  path: /api/v1/external_fetches.json
+  tag: External fetch
+  summary: List external fetch templates
+- operationId: postV1ExternalFetchesJson
+  method: POST
+  path: /api/v1/external_fetches.json
+  tag: External fetch
+  summary: Create an external fetch template
+- operationId: putV1ExternalFetchesByTemplateUuid
+  method: PUT
+  path: /api/v1/external_fetches/{template_uuid}
+  tag: External fetch
+  summary: Update an external fetch template
+- operationId: postV1InterestsAlert
+  method: POST
+  path: /api/v1/interests/alert
+  tag: Interest alerts
+  summary: Update or alert customers
+- operationId: getV1InterestsUserSubscriptions
+  method: GET
+  path: /api/v1/interests/user_subscriptions
+  tag: Interest alerts
+  summary: Get customer subscriptions
+- operationId: postV1LiveActivityStart
+  method: POST
+  path: /api/v1/live_activity/start
+  tag: Live Activities
+  summary: Start a Live Activity
+- operationId: postV1LiveActivityUpdate
+  method: POST
+  path: /api/v1/live_activity/update
+  tag: Live Activities
+  summary: Update a Live Activity
+- operationId: putV1PromotionsByPromotionUuidAddPromocodes
+  method: PUT
+  path: /api/v1/promotions/{promotion_uuid}/add_promocodes
+  tag: Promotions
+  summary: Add promo codes to promotion
+- operationId: putV1PromotionsByPromotionUuidOverwrite
+  method: PUT
+  path: /api/v1/promotions/{promotion_uuid}/overwrite
+  tag: Promotions
+  summary: Overwrite promo codes in promotion
+- operationId: postV1PushTemplatesJson
+  method: POST
+  path: /api/v1/push_templates.json
+  tag: Push template
+  summary: Create a push template
+- operationId: postV1PushTemplatesTestPushJson
+  method: POST
+  path: /api/v1/push_templates/test_push.json
+  tag: Push template
+  summary: Push a test message
+- operationId: putV1PushTemplatesByTemplateUuid
+  method: PUT
+  path: /api/v1/push_templates/{template_uuid}
+  tag: Push template
+  summary: Update a push template
+- operationId: postV1SmsTemplatesJson
+  method: POST
+  path: /api/v1/sms_templates.json
+  tag: SMS template
+  summary: Create an SMS template
+- operationId: postV1SmsTemplatesTestSendJson
+  method: POST
+  path: /api/v1/sms_templates/test_send.json
+  tag: SMS template
+  summary: Send a test SMS
+- operationId: putV1SmsTemplatesByTemplateUuid
+  method: PUT
+  path: /api/v1/sms_templates/{template_uuid}
+  tag: SMS template
+  summary: Update an SMS template
+- operationId: postV1SharedAssetsJson
+  method: POST
+  path: /api/v1/shared_assets.json
+  tag: Shared assets
+  summary: Create a shared asset
+- operationId: putV1SharedAssetsByUuidJson
+  method: PUT
+  path: /api/v1/shared_assets/{uuid}.json
+  tag: Shared assets
+  summary: Update a shared asset
+- operationId: getV1SubscriptionGroups
+  method: GET
+  path: /api/v1/subscription_groups
+  tag: Subscription groups
+  summary: List subscription groups
+- operationId: getV1SubscriptionGroupsIndexLite
+  method: GET
+  path: /api/v1/subscription_groups/index_lite
+  tag: Subscription groups
+  summary: List subscription groups (lite)
+- operationId: getV1SubscriptionGroupsByUuid
+  method: GET
+  path: /api/v1/subscription_groups/{uuid}
+  tag: Subscription groups
+  summary: Get a subscription group

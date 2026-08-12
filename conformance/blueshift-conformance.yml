@@ -1,0 +1,251 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://trust.blueshift.com/ (SafeBase trust center),
+  https://blueshift.com/security/,
+  https://help.blueshift.com/hc/en-us/articles/4405437333011-Security,
+  https://help.blueshift.com/hc/en-us/articles/4405437312915-Privacy-compliance,
+  and the RFC 8414 / RFC 9728 documents in well-known/ — reconciled against
+  openapi/blueshift-openapi.yml.
+description: >-
+  Blueshift's ORGANISATIONAL compliance posture is strong and independently
+  attested — SOC 2 Type 2, ISO/IEC 27001:2022, HIPAA, GDPR, CCPA and the EU-U.S.
+  Data Privacy Framework, all named on a real trust center. Its API-level
+  STANDARDS conformance is thin by contrast: the REST API implements no
+  cross-cutting web-API standard beyond OpenAPI 3.0 itself — no OAuth, no OIDC,
+  no RFC 9457 problem details, no RFC 8594 sunset, no RFC 9116 security.txt, no
+  standard rate-limit headers. The one place Blueshift conforms properly to a
+  modern protocol stack is the MCP server, which implements RFC 8414, RFC 9728,
+  RFC 7636 PKCE and RFC 7591 dynamic client registration correctly and verifiably.
+
+certifications:
+  - id: soc2-type2
+    name: SOC 2 Type 2
+    conforms: true
+    evidence: >-
+      Named on trust.blueshift.com with a 2025 report available on request; also
+      claimed on blueshift.com/security. Report itself is gated — access
+      requires a request to support@blueshift.com.
+    gated: true
+  - id: iso-27001
+    name: ISO/IEC 27001:2022
+    conforms: true
+    evidence: Named on trust.blueshift.com.
+    gated: true
+  - id: hipaa
+    name: HIPAA
+    conforms: true
+    evidence: >-
+      trust.blueshift.com names a 2026 HIPAA audit report;
+      blueshift.com/security describes "HIPAA-ready deployments".
+    gated: true
+  - id: gdpr
+    name: GDPR
+    conforms: true
+    evidence: >-
+      Compliance claimed on the security page and the trust center; EU and US
+      DPAs are published as gated documents.
+  - id: ccpa
+    name: CCPA
+    conforms: true
+    evidence: Compliance claimed on the security page and the trust center.
+  - id: eu-us-dpf
+    name: EU-U.S. Data Privacy Framework (incl. UK Extension and Swiss-U.S. DPF)
+    conforms: true
+    evidence: >-
+      Participation stated on the Blueshift privacy/compliance help centre
+      article and listed on the trust center.
+  - id: truste
+    name: TRUSTe
+    conforms: true
+    evidence: Listed on trust.blueshift.com.
+  - id: pci-dss
+    name: PCI DSS
+    conforms: false
+    evidence: >-
+      Not claimed anywhere. Recorded as a negative because Blueshift is not a
+      payments processor and has no reason to hold it — an honest N/A, not a gap.
+  - id: fedramp
+    name: FedRAMP
+    conforms: false
+    evidence: Not claimed anywhere.
+
+security_controls:
+  encryption_at_rest: AES-256
+  encryption_in_transit: TLS 1.2+
+  observed_tls: >-
+    TLSv1.3 on blueshift.com and developer.blueshift.com, TLSv1.2 on
+    api.getblueshift.com (probed 2026-08-12 — see
+    security/blueshift-domain-security.yml)
+  penetration_testing: Annual third-party penetration tests (stated on blueshift.com/security)
+  sso: SAML 2.0 federated single sign-on
+  mfa: supported
+  rbac: >-
+    Built-in roles (e.g. Analyst read-only, Manager read-write) plus custom roles
+    with specific permissions
+  audit_trails: >-
+    Administrator-facing audit trail capturing per-user interactions; also
+    exposed as MCP tools (list_audit_trails, get_audit_detail)
+  infrastructure: AWS, isolated VPC, global region options
+  data_residency: US and EU regions, with region-specific API and app hosts
+
+subprocessors:
+  source: https://trust.blueshift.com/
+  list:
+    - Amazon Web Services
+    - Salesforce
+    - Sinch
+    - Twilio
+    - Intercom
+
+api_standards:
+  - id: openapi
+    name: OpenAPI 3.0.0
+    conforms: true
+    evidence: >-
+      Blueshift publishes a per-operation OpenAPI 3.0.0 document behind every
+      one of the 88 reference pages; 81 of them describe an operation. Merged
+      into openapi/blueshift-openapi.yml. Every operation carries a summary, a
+      description, tags, 4xx/5xx responses and examples.
+    caveat: >-
+      No operation declares an operationId, and there is no single downloadable
+      spec document — the spec exists only as 81 per-page fragments. Both are
+      addressed in overlays/blueshift-openapi-overlay.yaml.
+
+  - id: oauth2
+    name: OAuth 2.0
+    conforms: partial
+    evidence: >-
+      Implemented for the MCP server only (authorization_code, client_credentials
+      and refresh_token grants, eight scopes). The REST API has no OAuth at all —
+      it uses HTTP Basic with an API key.
+    artifacts:
+      - well-known/blueshift-oauth-authorization-server.json
+      - scopes/blueshift-scopes.yml
+
+  - id: rfc8414
+    name: RFC 8414 — OAuth 2.0 Authorization Server Metadata
+    conforms: true
+    evidence: >-
+      Served at /.well-known/oauth-authorization-server on all four API/app
+      hosts, HTTP 200, valid JSON with issuer, authorization_endpoint,
+      token_endpoint, registration_endpoint, scopes_supported,
+      response_types_supported, grant_types_supported,
+      token_endpoint_auth_methods_supported and code_challenge_methods_supported.
+
+  - id: rfc9728
+    name: RFC 9728 — OAuth 2.0 Protected Resource Metadata
+    conforms: true
+    evidence: >-
+      Served at /.well-known/oauth-protected-resource, and correctly referenced
+      from the WWW-Authenticate header on a 401 from the MCP endpoint. Verified
+      end to end on 2026-08-12.
+
+  - id: rfc7636
+    name: RFC 7636 — PKCE
+    conforms: true
+    evidence: code_challenge_methods_supported declares S256.
+
+  - id: rfc7591
+    name: RFC 7591 — OAuth 2.0 Dynamic Client Registration
+    conforms: true
+    evidence: registration_endpoint published; token_endpoint_auth_methods includes "none".
+
+  - id: mcp
+    name: Model Context Protocol
+    conforms: true
+    evidence: >-
+      Official hosted server at app.getblueshift.com/mcp and
+      app.eu.getblueshift.com/mcp, streamable HTTP transport, OAuth-protected.
+      Public beta. See mcp/blueshift-mcp.yml.
+
+  - id: openid-connect
+    name: OpenID Connect
+    conforms: false
+    evidence: >-
+      /.well-known/openid-configuration returns 404 on every host probed.
+      Blueshift supports SAML 2.0 SSO for the application, not OIDC.
+
+  - id: rfc9457
+    name: RFC 9457 — Problem Details for HTTP APIs
+    conforms: false
+    evidence: >-
+      No application/problem+json media type anywhere in the spec; at least four
+      different ad-hoc JSON error envelopes. See errors/blueshift-problem-types.yml.
+
+  - id: rfc8594
+    name: RFC 8594 — Sunset HTTP Header
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation header returned; no deprecation policy published;
+      zero operations marked deprecated in the spec.
+
+  - id: rfc9116
+    name: RFC 9116 — security.txt
+    conforms: false
+    evidence: >-
+      /.well-known/security.txt returns 404 on api.getblueshift.com,
+      developer.blueshift.com and blueshift.com.
+
+  - id: ratelimit-headers
+    name: IETF RateLimit header fields
+    conforms: false
+    evidence: >-
+      No RateLimit-*, X-RateLimit-* or Retry-After header returned on any
+      observed response. See rate-limits/blueshift-rate-limits.yml.
+
+  - id: idempotency-key
+    name: IETF Idempotency-Key header
+    conforms: false
+    evidence: >-
+      Idempotency IS supported, but through a transaction_uuid body field on two
+      campaign-execution operations rather than the Idempotency-Key header. See
+      conventions/blueshift-conventions.yml.
+
+  - id: asyncapi
+    name: AsyncAPI
+    conforms: false
+    evidence: >-
+      Blueshift ships a real webhook surface but publishes no AsyncAPI document.
+      See asyncapi/blueshift-webhooks.yml.
+
+  - id: json-api
+    name: JSON:API
+    conforms: false
+    evidence: No JSON:API media type or document structure.
+
+  - id: odata
+    name: OData
+    conforms: false
+    evidence: Not implemented.
+
+  - id: a2a
+    name: A2A Agent Card
+    conforms: false
+    evidence: >-
+      /.well-known/agent-card.json and the legacy /.well-known/agent.json return
+      404 on every Blueshift host probed. No agent card is served.
+
+  - id: llmstxt
+    name: llms.txt
+    conforms: true
+    evidence: >-
+      https://developer.blueshift.com/llms.txt returns HTTP 200, text/plain,
+      21,874 bytes, indexing 113 documentation pages with .md twins. Saved
+      verbatim to llms/blueshift-llms.txt.
+
+pagination_conformance:
+  style: page-number (page / per_page)
+  standard: none — no Link header (RFC 8288), no cursor standard, no uniform envelope
+  conforms: false
+
+vulnerability_disclosure:
+  published: false
+  bug_bounty: false
+  security_txt: false
+  contact: support@blueshift.com (general support address, not a dedicated security channel)
+  evidence: >-
+    No VDP page, no HackerOne/Bugcrowd/Intigriti program, and no security.txt on
+    any host. The trust center's own instruction for compliance documents is to
+    email support@blueshift.com. This is the clearest single security-programme
+    gap for a company that otherwise holds SOC 2 Type 2 and ISO 27001.

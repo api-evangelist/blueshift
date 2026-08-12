@@ -1,0 +1,222 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://developer.blueshift.com/reference/authorization-1,
+  https://developer.blueshift.com/reference/api-errors,
+  https://developer.blueshift.com/reference/post_api-v1-campaigns-execute,
+  https://developer.blueshift.com/reference/post_api-v1-campaigns-bulk-execute,
+  https://developer.blueshift.com/reference/get_api-v2-campaigns-json — read
+  against the 81 operations in openapi/blueshift-openapi.yml.
+description: >-
+  How the Blueshift REST API behaves across every operation: authentication
+  style, idempotency, pagination, versioning, error envelope, batching limits
+  and rate-limit signalling. These are the runtime semantics OpenAPI does not
+  fully express. Two things stand out. First, Blueshift DOES support
+  idempotency, but through a body field (transaction_uuid) rather than a
+  header — an agent that only knows the Idempotency-Key convention will miss it
+  entirely. Second, the API returns no rate-limit headers and no request-id
+  header at all, so a client has no runtime signal to back off against and no
+  correlation handle for support.
+
+base_url: https://api.getblueshift.com
+base_url_eu: https://api.eu.getblueshift.com
+api_style: REST over HTTPS, JSON request and response bodies
+
+authentication:
+  scheme: HTTP Basic — API key as the username, password left empty
+  key_types:
+    - Event API key (EVENT_API_KEY) — event ingestion and supported live content
+    - User API key (USER_API_KEY) — everything else; admin-only
+  bearer_supported: false
+  docs: https://developer.blueshift.com/reference/authorization-1
+  detail: authentication/blueshift-authentication.yml
+
+idempotency:
+  supported: true
+  mechanism: transaction_uuid — a request BODY field, not a header
+  header: null
+  applies_to:
+    - POST /api/v1/campaigns/execute
+    - POST /api/v1/campaigns/bulk_execute
+  key_format: A well-formed UUID, client-generated
+  replay_behavior: >-
+    A repeat request carrying a transaction_uuid that has already been processed
+    returns 200 OK together with a message noting the request was already
+    processed. No message is sent twice.
+  retention: Not published.
+  conflict_behavior: >-
+    Not published. Blueshift documents the duplicate-suppression case but not
+    what happens when the same transaction_uuid arrives with a different
+    payload.
+  coverage: >-
+    Partial and deliberate. Idempotency is offered exactly where duplicate
+    delivery is unacceptable — campaign triggering, i.e. transactional email
+    and push. It is NOT offered on customer writes, catalog writes, template
+    writes or list mutations, all of which are POST/PUT and all of which a
+    retrying client can double-apply.
+  docs: https://developer.blueshift.com/reference/post_api-v1-campaigns-execute
+  note: >-
+    Because the key is a body field, idempotency cannot be added by a proxy,
+    gateway or generic retry middleware — it has to be threaded through the
+    application payload. This is the single most consequential deviation from
+    the industry Idempotency-Key convention on this API.
+
+pagination:
+  style: page-number
+  request_params:
+    page: Page number of the result set
+    per_page: Number of records returned per page
+    cursor: >-
+      Present on one operation only (customer campaign activity); the rest of
+      the API is page/per_page.
+  response_fields: >-
+    Not standardised. Paginated list responses do not carry a uniform envelope
+    (no consistent has_more, total or next fields), so a client must know
+    per-endpoint what the page boundary looks like.
+  default_page_size: Not published; varies by endpoint.
+  max_page_size: Not published.
+  coverage: >-
+    page/per_page appear on 7 of the 81 operations — the campaign, segment,
+    template, shared-asset and external-fetch lists. Other list operations
+    return unpaginated collections.
+  auto_pagination: No SDK helper exists; there is no server-side SDK.
+
+batching:
+  supported: true
+  note: >-
+    Blueshift's batch limits are hard caps enforced with 413, not soft advice,
+    and they differ per endpoint.
+  limits:
+    - operation: POST /api/v1/customers/bulk
+      limit: 50 customers per call
+      exceeded: 413
+    - operation: PUT /api/v1/catalogs/{catalog_uuid}.json
+      limit: 100 items per call
+      exceeded: 413
+    - operation: PUT /api/v1/custom_user_lists/bulk_add_users_to_list/{list_id}
+      limit: 25 users per call, or 500 with async=true
+    - operation: PUT /api/v1/custom_user_lists/bulk_remove_users_from_list/{list_id}
+      limit: 25 users per call, or 500 with async=true
+    - operation: POST /api/v1/emails/bulk_validate
+      limit: 30 email addresses per call
+    - operation: POST /api/v1/bulkevents
+      limit: >-
+        No documented per-call cap; throughput guidance is 5 bulk calls per
+        second (~150 events/sec).
+
+versioning:
+  style: URI path segment
+  versions_in_use:
+    - v1 — the overwhelming majority of operations
+    - v2 — campaign list (/api/v2/campaigns.json) and customer campaign
+      activity (/api/v2/customer_campaign_activity)
+  policy: >-
+    No published versioning policy. v1 and v2 coexist with no stated
+    relationship, no deprecation date on v1, and no version header or media-type
+    negotiation. The v2 operations are additive replacements for v1 operations
+    that remain live.
+  header: none
+  detail: lifecycle/blueshift-lifecycle.yml
+
+error_envelope:
+  formats:
+    - shape: '{"message": "<human readable string>"}'
+      usage: the most common shape — 401, 403, 404, 422, 429, 5xx
+    - shape: '{"errors": {"<field>": ["<validation message>"]}}'
+      usage: field-level validation failures on 400
+    - shape: '{"error": "<code-like string>"}'
+      usage: some 400 responses
+    - shape: '{"success": false, "error": "Validation failed"}'
+      usage: some 422 responses
+  rfc9457: false
+  content_type: application/json
+  stable_error_codes: false
+  note: >-
+    There is no single error envelope and no machine-readable error code — the
+    discriminator is the HTTP status plus an English string. A client cannot
+    branch on error identity without string matching.
+  detail: errors/blueshift-problem-types.yml
+
+rate_limit_signaling:
+  response_headers: none
+  documented_headers: []
+  retry_after: not returned
+  status_on_exhaustion: 429
+  body_on_exhaustion: '{"message": "Rate limit exceeded"}'
+  note: >-
+    Blueshift publishes throughput guidance in prose but returns no
+    X-RateLimit-*, no RateLimit-* and no Retry-After header. A client cannot
+    discover its remaining budget, and an agent has nothing to back off against
+    beyond the 429 itself. The documented remedy is exponential backoff starting
+    at 1 second, doubling, capped around 5 attempts, with jitter.
+  detail: rate-limits/blueshift-rate-limits.yml
+
+retries:
+  guidance: >-
+    Retry 5xx and 429 with exponential backoff — 1s, 2s, 4s, 8s — capped at
+    about 5 attempts, with jitter to avoid synchronised retry storms. Do not
+    retry other 4xx without changing the request.
+  docs: https://developer.blueshift.com/reference/api-errors
+  safety: >-
+    Note the interaction with idempotency: the retry guidance applies to every
+    endpoint, but only the two campaign-execution endpoints are safe to retry
+    without side effects. Retrying a POST /api/v1/customers or a catalog write
+    is at-least-once.
+
+request_tracing:
+  request_id_header: x-request-id
+  request_id_format: UUID v4
+  timing_header: x-runtime (server-side seconds)
+  correlation_id: none — no inbound correlation header is honoured
+  observed: >-
+    Confirmed on a live unauthenticated response from
+    https://api.getblueshift.com/api/v1/campaigns.json on 2026-08-12 (HTTP 401):
+    "x-request-id: 5b1a72c9-7afb-414f-aac5-d2cd402198fb", "x-runtime: 0.016538".
+  method: probed
+  note: >-
+    Both headers are returned on every response including errors, which makes
+    x-request-id the handle to quote to support. It is NOT documented anywhere in
+    the developer portal or the API reference — a client only finds it by
+    inspecting responses. Domain identifiers in payloads (transaction_uuid,
+    message_uuid, campaign_uuid) are separate from this transport identifier.
+
+transport_security:
+  hsts: 'max-age=63072000; includeSubDomains; preload'
+  observed_on: https://api.getblueshift.com
+  method: probed
+  additional_headers:
+    - x-content-type-options: nosniff
+    - x-permitted-cross-domain-policies: none
+    - referrer-policy: strict-origin-when-cross-origin
+    - content-security-policy-report-only (present on API responses)
+
+field_expansion:
+  supported: false
+  note: No expand/include mechanism and no sparse fieldsets.
+
+metadata:
+  supported: true
+  mechanism: >-
+    Arbitrary custom attributes on customer profiles and arbitrary properties on
+    events; catalog items accept custom fields. Reserved Blueshift keys are
+    prefixed _bsft_ (for example _bsft_high_priority).
+  docs: https://developer.blueshift.com/docs/data-types-and-attributes
+
+conditional_requests:
+  etag: false
+  last_modified: false
+
+content_negotiation:
+  request: application/json
+  response: application/json
+  note: >-
+    Several paths carry a literal .json suffix (/api/v1/campaigns.json,
+    /api/v1/email_templates.json). The suffix is part of the path, not a
+    negotiation mechanism; there is no alternative representation.
+
+cross_links:
+  errors: errors/blueshift-problem-types.yml
+  lifecycle: lifecycle/blueshift-lifecycle.yml
+  authentication: authentication/blueshift-authentication.yml
+  rate_limits: rate-limits/blueshift-rate-limits.yml
+  webhooks: asyncapi/blueshift-webhooks.yml

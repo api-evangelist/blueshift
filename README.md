@@ -42,5 +42,30 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Blueshift is a company surfaced via the API Evangelist harvest backlog (source: marketing-integration-graph) and added to the network as a stub for full-pipeline profiling.
-- https://blueshift.com/
+Blueshift is an AI-powered customer engagement and customer data platform (CDP) that unifies customer
+profiles, product and content catalogs, and behavioural event streams, then activates them across email,
+SMS, push, in-app messaging, mobile inbox, iOS Live Activities and on-site live content.
+
+- Website: https://blueshift.com/
+- Developer portal: https://developer.blueshift.com/
+- API reference: https://developer.blueshift.com/reference/welcome
+- Status: https://status.blueshift.com/
+- Trust center: https://trust.blueshift.com/
+- GitHub: https://github.com/blueshift-labs
+
+## What this profile holds
+
+| Artifact | Detail |
+|---|---|
+| `openapi/` | OpenAPI 3.0.0, 72 paths / 81 operations / 21 tags. Harvested verbatim from the per-operation OpenAPI documents Blueshift embeds in every `developer.blueshift.com/reference/*.md` page — there is no single downloadable spec. |
+| `overlays/` | Overlay 1.0.0 adding the 81 `operationId`s Blueshift's published spec omits. |
+| `mcp/` | Official OAuth-gated remote MCP server (public beta), plus Blueshift's own 131-tool catalogue and a crosswalk binding those tools to REST operations. |
+| `well-known/` | RFC 8414 + RFC 9728 OAuth discovery documents, served on all four API/app hosts. No security.txt, no api-catalog, no agent card. |
+| `postman/` | Blueshift's first-party public Postman collection — 83 requests across 22 folders. |
+| `skills/` | Four packaged Agent Skills, every `operationId` verified against the spec. |
+| `conventions/`, `errors/`, `rate-limits/`, `authentication/`, `scopes/` | Runtime semantics: idempotency via `transaction_uuid`, the error envelopes, the absent rate-limit headers, the two API-key classes and the eight OAuth scopes. |
+| `conformance/`, `security/` | SOC 2 Type 2, ISO/IEC 27001:2022, HIPAA, GDPR, CCPA, EU-U.S. DPF — plus the standards the API does *not* implement. |
+| `packages/`, `components/`, `sandbox/`, `plans/`, `lifecycle/`, `changelog/`, `data-model/`, `asyncapi/`, `llms/` | SDK currency, client surfaces, the sandbox account model, published pricing, lifecycle gaps, change signals, the entity graph and the webhook surface. |
+
+No A2A agent card is recorded because Blueshift serves none — `/.well-known/agent-card.json` and the legacy
+`/.well-known/agent.json` return 404 on every host probed.

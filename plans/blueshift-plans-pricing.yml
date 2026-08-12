@@ -1,0 +1,112 @@
+generated: '2026-08-12'
+method: searched
+source: https://blueshift.com/pricing/
+description: >-
+  Blueshift publishes three named packaging tiers and a real starting price for
+  the entry tier, which is more than most enterprise CDPs disclose. Everything
+  above Starter is a sales conversation. Pricing is metered on ACTIVE profiles —
+  Blueshift's stated differentiator is that it charges for the profiles you use,
+  not the ones you store — but no per-profile rate, no included quota and no
+  overage rate is published, so the entry price alone is not enough to model a
+  bill. There is no self-serve signup and no published API-call pricing: API
+  access is a property of the subscription, not a separately metered product.
+
+plan_count: 3
+currency: USD
+billing_period: annual
+metering_basis: active customer profiles
+self_serve: false
+free_tier: false
+trial: false
+api_metered_separately: false
+
+plans:
+  - name: Starter
+    price: 1250
+    currency: USD
+    billing_period: month
+    billing_note: billed annually
+    price_published: true
+    included_quota: not published
+    overage: not published
+    includes:
+      - Customer data platform (CDP)
+      - Customer AI
+      - Omni-channel campaigns — email, SMS, mobile apps, website
+      - Journey orchestration
+      - Audience building
+      - Message personalization
+      - Data ingestion
+      - 100+ native integrations
+
+  - name: Growth
+    price: null
+    price_published: false
+    billing_period: annual
+    contact_sales: true
+    included_quota: not published
+    overage: not published
+    includes:
+      - Everything in Starter
+      - 1:1 product and content recommendations
+      - Predictive optimization
+      - Custom profile attributes
+      - Audience analysis
+      - A/B and holdout testing
+
+  - name: Enterprise
+    price: null
+    price_published: false
+    billing_period: annual
+    contact_sales: true
+    included_quota: not published
+    overage: not published
+    includes:
+      - Everything in Growth
+      - Advanced data modeling
+      - Triggered event computation
+      - Household and account grouping
+      - Omni-channel identity resolution
+      - Enterprise controls — SSO, audit trails
+      - Dedicated Customer Success Manager
+
+add_ons:
+  note: >-
+    Blueshift states that premium onboarding services and add-on modules appear
+    as one-time charges on the first invoice. No prices are published for any of
+    them.
+  items:
+    - SMS
+    - In-app messaging
+    - Advanced analytics
+    - Premium onboarding services
+
+discounts:
+  multi_year: available by contacting sales
+  volume: available by contacting sales
+  published_rates: false
+
+api_access:
+  note: >-
+    The REST API and the MCP server are not listed as separate line items or
+    priced add-ons on the pricing page. API keys are generated from Account
+    Settings by any account, and the MCP server is a free public beta available
+    to accounts with admin or appropriate role permissions. There is no
+    published per-call or per-request charge.
+
+signup:
+  self_serve: false
+  path: https://blueshift.com/request-demo/
+  note: >-
+    No self-serve signup exists. Every tier including Starter routes through a
+    demo request, so a developer cannot obtain API credentials without going
+    through sales first. This is the practical gate on the whole API surface.
+
+gaps:
+  - >-
+    No included profile quota and no overage rate on any tier, so the published
+    $1,250/month figure cannot be turned into a cost model.
+  - Two of three tiers publish no price at all.
+  - >-
+    No self-serve path to credentials, which means the API cannot be evaluated
+    before a commercial conversation.

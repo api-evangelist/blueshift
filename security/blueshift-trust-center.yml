@@ -1,0 +1,19 @@
+generated: '2026-08-12'
+method: searched
+probe: true
+source: https://trust.blueshift.com/
+url: https://trust.blueshift.com/
+certifications:
+- SOC 2
+- ISO 27001
+- HIPAA
+- GDPR
+evidence:
+- source: https://trust.blueshift.com/
+  keywords:
+  - soc 2
+  - iso/iec 27001
+  - hipaa
+  - trust center
+  - compliance certification
+  - gdpr

@@ -1,0 +1,118 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://developer.blueshift.com/reference/live-content-slot,
+  https://developer.blueshift.com/reference/post_live,
+  https://developer.blueshift.com/docs/about-the-blueshift-ios-sdk,
+  https://developer.blueshift.com/docs/setup-blueshifts-android-sdk, and the
+  Live content / Live Activities operations in openapi/blueshift-openapi.yml
+description: >-
+  Blueshift ships client-side rendering surfaces, but not in the way a payments
+  or auth vendor does. There is no drop-in web component library and no
+  hosted/embeddable dashboard. What exists is (a) Live Content — server-rendered
+  personalization slots a site or app fetches as JSON and renders itself, and
+  (b) native mobile UI surfaces delivered by the SDKs: in-app messages, mobile
+  inbox and iOS Live Activities. The distinction matters: with Live Content
+  Blueshift supplies the DATA and the integrator supplies the markup, so there is
+  no versioned front-end artifact to pin.
+
+web_components: none
+element_library: none
+hosted_dashboard: none
+embedded_analytics: none
+
+families:
+  - name: Live content slots
+    kind: server-rendered personalization payload
+    surface: web and mobile
+    loader: none — plain HTTPS request from the integrator's own code
+    endpoints:
+      - POST /live
+      - GET /api/v1/onsite_slots.json
+    auth: Event API key (HTTP Basic)
+    docs: https://developer.blueshift.com/reference/live-content-slot
+    description: >-
+      A slot is a named, account-configured personalization unit. The integrator
+      calls the live-content endpoint and receives a JSON response containing
+      recommendations or content; rendering is entirely on the integrator's side.
+      Slot templates are authored in the Blueshift app.
+    versioned_artifact: false
+    note: >-
+      Because there is no Blueshift-supplied renderer, there is no npm package,
+      no CDN bundle and nothing to pin a version against — the contract is the
+      JSON response shape.
+
+  - name: In-app messages
+    kind: native mobile UI, SDK-rendered
+    surface: iOS and Android
+    loader: BlueShift-iOS-SDK / com.blueshift:android-sdk-x
+    docs: https://developer.blueshift.com/docs/in-app-messaging-android-sdk
+    description: >-
+      Modal, banner and full-screen in-app messages composed in the Blueshift app
+      and rendered by the native SDK. Layout and content are configured
+      server-side; the SDK owns presentation.
+    customizable: true
+
+  - name: Mobile inbox
+    kind: native mobile UI, SDK-rendered
+    surface: iOS and Android
+    loader: BlueShift-iOS-SDK / com.blueshift:android-sdk-x
+    docs: https://developer.blueshift.com/docs/set-up-android-mobile-inbox
+    description: >-
+      A persistent in-app message centre. The SDK ships a default inbox view that
+      can be styled or replaced with a custom implementation over the SDK's data.
+
+  - name: iOS Live Activities
+    kind: native OS surface (Lock Screen / Dynamic Island)
+    surface: iOS
+    loader: BlueShift-iOS-SDK
+    endpoints:
+      - POST /api/v1/live_activity/start
+      - POST /api/v1/live_activity/update
+    docs: https://developer.blueshift.com/docs/set-up-live-activities-on-ios
+    description: >-
+      Blueshift can start, update and end an iOS Live Activity on one or more
+      customers' devices through the REST API. The ActivityKit widget itself is
+      built by the app developer; Blueshift drives its content remotely.
+    note: >-
+      One of the few genuinely differentiated surfaces here — remote control of a
+      Live Activity is not a common CDP capability.
+
+  - name: Push notifications (rich)
+    kind: native OS surface
+    surface: iOS and Android
+    loader: BlueShift-iOS-SDK / com.blueshift:android-sdk-x
+    docs: https://developer.blueshift.com/docs/push-notifications-android-sdk
+    description: >-
+      Rich push with images and actions, rendered by the SDK's notification
+      service extension (iOS) or messaging service (Android).
+
+  - name: On-site JavaScript tag
+    kind: web event collector
+    surface: web
+    loader: account-specific script tag
+    versioned_artifact: false
+    version: null
+    note: >-
+      The web integration is a script tag Blueshift generates per account, not a
+      versioned package. It is unpinned and floats to latest, so a consumer
+      cannot determine which build is running. The npm package blueshift-js is
+      the nearest thing to a versioned web artifact and has not shipped since
+      June 2023 — see packages/blueshift-packages.yml.
+
+template_authoring:
+  note: >-
+    Email templates are authored in the Blueshift app using an embedded BeeFree
+    editor (visible in the app's own content-security policy as beefree.io /
+    getbee.io). That is a third-party editor Blueshift embeds, not a component
+    Blueshift offers to its customers, and is recorded here only to avoid it
+    being mistaken for a Blueshift-published embeddable.
+
+gaps:
+  - >-
+    No web component library, no React/Vue/Svelte packages, and no hosted
+    embeddable dashboard — so a customer cannot surface Blueshift content or
+    analytics inside their own product without building the UI themselves.
+  - >-
+    The web-side distribution (script tag, blueshift-js) is either unpinned or
+    stale, which is the weakest link in an otherwise well-maintained SDK estate.

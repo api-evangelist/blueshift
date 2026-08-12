@@ -1,0 +1,127 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://help.blueshift.com/hc/en-us/articles/43044536678291-Working-with-Blueshift-sandbox-accounts,
+  https://help.blueshift.com/hc/en-us/articles/4528724130195-Blueshift-demo-instances, and
+  https://developer.blueshift.com/reference/test-apis
+description: >-
+  Blueshift does have a real sandbox, but it is an ACCOUNT MODE, not a key
+  prefix or a URL. There is no test-vs-live credential distinction, no test key
+  prefix, no test data fixtures and no time simulation. A sandbox is a separate
+  Blueshift account provisioned by a CSM, running against the same hosts with
+  the same key types, distinguished only by an internal account_mode flag that
+  blocks campaign execution. Because it must be requested from a human, the
+  sandbox is not reachable by a developer evaluating the API — which matters,
+  since there is no self-serve signup either.
+
+available: true
+self_serve: false
+provisioning: >-
+  Request from a Blueshift CSM or support@blueshift.com. There is no signup
+  form, no console toggle and no API to create one.
+request_contact: support@blueshift.com
+
+model: separate account
+account_flag: account_mode = sandbox
+key_prefix_test: null
+key_prefix_live: null
+separate_base_url: false
+base_urls:
+  - https://api.getblueshift.com
+  - https://api.eu.getblueshift.com
+note_on_keys: >-
+  Sandbox accounts use the same Event API key / User API key model as production
+  and carry no distinguishing prefix. A credential alone does not tell an
+  integrator — or an agent — whether it is pointed at production.
+
+capabilities:
+  allowed:
+    - Upload test users exactly as in production
+    - Build and evaluate segments
+    - Preview campaigns and personalization
+    - Validate trigger and journey logic
+    - Test sends for all templates (do not consume quota)
+    - Test CloudApp integrations and inspect webhook payloads
+    - Explore API workflows without touching production data
+  blocked:
+    - Campaign execution — no Email, SMS, Push or CloudApp messages are sent
+    - High-volume load testing
+    - Deliverability testing
+    - Real-time throughput validation
+
+sandbox_error:
+  status: 422
+  error_code: 101
+  message: '<account>.com is a sandbox account'
+  raised_by: campaign trigger operations (POST /api/v1/campaigns/execute and bulk_execute)
+  note: >-
+    This is the only numeric error code published anywhere in Blueshift's API
+    surface. The rest of the API has no error-code field at all, so error code
+    101 is an isolated exception rather than the start of a code taxonomy.
+
+quota:
+  consumed: false
+  note: >-
+    Because campaign messaging is disabled, sandbox activity does not draw down
+    the annual messaging quota. Template test sends also do not consume quota.
+
+limitations:
+  - >-
+    No infrastructure allocation for MTA scaling, API rate guarantees or
+    throughput validation — the sandbox is explicitly not for load testing.
+  - >-
+    Recommendation engines, Photon V2 recipes and predictive/ML features degrade
+    or do not function, because a sandbox lacks the engagement history, purchase
+    data and catalog interactions those models need. Blueshift's own advice is
+    to fall back to random catalog selection or manually configured product sets
+    when testing recommendations.
+
+test_fixtures:
+  test_cards: null
+  test_accounts: null
+  trigger_fixtures: null
+  time_simulation: null
+  note: >-
+    No fixture or trigger tooling of any kind, and no test clock. Blueshift
+    publishes no canned test values — nothing here was invented.
+
+console:
+  name: Try It
+  provider: ReadMe
+  url: https://developer.blueshift.com/reference/welcome
+  description: >-
+    Every reference page carries an in-browser Try It console. It requires a
+    real API key and a region selection, and it calls the live API — it is a
+    request builder, not a mock server.
+  requires_credentials: true
+  mock_mode: false
+  docs: https://developer.blueshift.com/reference/test-apis
+
+postman:
+  collection: postman/blueshift-postman-collection.json
+  workspace_url: https://god.gw.postman.com/run-collection/32013241-d42cfaeb-ad50-4df9-bee7-935476a05ca4
+  requests: 83
+  folders: 22
+  variables:
+    - base_url — https://api.getblueshift.com/api
+    - User API Key
+    - Event API Key
+  auth: basic (API key as username)
+  note: >-
+    First-party and current — the collection was last revised 2026-07-30. It
+    also calls the live API; there is no mock server.
+
+demo_instances:
+  url: https://help.blueshift.com/hc/en-us/articles/4528724130195-Blueshift-demo-instances
+  note: Blueshift also documents demo instances, separately from sandbox accounts.
+
+gaps:
+  - >-
+    The sandbox cannot be self-provisioned, so it does not solve the evaluation
+    problem — a developer still cannot exercise the API without a sales
+    conversation.
+  - >-
+    No test-key prefix means there is no credential-level guard against pointing
+    test code at production. Every other safety property here depends on the
+    account, not the key.
+  - No fixtures, no triggers, no test clock, and no mock server.

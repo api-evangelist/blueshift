@@ -1,0 +1,160 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  Registry metadata endpoints (registry.npmjs.org, trunk.cocoapods.org,
+  central.sonatype.com, pub.dev), the GitHub releases API for
+  github.com/blueshift-labs, and Blueshift's own SDK setup documentation on
+  developer.blueshift.com.
+description: >-
+  Blueshift's first-party client libraries are mobile SDKs, not server SDKs.
+  There is no official Python, Ruby, Java, Go, PHP or .NET client for the REST
+  API — server-side integration is expected to be raw HTTP, and Blueshift points
+  developers at its Postman collection instead. The mobile SDKs are actively
+  maintained: iOS, Android and the Android Compose artifact all shipped inside
+  the last month. The two JavaScript packages are the weak spot — blueshift-js
+  has not shipped since June 2023, and the React Native plugin trails the native
+  SDKs it wraps by ten months.
+
+official_count: 6
+package_count: 7
+
+packages:
+  - name: BlueShift-iOS-SDK
+    registry: cocoapods
+    official: true
+    language: Objective-C / Swift
+    platform: iOS
+    version: 2.8.0
+    published: '2026-07-28'
+    releases_published: 101
+    url: https://cocoapods.org/pods/BlueShift-iOS-SDK
+    source: https://github.com/blueshift-labs/Blueshift-iOS-SDK
+    docs: https://developer.blueshift.com/docs/about-the-blueshift-ios-sdk
+    note: >-
+      Also distributed via Swift Package Manager from the same repository.
+      Covers push, rich push, in-app messages, mobile inbox, deep/universal
+      links, Live Activities and event tracking.
+
+  - name: com.blueshift:android-sdk-x
+    registry: maven
+    official: true
+    language: Java / Kotlin
+    platform: Android
+    version: 4.2.4
+    published: '2026-07-29'
+    url: https://central.sonatype.com/artifact/com.blueshift/android-sdk-x
+    source: https://github.com/blueshift-labs/Blueshift-Android-SDK
+    docs: https://developer.blueshift.com/docs/setup-blueshifts-android-sdk
+    note: >-
+      The current AndroidX artifact. Minimum Android SDK 21. Installed via
+      mavenCentral().
+
+  - name: com.blueshift:android-sdk-compose
+    registry: maven
+    official: true
+    language: Kotlin
+    platform: Android (Jetpack Compose)
+    version: 4.2.4
+    published: '2026-07-29'
+    url: https://central.sonatype.com/artifact/com.blueshift/android-sdk-compose
+    source: https://github.com/blueshift-labs/Blueshift-Android-SDK
+    note: Compose companion artifact, versioned in lockstep with android-sdk-x.
+
+  - name: com.blueshift:android-sdk
+    registry: maven
+    official: true
+    language: Java
+    platform: Android (legacy)
+    version: 3.3.1
+    published: '2023-01-19'
+    url: https://central.sonatype.com/artifact/com.blueshift/android-sdk
+    status: superseded
+    note: >-
+      The pre-AndroidX artifact, superseded by android-sdk-x. Last published
+      January 2023 and left in place for existing integrations only.
+
+  - name: blueshift_plugin
+    registry: pub.dev
+    official: true
+    language: Dart
+    platform: Flutter (iOS + Android)
+    version: 1.2.1
+    published: '2026-02-24'
+    url: https://pub.dev/packages/blueshift_plugin
+    source: https://github.com/blueshift-labs/Blueshift-Flutter-Plugin
+    docs: https://developer.blueshift.com/docs/integrate-your-flutter-android-app
+
+  - name: blueshift-react-native
+    registry: npm
+    official: true
+    language: JavaScript / Objective-C / Java
+    platform: React Native (iOS + Android)
+    version: 1.3.0
+    published: '2025-10-08'
+    url: https://www.npmjs.com/package/blueshift-react-native
+    source: https://github.com/blueshift-labs/blueshift-react-native
+    docs: https://developer.blueshift.com/docs/install-and-get-started-with-blueshifts-react-native-plugin
+    note: >-
+      Wraps the native iOS and Android SDKs. Ten months behind the native SDKs
+      it wraps (iOS 2.8.0 and Android 4.2.4 both shipped July 2026), so a React
+      Native integration cannot reach the newest native capabilities.
+
+  - name: blueshift-js
+    registry: npm
+    official: true
+    language: JavaScript
+    platform: Web / Node
+    version: 0.0.6
+    published: '2023-06-14'
+    url: https://www.npmjs.com/package/blueshift-js
+    source: https://github.com/blueshift-labs/blueshift-js
+    status: stale
+    note: >-
+      Event-tracking library for the web. Still on a 0.0.x version and last
+      published June 2023 — more than three years before the API surface it
+      talks to was last revised. Treat as unmaintained; the documented web
+      integration path is the on-site JavaScript snippet, not this package.
+
+not_found:
+  - registry: npm
+    query: server-side Blueshift REST client (JavaScript/TypeScript)
+    result: none published by Blueshift
+  - registry: pypi
+    query: Blueshift REST client (Python)
+    result: >-
+      No first-party package. Packages named "blueshift" on PyPI belong to
+      unrelated projects and were not recorded.
+  - registry: rubygems
+    query: Blueshift REST client (Ruby)
+    result: none published by Blueshift
+  - registry: nuget
+    query: Blueshift REST client (.NET)
+    result: none published by Blueshift
+  - registry: pkg.go.dev
+    query: Blueshift REST client (Go)
+    result: >-
+      github.com/blueshift-labs publishes Go repositories (pulsarlib-go,
+      traefik-block-regex-urls) but they are infrastructure, not API clients.
+
+cdn_distribution:
+  - name: Blueshift on-site JavaScript tag
+    registry: cdn
+    official: true
+    version: null
+    published: null
+    note: >-
+      The web/on-site integration is a script tag Blueshift generates per
+      account rather than a versioned package. The distribution is unpinned and
+      floats to latest, so a consumer cannot tell which build they are running —
+      recorded as a null version deliberately, not as an unchecked field.
+
+deprecated:
+  - name: Blueshift-Cordova-Plugin
+    official: true
+    registry: null
+    version: v0.2.0
+    published: '2024-10-17'
+    source: https://github.com/blueshift-labs/Blueshift-Cordova-Plugin
+    note: >-
+      Never published to npm; installable only from the git repository. Last
+      released October 2024 with no activity since.

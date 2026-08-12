@@ -1,0 +1,340 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements to the Blueshift API OpenAPI
+  version: 1.0.0
+extends: ../openapi/blueshift-openapi.yml
+x-generated: '2026-08-12'
+x-method: derived
+x-source: openapi/blueshift-openapi.yml — harvested verbatim from the per-operation OpenAPI documents
+  Blueshift embeds in each developer.blueshift.com/reference/*.md page
+x-rationale: Blueshift publishes a genuinely good spec — every one of the 81 operations carries a summary,
+  a description, tags, 4xx/5xx responses and examples — but NOT ONE operation declares an operationId.
+  That single omission is what stops the spec from being usable as a code-generation or agent-tool source,
+  because there is no stable name to bind a generated method or an MCP tool to. This overlay adds a deterministic
+  operationId to each operation, derived from its method and path, and changes nothing else. The original
+  spec is never mutated. This is the one concrete fix worth sending back to Blueshift.
+actions:
+- target: $.paths['/api/v1/account_adapters'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/account_adapters.
+  update:
+    operationId: getV1AccountAdapters
+- target: $.paths['/api/v1/bulkevents'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/bulkevents.
+  update:
+    operationId: postV1Bulkevents
+- target: $.paths['/api/v1/campaigns.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/campaigns.json.
+  update:
+    operationId: getV1CampaignsJson
+- target: $.paths['/api/v1/campaigns/bulk_archive'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/campaigns/bulk_archive.
+  update:
+    operationId: putV1CampaignsBulkArchive
+- target: $.paths['/api/v1/campaigns/bulk_execute'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/campaigns/bulk_execute.
+  update:
+    operationId: postV1CampaignsBulkExecute
+- target: $.paths['/api/v1/campaigns/bulk_unarchive'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/campaigns/bulk_unarchive.
+  update:
+    operationId: putV1CampaignsBulkUnarchive
+- target: $.paths['/api/v1/campaigns/execute'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/campaigns/execute.
+  update:
+    operationId: postV1CampaignsExecute
+- target: $.paths['/api/v1/campaigns/{campaign_type}'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/campaigns/{campaign_type}.
+  update:
+    operationId: postV1CampaignsByCampaignType
+- target: $.paths['/api/v1/campaigns/{campaign_uuid}.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/campaigns/{campaign_uuid}.json.
+  update:
+    operationId: getV1CampaignsByCampaignUuidJson
+- target: $.paths['/api/v1/campaigns/{campaign_uuid}/archive'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/campaigns/{campaign_uuid}/archive.
+  update:
+    operationId: putV1CampaignsByCampaignUuidArchive
+- target: $.paths['/api/v1/campaigns/{campaign_uuid}/detail.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/campaigns/{campaign_uuid}/detail.json.
+  update:
+    operationId: getV1CampaignsByCampaignUuidDetailJson
+- target: $.paths['/api/v1/campaigns/{campaign_uuid}/launch'].patch
+  description: Add the unique operationId Blueshift's published spec omits for PATCH /api/v1/campaigns/{campaign_uuid}/launch.
+  update:
+    operationId: patchV1CampaignsByCampaignUuidLaunch
+- target: $.paths['/api/v1/campaigns/{campaign_uuid}/pause'].patch
+  description: Add the unique operationId Blueshift's published spec omits for PATCH /api/v1/campaigns/{campaign_uuid}/pause.
+  update:
+    operationId: patchV1CampaignsByCampaignUuidPause
+- target: $.paths['/api/v1/campaigns/{campaign_uuid}/unarchive'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/campaigns/{campaign_uuid}/unarchive.
+  update:
+    operationId: putV1CampaignsByCampaignUuidUnarchive
+- target: $.paths['/api/v1/campaigns/{campaign_uuid}/update_schedule'].patch
+  description: Add the unique operationId Blueshift's published spec omits for PATCH /api/v1/campaigns/{campaign_uuid}/update_schedule.
+  update:
+    operationId: patchV1CampaignsByCampaignUuidUpdateSchedule
+- target: $.paths['/api/v1/catalogs'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/catalogs.
+  update:
+    operationId: getV1Catalogs
+- target: $.paths['/api/v1/catalogs'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/catalogs.
+  update:
+    operationId: postV1Catalogs
+- target: $.paths['/api/v1/catalogs/{catalog_uuid}.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/catalogs/{catalog_uuid}.json.
+  update:
+    operationId: getV1CatalogsByCatalogUuidJson
+- target: $.paths['/api/v1/catalogs/{catalog_uuid}.json'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/catalogs/{catalog_uuid}.json.
+  update:
+    operationId: putV1CatalogsByCatalogUuidJson
+- target: $.paths['/api/v1/custom_user_lists/add_user_to_list/{list_id}'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/custom_user_lists/add_user_to_list/{list_id}.
+  update:
+    operationId: putV1CustomUserListsAddUserToListByListId
+- target: $.paths['/api/v1/custom_user_lists/bulk_add_users_to_list/{list_id}'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/custom_user_lists/bulk_add_users_to_list/{list_id}.
+  update:
+    operationId: putV1CustomUserListsBulkAddUsersToListByListId
+- target: $.paths['/api/v1/custom_user_lists/bulk_remove_users_from_list/{list_id}'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/custom_user_lists/bulk_remove_users_from_list/{list_id}.
+  update:
+    operationId: putV1CustomUserListsBulkRemoveUsersFromListByListId
+- target: $.paths['/api/v1/custom_user_lists/create'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/custom_user_lists/create.
+  update:
+    operationId: postV1CustomUserListsCreate
+- target: $.paths['/api/v1/custom_user_lists/id/{custom_user_list_id}'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/custom_user_lists/id/{custom_user_list_id}.
+  update:
+    operationId: getV1CustomUserListsIdByCustomUserListId
+- target: $.paths['/api/v1/custom_user_lists/overwrite_list/{list_id}'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/custom_user_lists/overwrite_list/{list_id}.
+  update:
+    operationId: putV1CustomUserListsOverwriteListByListId
+- target: $.paths['/api/v1/custom_user_lists/remove_user_from_list/{list_id}'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/custom_user_lists/remove_user_from_list/{list_id}.
+  update:
+    operationId: putV1CustomUserListsRemoveUserFromListByListId
+- target: $.paths['/api/v1/custom_user_lists/seed_lists'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/custom_user_lists/seed_lists.
+  update:
+    operationId: getV1CustomUserListsSeedLists
+- target: $.paths['/api/v1/customer_attributes/trigger_import'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/customer_attributes/trigger_import.
+  update:
+    operationId: postV1CustomerAttributesTriggerImport
+- target: $.paths['/api/v1/customer_group/{group_id}'].delete
+  description: Add the unique operationId Blueshift's published spec omits for DELETE /api/v1/customer_group/{group_id}.
+  update:
+    operationId: deleteV1CustomerGroupByGroupId
+- target: $.paths['/api/v1/customer_group/{group_id}/user/{user_uuid}'].delete
+  description: Add the unique operationId Blueshift's published spec omits for DELETE /api/v1/customer_group/{group_id}/user/{user_uuid}.
+  update:
+    operationId: deleteV1CustomerGroupByGroupIdUserByUserUuid
+- target: $.paths['/api/v1/customer_search/show_events'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/customer_search/show_events.
+  update:
+    operationId: getV1CustomerSearchShowEvents
+- target: $.paths['/api/v1/customers'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/customers.
+  update:
+    operationId: getV1Customers
+- target: $.paths['/api/v1/customers'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/customers.
+  update:
+    operationId: postV1Customers
+- target: $.paths['/api/v1/customers/bulk'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/customers/bulk.
+  update:
+    operationId: postV1CustomersBulk
+- target: $.paths['/api/v1/customers/delete'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/customers/delete.
+  update:
+    operationId: postV1CustomersDelete
+- target: $.paths['/api/v1/customers/forget'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/customers/forget.
+  update:
+    operationId: postV1CustomersForget
+- target: $.paths['/api/v1/customers/merge'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/customers/merge.
+  update:
+    operationId: postV1CustomersMerge
+- target: $.paths['/api/v1/customers/unforget'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/customers/unforget.
+  update:
+    operationId: postV1CustomersUnforget
+- target: $.paths['/api/v1/customers/{uuid}'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/customers/{uuid}.
+  update:
+    operationId: getV1CustomersByUuid
+- target: $.paths['/api/v1/data_connectors/{data_connector_uuid}/debug'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/data_connectors/{data_connector_uuid}/debug.
+  update:
+    operationId: getV1DataConnectorsByDataConnectorUuidDebug
+- target: $.paths['/api/v1/email_templates.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/email_templates.json.
+  update:
+    operationId: getV1EmailTemplatesJson
+- target: $.paths['/api/v1/email_templates.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/email_templates.json.
+  update:
+    operationId: postV1EmailTemplatesJson
+- target: $.paths['/api/v1/email_templates/test_send.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/email_templates/test_send.json.
+  update:
+    operationId: postV1EmailTemplatesTestSendJson
+- target: $.paths['/api/v1/email_templates/{TEMPLATE_UUID}.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/email_templates/{TEMPLATE_UUID}.json.
+  update:
+    operationId: getV1EmailTemplatesByTemplateUuidJson
+- target: $.paths['/api/v1/email_templates/{TEMPLATE_UUID}.json'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/email_templates/{TEMPLATE_UUID}.json.
+  update:
+    operationId: putV1EmailTemplatesByTemplateUuidJson
+- target: $.paths['/api/v1/emails/bulk_validate'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/emails/bulk_validate.
+  update:
+    operationId: postV1EmailsBulkValidate
+- target: $.paths['/api/v1/emails/validate'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/emails/validate.
+  update:
+    operationId: getV1EmailsValidate
+- target: $.paths['/api/v1/event'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/event.
+  update:
+    operationId: postV1Event
+- target: $.paths['/api/v1/event/debug'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/event/debug.
+  update:
+    operationId: getV1EventDebug
+- target: $.paths['/api/v1/event/history'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/event/history.
+  update:
+    operationId: getV1EventHistory
+- target: $.paths['/api/v1/event/summary.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/event/summary.json.
+  update:
+    operationId: postV1EventSummaryJson
+- target: $.paths['/api/v1/external_fetches.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/external_fetches.json.
+  update:
+    operationId: getV1ExternalFetchesJson
+- target: $.paths['/api/v1/external_fetches.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/external_fetches.json.
+  update:
+    operationId: postV1ExternalFetchesJson
+- target: $.paths['/api/v1/external_fetches/{template_uuid}'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/external_fetches/{template_uuid}.
+  update:
+    operationId: putV1ExternalFetchesByTemplateUuid
+- target: $.paths['/api/v1/interests/alert'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/interests/alert.
+  update:
+    operationId: postV1InterestsAlert
+- target: $.paths['/api/v1/interests/user_subscriptions'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/interests/user_subscriptions.
+  update:
+    operationId: getV1InterestsUserSubscriptions
+- target: $.paths['/api/v1/live_activity/start'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/live_activity/start.
+  update:
+    operationId: postV1LiveActivityStart
+- target: $.paths['/api/v1/live_activity/update'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/live_activity/update.
+  update:
+    operationId: postV1LiveActivityUpdate
+- target: $.paths['/api/v1/onsite_slots.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/onsite_slots.json.
+  update:
+    operationId: getV1OnsiteSlotsJson
+- target: $.paths['/api/v1/promotions/{promotion_uuid}/add_promocodes'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/promotions/{promotion_uuid}/add_promocodes.
+  update:
+    operationId: putV1PromotionsByPromotionUuidAddPromocodes
+- target: $.paths['/api/v1/promotions/{promotion_uuid}/overwrite'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/promotions/{promotion_uuid}/overwrite.
+  update:
+    operationId: putV1PromotionsByPromotionUuidOverwrite
+- target: $.paths['/api/v1/push_templates.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/push_templates.json.
+  update:
+    operationId: getV1PushTemplatesJson
+- target: $.paths['/api/v1/push_templates.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/push_templates.json.
+  update:
+    operationId: postV1PushTemplatesJson
+- target: $.paths['/api/v1/push_templates/test_push.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/push_templates/test_push.json.
+  update:
+    operationId: postV1PushTemplatesTestPushJson
+- target: $.paths['/api/v1/push_templates/{template_uuid}'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/push_templates/{template_uuid}.
+  update:
+    operationId: putV1PushTemplatesByTemplateUuid
+- target: $.paths['/api/v1/segments/list'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/segments/list.
+  update:
+    operationId: getV1SegmentsList
+- target: $.paths['/api/v1/segments/{segment_uuid}/matching_users.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/segments/{segment_uuid}/matching_users.json.
+  update:
+    operationId: getV1SegmentsBySegmentUuidMatchingUsersJson
+- target: $.paths['/api/v1/shared_assets.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/shared_assets.json.
+  update:
+    operationId: getV1SharedAssetsJson
+- target: $.paths['/api/v1/shared_assets.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/shared_assets.json.
+  update:
+    operationId: postV1SharedAssetsJson
+- target: $.paths['/api/v1/shared_assets/{uuid}.json'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/shared_assets/{uuid}.json.
+  update:
+    operationId: putV1SharedAssetsByUuidJson
+- target: $.paths['/api/v1/sms_templates.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/sms_templates.json.
+  update:
+    operationId: getV1SmsTemplatesJson
+- target: $.paths['/api/v1/sms_templates.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/sms_templates.json.
+  update:
+    operationId: postV1SmsTemplatesJson
+- target: $.paths['/api/v1/sms_templates/test_send.json'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /api/v1/sms_templates/test_send.json.
+  update:
+    operationId: postV1SmsTemplatesTestSendJson
+- target: $.paths['/api/v1/sms_templates/{template_uuid}'].put
+  description: Add the unique operationId Blueshift's published spec omits for PUT /api/v1/sms_templates/{template_uuid}.
+  update:
+    operationId: putV1SmsTemplatesByTemplateUuid
+- target: $.paths['/api/v1/subscription_groups'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/subscription_groups.
+  update:
+    operationId: getV1SubscriptionGroups
+- target: $.paths['/api/v1/subscription_groups/index_lite'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/subscription_groups/index_lite.
+  update:
+    operationId: getV1SubscriptionGroupsIndexLite
+- target: $.paths['/api/v1/subscription_groups/{uuid}'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/subscription_groups/{uuid}.
+  update:
+    operationId: getV1SubscriptionGroupsByUuid
+- target: $.paths['/api/v1/tag_contexts/list'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v1/tag_contexts/list.
+  update:
+    operationId: getV1TagContextsList
+- target: $.paths['/api/v2/campaigns.json'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v2/campaigns.json.
+  update:
+    operationId: getV2CampaignsJson
+- target: $.paths['/api/v2/customer_campaign_activity'].get
+  description: Add the unique operationId Blueshift's published spec omits for GET /api/v2/customer_campaign_activity.
+  update:
+    operationId: getV2CustomerCampaignActivity
+- target: $.paths['/live'].post
+  description: Add the unique operationId Blueshift's published spec omits for POST /live.
+  update:
+    operationId: postLive

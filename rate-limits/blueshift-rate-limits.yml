@@ -1,0 +1,159 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://developer.blueshift.com/reference/post_api-v1-bulkevents,
+  https://developer.blueshift.com/reference/post_api-v1-customers-bulk,
+  https://developer.blueshift.com/reference/put_api-v1-catalogs-catalog-uuid-json,
+  https://developer.blueshift.com/reference/get_api-v1-list-shared-assets,
+  https://developer.blueshift.com/reference/api-errors, and
+  https://help.blueshift.com/hc/en-us/articles/360042336054-Rate-limiting —
+  reconciled against a live header probe of https://api.getblueshift.com on
+  2026-08-12.
+description: >-
+  Blueshift's API rate limiting is advisory prose, not a runtime contract. There
+  are published throughput recommendations on the bulk endpoints and hard batch
+  caps enforced with 413, but the API returns NO rate-limit headers of any kind —
+  no X-RateLimit-*, no RateLimit-*, no Retry-After. A client discovers it has
+  exceeded the limit only by receiving a 429 with a one-line message, and then
+  has to guess the backoff. Note also that the article most people find when
+  searching "Blueshift rate limiting" is about MESSAGE-SENDING throughput
+  (campaign, channel and user-level message caps), which is a different concept
+  from API request limits; both are recorded here and kept separate.
+
+limit_count: 6
+
+response_headers:
+  x_ratelimit: none
+  ratelimit: none
+  retry_after: none
+  observed: >-
+    Live probe of https://api.getblueshift.com/api/v1/campaigns.json on
+    2026-08-12 returned HTTP 401 with headers date, content-type, cache-control,
+    x-request-id, x-runtime, x-content-type-options,
+    x-permitted-cross-domain-policies, referrer-policy,
+    content-security-policy-report-only and strict-transport-security. No
+    rate-limit header of any form was present.
+  method: probed
+
+status_on_exhaustion: 429
+body_on_exhaustion: '{"message": "Rate limit exceeded"}'
+
+limits:
+  - name: Bulk events throughput
+    scope: per-account
+    operation: POST /api/v1/bulkevents
+    window: per second
+    limit: 5 bulk calls per second (~150 events per second)
+    burst: not published
+    enforcement: advisory ("we recommend")
+    docs: https://developer.blueshift.com/reference/post_api-v1-bulkevents
+
+  - name: Bulk customers throughput
+    scope: per-account
+    operation: POST /api/v1/customers/bulk
+    window: per second
+    limit: 5 bulk calls per second (~250 users per second)
+    burst: not published
+    enforcement: advisory ("we recommend")
+    docs: https://developer.blueshift.com/reference/post_api-v1-customers-bulk
+
+  - name: Bulk customers payload cap
+    scope: per-request
+    operation: POST /api/v1/customers/bulk
+    window: per request
+    limit: 50 customers
+    enforcement: hard — HTTP 413
+    docs: https://developer.blueshift.com/reference/post_api-v1-customers-bulk
+
+  - name: Catalog items payload cap
+    scope: per-request
+    operation: PUT /api/v1/catalogs/{catalog_uuid}.json
+    window: per request
+    limit: 100 items
+    enforcement: hard — HTTP 413
+    docs: https://developer.blueshift.com/reference/put_api-v1-catalogs-catalog-uuid-json
+
+  - name: Custom user list bulk cap
+    scope: per-request
+    operation: >-
+      PUT /api/v1/custom_user_lists/bulk_add_users_to_list/{list_id} and
+      PUT /api/v1/custom_user_lists/bulk_remove_users_from_list/{list_id}
+    window: per request
+    limit: 25 users, or 500 when async=true
+    enforcement: hard
+
+  - name: Bulk email validation cap
+    scope: per-request
+    operation: POST /api/v1/emails/bulk_validate
+    window: per request
+    limit: 30 email addresses
+    enforcement: hard
+    note: Feature requires custom setup — contact Blueshift Support or a CSM to enable.
+
+undocumented:
+  - >-
+    No global per-key or per-account request rate is published for the
+    non-bulk endpoints. 429 is declared on 79 of the 81 operations, so a limit
+    exists on effectively the whole API, but its value is not stated anywhere.
+  - >-
+    Blueshift's 429 guidance directs high-throughput users to
+    support@blueshift.com "for recommended throughput", which makes the actual
+    ceiling a per-customer negotiation rather than a published figure.
+
+retry_guidance:
+  strategy: exponential backoff
+  schedule: 1s, 2s, 4s, 8s ...
+  max_attempts: ~5
+  jitter: recommended
+  applies_to: [429, 500, 502, 503, 504]
+  docs: https://developer.blueshift.com/reference/api-errors
+  caution: >-
+    Only the two campaign-execution endpoints accept an idempotency key
+    (transaction_uuid in the body). Retrying any other write is at-least-once.
+
+messaging_rate_limits:
+  note: >-
+    A DIFFERENT concept from API rate limits — these cap how fast Blueshift
+    sends messages to end customers, and are configured in the Blueshift app,
+    not returned by the API.
+  docs: https://help.blueshift.com/hc/en-us/articles/360042336054-Rate-limiting
+  types:
+    - level: user
+      description: >-
+        Total messages a single user can receive on one channel or across all
+        channels. Set in Account Settings > Messaging Limits.
+    - level: campaign
+      description: >-
+        Messaging rate per one-time or recurring campaign, with a segment-size
+        threshold below which the limit does not apply. Applied independently
+        per campaign, so concurrent campaigns multiply the effective rate.
+    - level: channel
+      description: >-
+        Per-channel cap (email, push, SMS) across one-time, recurring and
+        segment-triggered campaigns — but NOT event-triggered campaigns.
+        Enabled by contacting support.
+    - level: external fetch
+      description: >-
+        Cap on external fetches across all campaigns, including
+        event-triggered. Takes precedence over campaign-level limits.
+    - level: cloud app
+      description: >-
+        Per-connector cap across all campaigns using the same Cloud App
+        integration, to avoid overloading third-party systems.
+    - level: SMS carrier
+      description: Carrier-imposed throughput on SMS delivery.
+  precedence: >-
+    Campaign-level limits override channel-level limits, but the external-fetch
+    limit overrides the campaign-level limit. Blueshift's worked example: an
+    external-fetch limit of 5,000/min with a campaign limit of 10,000/min yields
+    an effective 5,000/min.
+
+gaps:
+  - >-
+    No rate-limit response headers at all. An agent or client has no runtime
+    signal — it cannot see its remaining budget, its reset window, or how long
+    to wait. This is the single largest agent-readiness gap on this API.
+  - No Retry-After on 429, so backoff is entirely client-guessed.
+  - >-
+    No published numeric limit for the non-bulk endpoints, despite 429 being
+    declared on 79 of 81 operations.

@@ -1,0 +1,122 @@
+# Blueshift Documentation
+
+> Blueshift is the only Customer Engagement Platform (CEP) that combines customer data, AI and multi-channel activation in a single easy-to-use platform.
+
+## Guides
+- [Data types and attributes](https://developer.blueshift.com/docs/data-types-and-attributes.md): This article provides information on the data types and attributes that you can specify when you make an API call to our platform.
+- [Import data into Blueshift](https://developer.blueshift.com/docs/product-catalog-feeds.md): This article provides information on how you can import customer, product and catalog information, and event data into Blueshift.
+- [Mobile integration without using Blueshift's SDKs](https://developer.blueshift.com/docs/event-attributes-for-integration-without-sdk.md): This article provides information about the event attributes that you must send to Blueshift in the event from your server/non-SDK mobile apps to fully leverage the messaging capabilities offered by Blueshift.
+- [Set up Blueshift Android SDK](https://developer.blueshift.com/docs/setup-blueshifts-android-sdk.md): Step-by-step instructions to install the SDK and configure it for your app.
+- [Register your Android app with Blueshift](https://developer.blueshift.com/docs/register-your-android-app-with-blueshift.md): Steps to retrieve your Firebase credentials and configure a push channel in the Blueshift dashboard.
+- [Initialize the SDK](https://developer.blueshift.com/docs/get-started-with-the-android-sdk.md): A step-by-step guide to initializing the SDK and setting up basic configurations in your Android app.
+- [Verify the SDK Installation](https://developer.blueshift.com/docs/verify-the-sdk-installation-1.md): Steps to confirm that the Blueshift SDK is correctly installed and initialized in your app.
+- [Track events and manage user data](https://developer.blueshift.com/docs/events-tracking-android-sdk.md): How to identify users and track events such as purchases, screen views, and custom actions.
+- [Optional SDK configurations](https://developer.blueshift.com/docs/optional-sdk-configurations-1.md): Customize your SDK setup.
+- [Push notifications (Android)](https://developer.blueshift.com/docs/push-notifications-android-sdk.md): Learn how to set up and customize push notifications in your app.
+- [In-app messages (Android)](https://developer.blueshift.com/docs/in-app-messaging-android-sdk.md): Learn how to configure, customize, and test in-app messages in your Android app using the Blueshift SDK.
+- [Mobile inbox (Android)](https://developer.blueshift.com/docs/set-up-android-mobile-inbox.md): Learn how to set up, customize, and display in-app messages in a persistent mobile inbox.
+- [FAQ & troubleshooting for Android SDK](https://developer.blueshift.com/docs/faq-troubleshooting-for-android-sdk-1.md): FAQ and troubleshooting guide for integration, messaging, event tracking, and debugging.
+- [About Blueshift's iOS SDK](https://developer.blueshift.com/docs/about-the-blueshift-ios-sdk.md): This article provides information about Blueshift's iOS SDK and the features it provides.
+- [Generate a .pem file](https://developer.blueshift.com/docs/generate-a-pem-file.md): This article provides steps on how to generate a .pem file that we need to send notifications to your app's users. The .pem file is a prerequisite if you want to use Blueshift to send notifications to your users.
+- [Generate a .p8 authentication key](https://developer.blueshift.com/docs/generate-a-p8-authentication-key.md): Steps to generate a .p8 authentication key for token-based APNs push notification authentication.
+- [Get started with the SDK](https://developer.blueshift.com/docs/include-configure-initialize-the-ios-sdk-in-the-app.md): This article provides steps to include the SDK in your app's code so that the app can initialize the SDK and start using the SDK's features.
+- [Track events on your app](https://developer.blueshift.com/docs/track-events-on-your-app-with-blueshifts-ios-sdk.md): This article provides steps on how to use the Blueshift's SDK to track events on your app.
+- [Set up Live Activities](https://developer.blueshift.com/docs/set-up-live-activities-on-ios.md): Send real-time updates to your app's Lock Screen and Dynamic Island.
+- [Integrate Blueshift's deep links](https://developer.blueshift.com/docs/integrate-blueshifts-universal-links-ios.md): This article provides steps on how to use Blueshift's deep links (commonly known as universal links) to launch pages in your iOS app.
+- [Integrate your React Native Android app](https://developer.blueshift.com/docs/integrate-your-android-app.md): This article provides information on how to install and set up Blueshift's Android SDK and integrate your React Native app with our platform.
+- [Integrate your React Native iOS app](https://developer.blueshift.com/docs/integrate-your-ios-app.md): This article provides information on how to install and set up set up Blueshift's iOS SDK and integrate your React Native app with our platform.
+- [Integrate your Flutter Android app](https://developer.blueshift.com/docs/integrate-your-flutter-android-app.md): This article provides information on how to integrate your Flutter app with our platform.
+- [Integrate mParticle with Blueshift (iOS)](https://developer.blueshift.com/docs/integrate-mparticle-with-blueshift-ios.md): This article provides information on how to integrate our SDK with mParticle's iOS SDK.
+
+## API Reference
+- [API overview](https://developer.blueshift.com/reference/welcome.md): Introduction to the Blueshift REST API and how to use its endpoints.
+- [Authorization](https://developer.blueshift.com/reference/authorization-1.md): How to authenticate requests to the Blueshift API.
+- [API status codes](https://developer.blueshift.com/reference/api-errors.md): HTTP status codes returned by the Blueshift API and how to handle them.
+- [Test APIs](https://developer.blueshift.com/reference/test-apis.md): Test Blueshift API endpoints using the Try It console or Postman.
+- [Create a campaign](https://developer.blueshift.com/reference/post_api-v1-create-a-campaign.md): Use this endpoint to create a campaign and specify its attributes.
+- [Update campaign schedule](https://developer.blueshift.com/reference/patch_api-v1-campaigns-campaign-uuid-update-schedule.md): Use this endpoint to update the schedule of an existing campaign.
+- [Launch a campaign](https://developer.blueshift.com/reference/patch_api-v1-campaigns-campaign-uuid-launch.md): Use this endpoint to immediately launch a campaign.   Campaigns that are archived or already completed cannot be launched. The API returns validation errors similar to those shown on the campaign UI.
+- [Pause a campaign](https://developer.blueshift.com/reference/patch_api-v1-campaigns-campaign-uuid-pause.md): Use this endpoint to pause a campaign that is currently running or scheduled. This action is not applicable to campaigns that are completed or archived.
+- [Trigger a campaign](https://developer.blueshift.com/reference/post_api-v1-campaigns-execute.md): Use this endpoint to trigger an event-triggered or API-triggered campaign for a specific user.
+- [Bulk trigger campaigns](https://developer.blueshift.com/reference/post_api-v1-campaigns-bulk-execute.md): Use this endpoint to trigger multiple campaigns.
+- [Performance summary](https://developer.blueshift.com/reference/get_api-v1-campaigns-json.md): Use this endpoint to export the performance data of all the campaigns for a given date range.
+- [Detailed report with stats](https://developer.blueshift.com/reference/get_api-v1-campaigns-campaign-uuid-detail-json.md): Use this endpoint to get a detailed report of a specific campaign.
+- [Detailed report without stats](https://developer.blueshift.com/reference/get_api-v1-campaigns-campaign-uuid-json.md): Use this endpoint to get a detailed report of a specific campaign that does not include campaign statistics.
+- [List campaigns](https://developer.blueshift.com/reference/get_api-v2-campaigns-json.md): Use this endpoint to get the list of campaigns.
+- [Archive a single campaign](https://developer.blueshift.com/reference/put_api-v1-campaigns-campaign-uuid-archive.md): Use this endpoint to archive a specific campaign by its UUID.
+- [Unarchive a single campaign](https://developer.blueshift.com/reference/put_api-v1-campaigns-campaign-uuid-unarchive.md): Use this endpoint to unarchive a specific campaign by its UUID.
+- [Bulk archive campaigns](https://developer.blueshift.com/reference/put_api-v1-campaigns-bulk-archive.md): Use this endpoint to archive multiple campaigns by providing an array of UUIDs.
+- [Bulk unarchive campaigns](https://developer.blueshift.com/reference/put_api-v1-campaigns-bulk-unarchive.md): Use this endpoint to unarchive multiple campaigns by providing an array of UUIDs.
+- [Webhook for campaign execution status](https://developer.blueshift.com/reference/webhook-for-campaign-execution-status.md): Use this feature to track the execution status of an event-triggered campaign.
+- [Send an event](https://developer.blueshift.com/reference/post_api-v1-event.md): Use this endpoint to send an event from your server or use javascript events to call the API.
+- [Send bulk events](https://developer.blueshift.com/reference/post_api-v1-bulkevents.md): Use this endpoint to send multiple events from your server or use javascript events that call the API.
+- [Most recent event](https://developer.blueshift.com/reference/get_api-v1-event-debug.md): Use this endpoint to fetch the most recent event. It returns the latest events our server has received for each event type.
+- [Summary of events](https://developer.blueshift.com/reference/post_api-v1-event-summary-json.md): Use this endpoint to get a summary of counted events. By default, this endpoint returns data for the last 7 days.
+- [Debug event exports](https://developer.blueshift.com/reference/get_api-v1-data-connectors-data-connector-uuid-debug.md): Use this endpoint to download the first 10 success and errored events in last 5 minutes.
+- [Get event history](https://developer.blueshift.com/reference/get_api-v1-event-history.md): Retrieves up to 50 most recent successful events for the given event name, starting with the latest.
+- [Slot](https://developer.blueshift.com/reference/live-content-slot.md): Use the live content slot to create a JSON response that you can integrate in your app or site.
+- [Live content](https://developer.blueshift.com/reference/post_live.md): Use this endpoint to insert content recommendations in your website and mobile apps.
+- [List live content slots](https://developer.blueshift.com/reference/get_api-v1-onsite-slots-json.md): Use this endpoint to get the list of live content slots.
+- [List email templates](https://developer.blueshift.com/reference/get_api-v1-email-templates-json.md): Use this endpoint to get the list of email templates.
+- [Create email template](https://developer.blueshift.com/reference/post_api-v1-email-templates-json.md): Use this endpoint to create an email template.
+- [Get template details](https://developer.blueshift.com/reference/get_api-v1-email-templates-template-uuid-json.md): Use this endpoint to get a JSON representation of your email template along with a list of campaigns using the template.
+- [Update email template](https://developer.blueshift.com/reference/put_api-v1-email-templates-template-uuid-json.md): Use this endpoint to update an email template.
+- [Send a test mail](https://developer.blueshift.com/reference/post_api-v1-email-templates-test-send-json.md): Use this endpoint to send a test mail to a specific email address.
+- [List push templates](https://developer.blueshift.com/reference/get_api-v1-push-templates-json.md): Use this endpoint to get the list of push templates.
+- [Create a push template](https://developer.blueshift.com/reference/post_api-v1-push-templates-json.md): Use this endpoint to create a push template.
+- [Push a test message](https://developer.blueshift.com/reference/post_api-v1-push-templates-test-push-json.md): Use this endpoint to push a test message to users.
+- [Update a push template](https://developer.blueshift.com/reference/put_api-v1-push-templates-template-uuid.md): Use this endpoint to update a push template.
+- [List SMS templates](https://developer.blueshift.com/reference/get_api-v1-sms-templates-json.md): Use this endpoint to list all SMS templates. The SMS template has the content that the Blueshift platform uses to create and send text messages to your customers.
+- [Create an SMS template](https://developer.blueshift.com/reference/post_api-v1-sms-templates-json.md): Use this endpoint to create an SMS template.
+- [Update an SMS template](https://developer.blueshift.com/reference/put_api-v1-sms-templates-template-uuid.md): Use this endpoint to update an existing SMS template.
+- [Send a test SMS](https://developer.blueshift.com/reference/post_api-v1-sms-templates-test-send-json.md): Use this endpoint to send a test message. You can use this endpoint to test an SMS template that you create in Blueshift.
+- [List shared assets](https://developer.blueshift.com/reference/get_api-v1-list-shared-assets.md): Retrieve a list of shared assets: HTML, rich text, subject lines, and visual editor content.
+- [Create a shared asset](https://developer.blueshift.com/reference/post_api-v1-create-shared-assets.md): Use this endpoint to create a shared asset.
+- [Update a shared asset](https://developer.blueshift.com/reference/put_api-v1-update-shared-assets.md): Use this endpoint to update a shared asset.
+- [Create a catalog](https://developer.blueshift.com/reference/post_api-v1-catalogs-2.md): Create a catalog in Blueshift.
+- [Get list of catalogs](https://developer.blueshift.com/reference/get_api-v1-catalogs.md): Use this endpoint to get a list of all catalogs.
+- [Add items to a catalog](https://developer.blueshift.com/reference/put_api-v1-catalogs-catalog-uuid-json.md): Use this endpoint to add items to a catalog.
+- [Get catalog details](https://developer.blueshift.com/reference/get_api-v1-catalogs-catalog-uuid-json.md): Use this endpoint to get the details of one catalog at a time.
+- [Search customer](https://developer.blueshift.com/reference/get_api-v1-customers.md): Use this endpoint to search for a customer using the email ID that you added to our platform.
+- [Create or update customer](https://developer.blueshift.com/reference/post_api-v1-customers.md): Use this endpoint to create a new customer or update an existing customer.
+- [Get customer](https://developer.blueshift.com/reference/get_api-v1-customers-uuid.md): Use this endpoint to get the details of a customer using the customer's UUID.
+- [Bulk create/update customer](https://developer.blueshift.com/reference/post_api-v1-customers-bulk.md): Use this endpoint to create or update details of multiple customers.
+- [Stop tracking a customer](https://developer.blueshift.com/reference/post_api-v1-customers-forget.md): Use this endpoint to permanently delete all personal data associated with a customer and remove them from tracking.
+- [Start tracking a customer](https://developer.blueshift.com/reference/post_api-v1-customers-unforget.md): Use this endpoint to start tracking a customer. After tracking is enabled, the customer becomes eligible for future campaigns.
+- [Delete a customer](https://developer.blueshift.com/reference/post_api-v1-customers-delete.md): Use this endpoint to permanently delete all personal data of your customer.
+- [Merge customers](https://developer.blueshift.com/reference/post_api-v1-customers-merge.md): Use this endpoint to programmatically merge two duplicate customers, effectively unifying them as one.
+- [Trigger customer import](https://developer.blueshift.com/reference/post_api-v1-customer-attributes-trigger-import.md): Triggers a launched S3 customer attributes import task.
+- [Get a customer's campaign activity](https://developer.blueshift.com/reference/get_api-v2-customer-campaign-activity.md): Returns a customer's campaign activity (sends, opens, clicks, purchases, revenue) for up to 366 days.
+- [Get list of segments](https://developer.blueshift.com/reference/get_api-v1-segments-list.md): Use this endpoint to get the list of segments.
+- [Get segment membership counts](https://developer.blueshift.com/reference/get_api-v1-segments-segment-uuid-matching-users-json.md): Use this endpoint to get count of users in the segment.
+- [Create empty list](https://developer.blueshift.com/reference/post_api-v1-custom-user-lists-create.md): Use this endpoint to create an empty user list.
+- [Add user to list](https://developer.blueshift.com/reference/put_api-v1-custom-user-lists-add-user-to-list-list-id.md): Use this endpoint to add a user to a custom list.
+- [Remove user from list](https://developer.blueshift.com/reference/put_api-v1-custom-user-lists-remove-user-from-list-list-id.md): Use this endpoint to remove a user from a custom list.
+- [Overwrite users in a list](https://developer.blueshift.com/reference/put_api-v1-custom-user-lists-overwrite-list-list-id.md): Use this endpoint to overwrite all users in a custom list.
+- [Get seed lists from your account](https://developer.blueshift.com/reference/get_api-v1-custom-user-lists-seed-lists.md): Use this endpoint to get the seed lists from your account.
+- [Get customer list details](https://developer.blueshift.com/reference/get_api-v1-custom-user-lists-id.md): Use this endpoint to get details of the specified customer list from your account.
+- [Bulk add users to list](https://developer.blueshift.com/reference/put_api-v1-custom-user-lists-bulk-add-users-to-list-list-id.md): Bulk add users to a custom list — up to 25 per call, or 500 with `async=true`.
+- [Bulk remove users from list](https://developer.blueshift.com/reference/put_api-v1-custom-user-lists-bulk-remove-users-from-list-list-id.md): Bulk remove users from a custom list — up to 25 per call, or 500 with `async=true`.
+- [List adapters](https://developer.blueshift.com/reference/get_api-v1-account-adapters.md): Use this endpoint to list all adapters in your Blueshift account. Adapters connect your account to third-party services (e.g., Mailgun for email, Infobip for SMS), and you may have multiple per channel.
+- [List tags and tag folders](https://developer.blueshift.com/reference/get_api-v1-tag-contexts-list.md): Use this endpoint to list all the tags and tag folders in your Blueshift account.
+- [Get customer events](https://developer.blueshift.com/reference/get_api-v1-customer-search-show-events.md): Use this endpoint to fetch the details of the events for a customer using the customer's UUID.
+- [Interest alerts](https://developer.blueshift.com/reference/interest-alerts.md)
+- [Update or alert customers](https://developer.blueshift.com/reference/post_api-v1-interests-alert.md): Use this endpoint to send an update to or to alert customers about topics that they have subscribed to.
+- [Get customer subscriptions](https://developer.blueshift.com/reference/get_api-v1-interests-user-subscriptions.md): Use this endpoint to get all the topics that a customer has subscribed to.
+- [List external fetch templates](https://developer.blueshift.com/reference/get_api-v1-external-fetches-json.md): Use this endpoint to get the list of external fetch templates.
+- [Create an external fetch template](https://developer.blueshift.com/reference/post_api-v1-external-fetches-json.md): Use this endpoint to create an external fetch template.
+- [Update an external fetch template](https://developer.blueshift.com/reference/put_api-v1-external-fetches-template-uuid.md): Use this endpoint to update an external fetch template.
+- [Add promo codes to promotion](https://developer.blueshift.com/reference/put_api-v1-promotions-promotion-uuid-add-promocodes.md): Use this endpoint to add promo codes to existing promotion.
+- [Overwrite promo codes in promotion](https://developer.blueshift.com/reference/put_api-v1-promotions-promotion-uuid-overwrite.md): Use this endpoint to replace all existing promo codes in a promotion with a new set of codes.
+- [Validate a single email address](https://developer.blueshift.com/reference/get_api-v1-emails-validate.md): Use this endpoint to validate a single email address and evaluate its deliverability and risk profile.
+- [Validate multiple email addresses](https://developer.blueshift.com/reference/post_api-v1-emails-bulk-validate.md): Use this endpoint to validate up to 30 email addresses. This feature requires custom setup. Contact Blueshift Support or your CSM to enable it.
+- [List subscription groups](https://developer.blueshift.com/reference/get_api-v1-subscription-groups.md): Retrieve all subscription groups in your account, including archived ones.
+- [List subscription groups (lite)](https://developer.blueshift.com/reference/get_api-v1-subscription-groups-index-lite.md): Retrieve a lightweight list of subscription groups without metadata.
+- [Get a subscription group](https://developer.blueshift.com/reference/get_api-v1-subscription-groups-uuid.md): Retrieve details of a specific subscription group using its UUID.
+- [Delete customer group](https://developer.blueshift.com/reference/delete_api-v1-customer-group.md): Deletes a customer group. Set `delete_users` to keep or remove the associated users.
+- [Remove user from customer group](https://developer.blueshift.com/reference/delete_api-v1-customer-group-user.md): Removes a user from a customer group without deleting the user record.
+- [Start a Live Activity](https://developer.blueshift.com/reference/post_api-v1-live-activity-start.md): Starts a Live Activity on one or more customers' devices.
+- [Update a Live Activity](https://developer.blueshift.com/reference/post_api-v1-live-activity-update.md): Updates the content of a running Live Activity, or ends it.
+
+## Pages
+- [Updated Documentation](https://developer.blueshift.com/page/updated-documentation.md)

@@ -1,0 +1,124 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://help.blueshift.com/hc/en-us/sections/53035039589267-Release-notes
+  (Zendesk Help Center API), the GitHub releases API for github.com/blueshift-labs,
+  and the per-page `updatedAt` timestamps ReadMe emits on every
+  developer.blueshift.com reference page.
+description: >-
+  Blueshift publishes NO changelog for its REST API. This artifact records that
+  absence honestly, and then records the dated change signals that do exist —
+  product release notes for one product surface, SDK releases on GitHub, and the
+  per-page revision dates carried in the API reference itself. The reference-page
+  dates are the closest thing to an API changelog Blueshift offers: 79 of the 88
+  reference pages were revised in April 2026 in what was clearly a single
+  documentation overhaul, and six more in July 2026.
+
+api_changelog:
+  published: false
+  scheme: null
+  url: null
+  probes:
+    - url: https://developer.blueshift.com/changelog
+      status: 404
+    - url: https://developer.blueshift.com/changelog.rss
+      status: 404
+  note: >-
+    The developer portal runs on ReadMe, which ships a changelog feature; it is
+    not enabled. There is no version number for the API as a whole — the
+    OpenAPI `info.version` is a static "1.0.0" on every operation document.
+
+current_version:
+  api: v1 (with two v2 operations)
+  spec_info_version: '1.0.0'
+  note: >-
+    info.version is 1.0.0 on all 81 published operation documents and does not
+    move, so it carries no change information.
+
+reference_revision_signal:
+  method: derived
+  source: >-
+    The `updatedAt` frontmatter ReadMe emits on each
+    developer.blueshift.com/reference/*.md page, read across all 88 pages.
+  distribution:
+    - period: '2025-11'
+      pages: 3
+    - period: '2026-04'
+      pages: 79
+    - period: '2026-07'
+      pages: 6
+  oldest: '2025-11-26'
+  newest: '2026-07-30'
+  interpretation: >-
+    The April 2026 cluster is a wholesale rewrite of the API reference, not 79
+    independent API changes. The July 2026 pages are the genuinely recent edits.
+    This is a documentation signal, not an API-change signal, and should not be
+    read as 79 breaking changes.
+
+product_release_notes:
+  url: https://help.blueshift.com/hc/en-us/sections/53035039589267-Release-notes
+  scope: Launchpad (a Blueshift product surface) — not the REST API
+  entry_count: 5
+  entries:
+    - title: Launchpad release notes — June 26, 2026
+      date: '2026-06-26'
+      url: https://help.blueshift.com/hc/en-us/articles/53037383728659-Launchpad-release-notes-June-26-2026
+    - title: Launchpad release notes — May 18, 2026
+      date: '2026-05-18'
+      url: https://help.blueshift.com/hc/en-us/articles/53048960122899-Launchpad-release-notes-May-18-2026
+    - title: Launchpad release notes — April 28, 2026
+      date: '2026-04-28'
+      url: https://help.blueshift.com/hc/en-us/articles/53049962969363-Launchpad-release-notes-April-28-2026
+    - title: Launchpad release notes — March 31, 2026
+      date: '2026-03-31'
+      url: https://help.blueshift.com/hc/en-us/articles/53050478666771-Launchpad-release-notes-March-31-2026
+    - title: Launchpad release notes — March 11, 2026
+      date: '2026-03-11'
+      url: https://help.blueshift.com/hc/en-us/articles/53050724349203-Launchpad-release-notes-March-11-2026
+
+sdk_releases:
+  note: >-
+    The SDK repositories are where Blueshift's change history actually lives.
+    Each carries GitHub release notes.
+  entries:
+    - component: iOS SDK
+      version: 2.8.0
+      date: '2026-07-28'
+      url: https://github.com/blueshift-labs/Blueshift-iOS-SDK/releases
+    - component: Android SDK
+      version: v4.2.4
+      date: '2026-07-29'
+      url: https://github.com/blueshift-labs/Blueshift-Android-SDK/releases
+    - component: Android SDK
+      version: v4.2.3
+      date: '2026-05-28'
+    - component: Android SDK
+      version: v4.2.0
+      date: '2026-03-26'
+    - component: iOS SDK
+      version: 2.7.0
+      date: '2026-03-26'
+    - component: Flutter plugin
+      version: v1.2.1
+      date: '2026-02-24'
+      url: https://pub.dev/packages/blueshift_plugin/changelog
+    - component: React Native plugin
+      version: v1.3.0
+      date: '2025-10-08'
+      url: https://github.com/blueshift-labs/blueshift-react-native/releases
+
+breaking_changes:
+  published: false
+  note: >-
+    Blueshift publishes no breaking-change register for the API. Combined with
+    the absence of a deprecation policy (see lifecycle/), a consumer has no
+    forward notice mechanism of any kind for the REST API.
+
+gaps:
+  - >-
+    No API changelog, no API version history, and a static info.version — three
+    independent reasons a consumer cannot answer "what changed since I
+    integrated?".
+  - >-
+    The one release-notes surface that exists covers a different product
+    (Launchpad) and is easy to mistake for an API changelog.

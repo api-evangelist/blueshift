@@ -1,0 +1,140 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://status.blueshift.com/api/v2/summary.json (Statuspage API, probed
+  2026-08-12, HTTP 200), https://help.blueshift.com/hc/en-us/sections/53035039589267-Release-notes,
+  the GitHub releases API for github.com/blueshift-labs, and the version
+  structure of openapi/blueshift-openapi.yml.
+description: >-
+  Blueshift runs a good public status page with thirteen individually-tracked
+  components. What it does not publish is any API lifecycle policy at all: no
+  versioning policy, no deprecation policy, no sunset commitments, no SLA
+  document on the public web, and no operation in the published spec marked
+  deprecated. v1 and v2 endpoints coexist with no stated relationship. For a
+  platform that holds customer PII and drives production messaging, the absence
+  of a written deprecation commitment is the most material lifecycle gap.
+
+status_page:
+  url: https://status.blueshift.com/
+  provider: Statuspage (Atlassian)
+  api: https://status.blueshift.com/api/v2/summary.json
+  rss: https://status.blueshift.com/history.rss
+  probed: '2026-08-12'
+  probe_status: 200
+  component_count: 13
+  components:
+    - Dashboard at app.getblueshift.com
+    - Event processing & API
+    - One-Time/Recurring Campaigns
+    - Segment-Triggered Campaigns
+    - Event-Triggered Campaigns
+    - Event Imports
+    - Catalog Uploads
+    - User Uploads
+    - Segments
+    - Recommendations
+    - Live Content
+    - Syndications
+    - Reporting
+  observed_state: all components operational; no open incidents, no scheduled maintenance
+  note: >-
+    Component granularity is genuinely useful — event processing and the API are
+    tracked separately from campaign execution and reporting, so a consumer can
+    tell an ingestion outage from a delivery outage. The status page is also
+    machine-readable through the standard Statuspage v2 API.
+
+versioning:
+  style: URI path segment
+  versions:
+    - version: v1
+      operations: 79
+      status: current
+    - version: v2
+      operations: 2
+      status: current
+      operations_list:
+        - GET /api/v2/campaigns.json — List campaigns
+        - GET /api/v2/customer_campaign_activity — Get a customer's campaign activity
+  policy_published: false
+  policy_url: null
+  note: >-
+    v2 exists for exactly two operations and supersedes v1 equivalents that are
+    still live and still documented (GET /api/v1/campaigns.json remains the
+    "Performance summary" endpoint). There is no published statement of which a
+    new integration should use, nor of whether v1 will be retired.
+
+deprecation:
+  policy_published: false
+  policy_url: null
+  deprecated_operations_in_spec: 0
+  sunset_header: not returned
+  deprecation_header: not returned
+  rfc8594: false
+  note: >-
+    Checked directly: no operation in the 81-operation published spec carries
+    `deprecated: true`, and live responses from api.getblueshift.com return
+    neither a Deprecation nor a Sunset header. Blueshift publishes no
+    deprecation policy page. The only visible deprecation signal anywhere in the
+    provider's surface is in the SDK layer, where the pre-AndroidX Maven
+    artifact com.blueshift:android-sdk was superseded by
+    com.blueshift:android-sdk-x — and even that is signalled only by the docs
+    naming the newer artifact, not by a deprecation notice.
+
+sla:
+  published: false
+  note: >-
+    No public SLA or uptime commitment. Blueshift's marketing and RFP material
+    reference enterprise agreements, but no availability target is published on
+    the open web.
+
+support:
+  help_center: https://help.blueshift.com/hc/en-us
+  contact: https://help.blueshift.com/hc/en-us/articles/360008776414-Get-in-touch
+  email: support@blueshift.com
+  api_contact_email: support@getblueshift.com
+  note: >-
+    Blueshift directs high-throughput users to support for a recommended rate,
+    which effectively makes support part of the rate-limit contract.
+
+release_cadence:
+  product_release_notes:
+    url: https://help.blueshift.com/hc/en-us/sections/53035039589267-Release-notes
+    scope: >-
+      Covers Launchpad, a Blueshift product surface — not the REST API. Five
+      dated entries, March through June 2026.
+    api_coverage: none
+  sdk_releases:
+    ios:
+      latest: 2.8.0
+      date: '2026-07-28'
+      source: https://github.com/blueshift-labs/Blueshift-iOS-SDK/releases
+    android:
+      latest: v4.2.4
+      date: '2026-07-29'
+      source: https://github.com/blueshift-labs/Blueshift-Android-SDK/releases
+    react_native:
+      latest: v1.3.0
+      date: '2025-10-08'
+      source: https://github.com/blueshift-labs/blueshift-react-native/releases
+    flutter:
+      latest: v1.2.1
+      date: '2026-02-24'
+  api_changelog:
+    published: false
+    note: >-
+      No API changelog exists. The developer portal (ReadMe) does not serve
+      /changelog — probed 2026-08-12, HTTP 404. The only per-operation currency
+      signal is the `updatedAt` timestamp ReadMe emits at the top of each
+      reference page; the API reference was broadly revised in April 2026.
+
+gaps:
+  - No published versioning policy, so v1 versus v2 selection is guesswork.
+  - No deprecation policy, no Sunset/Deprecation headers, no RFC 8594 support.
+  - No public SLA or uptime commitment.
+  - >-
+    No API changelog. A consumer cannot tell what changed in the API between two
+    dates without diffing the reference pages themselves.
+
+cross_links:
+  changelog: changelog/blueshift-changelog.yml
+  conventions: conventions/blueshift-conventions.yml

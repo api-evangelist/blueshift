@@ -1,0 +1,135 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://developer.blueshift.com/reference/authorization-1 and
+  https://developer.blueshift.com/docs/generate-api-keys, reconciled against the
+  securitySchemes in openapi/blueshift-openapi.yml and the RFC 8414 /
+  RFC 9728 documents probed at well-known/.
+description: >-
+  Blueshift runs two entirely separate authentication regimes. The REST API uses
+  HTTP Basic with an API key as the username and an EMPTY password — no bearer
+  tokens, no OAuth — and splits its surface across two key classes with
+  different blast radii. The MCP server, by contrast, is a full OAuth 2.0
+  authorization-code deployment with PKCE, dynamic client registration and
+  scoped access. An integrator reading only the API reference would not know the
+  OAuth surface exists; it is documented in the help centre, not the developer
+  portal.
+
+summary:
+  types:
+    - http
+    - oauth2
+  rest_scheme: HTTP Basic (API key as username, empty password)
+  mcp_scheme: OAuth 2.0 authorization code with PKCE
+  bearer_supported: false
+  mtls: false
+  openid_connect: false
+
+schemes:
+  - name: user_api_auth
+    type: http
+    scheme: basic
+    surface: REST API
+    applies_to: >-
+      Customer profiles, catalogs, campaigns, segments, custom user lists,
+      templates, shared assets, promotions, external fetches, reports — 71 of
+      the 81 published operations.
+    credential: User API key (USER_API_KEY)
+    username: the API key
+    password: empty
+    who_can_generate: Admin users only
+    sources:
+      - openapi/blueshift-openapi.yml
+      - https://developer.blueshift.com/reference/authorization-1
+    note: >-
+      Visible only to admin users in the Blueshift app. This is the
+      high-privilege key: it can read and delete customer PII and mutate live
+      campaigns.
+
+  - name: event_api_auth
+    type: http
+    scheme: basic
+    surface: REST API
+    applies_to: >-
+      Event ingestion and supported live-content endpoints — 10 of the 81
+      published operations.
+    credential: Event API key (EVENT_API_KEY)
+    username: the API key
+    password: empty
+    who_can_generate: Any user role
+    sources:
+      - openapi/blueshift-openapi.yml
+      - https://developer.blueshift.com/reference/authorization-1
+    note: >-
+      Deliberately low-privilege and visible to every role, because it is the
+      key that ships in server-side event collectors. Using it against a
+      User-API endpoint returns 401.
+
+  - name: blueshift_mcp_oauth
+    type: oauth2
+    surface: MCP server
+    applies_to: https://app.getblueshift.com/mcp and https://app.eu.getblueshift.com/mcp
+    flows:
+      authorization_code:
+        authorization_url: https://app.getblueshift.com/oauth/authorize
+        token_url: https://app.getblueshift.com/oauth/token
+        scopes: scopes/blueshift-scopes.yml
+      client_credentials:
+        token_url: https://app.getblueshift.com/oauth/token
+      refresh_token:
+        token_url: https://app.getblueshift.com/oauth/token
+    pkce: S256
+    dynamic_client_registration: https://app.getblueshift.com/oauth/register
+    token_endpoint_auth_methods:
+      - none
+      - client_secret_basic
+      - client_secret_post
+    sources:
+      - well-known/blueshift-app-oauth-authorization-server.json
+      - well-known/blueshift-app-oauth-protected-resource.json
+      - https://help.blueshift.com/hc/en-us/articles/49713147943187-The-Blueshift-MCP-Server-Beta
+    note: >-
+      Discovered by probe, not from the API reference. The 401 challenge on
+      tools/list carries a correct RFC 9728 resource_metadata pointer, so a
+      compliant MCP client can bootstrap the whole flow with no configuration
+      beyond the server URL.
+
+key_management:
+  where: Blueshift app > Account Settings > API keys tab
+  docs: https://developer.blueshift.com/docs/generate-api-keys
+  rotation: >-
+    Documented as an operator responsibility — "rotate keys periodically and
+    revoke compromised keys immediately". No published rotation API, no key
+    expiry, and no scoping or restriction of a User API key below full admin
+    reach.
+  guidance: >-
+    Blueshift's own docs warn against committing keys to source control,
+    embedding them in client-side code, or sharing them outside trusted systems.
+
+regions:
+  - region: US and rest of world
+    rest_base_url: https://api.getblueshift.com
+    mcp_url: https://app.getblueshift.com/mcp
+  - region: EU
+    rest_base_url: https://api.eu.getblueshift.com
+    mcp_url: https://app.eu.getblueshift.com/mcp
+
+regions_note: >-
+  The base URL must match the region the account is provisioned in or requests
+  fail. This is a common first-integration failure and is called out in the
+  authorization docs.
+
+gaps:
+  - >-
+    Only two key classes exist for the whole REST API, and the User API key is
+    all-or-nothing. There are no restricted or scoped REST keys, so any
+    integration that needs to read a campaign report also holds the credential
+    that can delete customer records.
+  - >-
+    The REST API has no OAuth and no bearer-token option, so there is no
+    delegated or per-user authorization path for server-side integrations —
+    only the MCP server offers that.
+  - >-
+    Basic auth with an empty password means the credential travels in an
+    unsalted Base64 header on every request; there is no request signing and no
+    replay protection.

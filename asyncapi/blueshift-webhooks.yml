@@ -1,0 +1,145 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://developer.blueshift.com/reference/webhook-for-campaign-execution-status,
+  https://help.blueshift.com/hc/en-us/articles/39243100396307-Campaign-activity-exports-via-webhooks,
+  https://help.blueshift.com/hc/en-us/articles/360024686333-Event-webhook-callback-samples
+description: >-
+  Blueshift ships a real outbound webhook surface but publishes NO AsyncAPI
+  document — searched and confirmed absent, never fabricated here. Two distinct
+  webhook products exist and are easy to confuse: a campaign EXECUTION STATUS
+  webhook that fires when a customer qualifies for a trigger, and a CAMPAIGN
+  ACTIVITY EXPORT that streams messaging engagement events (delivered, opened,
+  clicked, bounced, unsubscribed). Both are configured in the Blueshift app, not
+  via API — there is no webhook-subscription endpoint in the 81 published
+  operations, so an integration cannot register or manage its own webhooks
+  programmatically.
+
+asyncapi_published: false
+asyncapi_probes:
+  - url: https://api.getblueshift.com/asyncapi.yaml
+    status: 404
+  - url: https://developer.blueshift.com/asyncapi.json
+    status: 404
+event_catalog_published: false
+
+management:
+  api_manageable: false
+  configured_in: >-
+    Blueshift app > Account Settings (Account Profile) > Campaign Activity
+    Export > Webhooks
+  console_url: https://app.getblueshift.com/dashboard#/app/account/integrations
+  note: >-
+    No subscription, registration, listing or rotation endpoint exists in the
+    REST API. A tenant cannot enumerate its own webhook configuration
+    programmatically, and an agent cannot set one up.
+
+webhooks:
+  - name: Campaign execution status
+    direction: outbound
+    docs: https://developer.blueshift.com/reference/webhook-for-campaign-execution-status
+    applies_to: Event-triggered campaigns, including API-triggered campaigns
+    transport: HTTP POST with a JSON body
+    expected_response: HTTP 200
+    delivery: >-
+      Fires once per trigger the customer qualifies for. If the customer reaches
+      a point where they no longer qualify for any trigger — usually because of
+      trigger filters — no notification is sent at all. Silence is therefore
+      ambiguous: it can mean success-with-no-qualification or nothing happened.
+    authentication: not documented for this webhook
+    signature: none — no HMAC signature, no shared secret, no timestamp header
+    retries: not documented
+    payload_fields:
+      - campaign_name
+      - campaign_uuid
+      - user (object — email, customer_id)
+      - status (success | failed)
+      - message (on success)
+      - error_message (on failure)
+      - error_code (on failure)
+      - payload (on failure — the original triggering event)
+    example_success: >-
+      {"campaign_name": "...", "campaign_uuid": "...", "user": {"email": "...",
+      "customer_id": "..."}, "status": "success", "message": "message sent"}
+    example_failure: >-
+      {"campaign_name": "...", "campaign_uuid": "...", "user": {...}, "status":
+      "failed", "error_message": "...", "error_code": 502, "payload": {...}}
+    semantics: >-
+      Status reflects only whether Blueshift successfully handed the message to
+      the integrated app. It does NOT track delivery beyond that point.
+
+  - name: Campaign activity export (messaging event notifications)
+    direction: outbound
+    docs: https://help.blueshift.com/hc/en-us/articles/39243100396307-Campaign-activity-exports-via-webhooks
+    transport: HTTP POST with a JSON body
+    batching: Notifications are batched and sent every 1 minute
+    authentication:
+      options:
+        - None
+        - Basic HTTPS (username and password)
+    signature: none
+    destinations:
+      - Custom webhook URL
+      - Segment.com
+      - mParticle
+      - Mixpanel
+      - Amplitude
+    events:
+      - Delivered
+      - Opened
+      - Clicked
+      - Bounced
+      - Unsubscribed
+    payload_fields:
+      - account_uuid
+      - action
+      - bucket_uuid
+      - campaign_name
+      - campaign_uuid
+      - creative_name
+      - creative_uuid
+      - customer_id
+      - email
+      - event
+      - experiment_id
+      - message_uuid
+      - sg_message_id
+      - subject_line
+      - transaction_uuid
+      - trigger_name
+      - trigger_timestamp
+      - trigger_type
+      - trigger_uuid
+      - user_uuid
+    docs_samples: https://help.blueshift.com/hc/en-us/articles/360024686333-Event-webhook-callback-samples
+    note: >-
+      If campaign activity export is disabled, notifications are neither created
+      nor queued — they are lost, not backfilled. Campaign activity remains
+      downloadable as a campaign report.
+
+inbound_events:
+  note: >-
+    Blueshift's INBOUND event surface is the REST API, not a webhook: POST
+    /api/v1/event and POST /api/v1/bulkevents. Those are documented in
+    openapi/blueshift-openapi.yml.
+
+streaming:
+  present: false
+  note: >-
+    No WebSocket, SSE, Kafka, Pub/Sub or message-queue surface is published for
+    external consumers. (github.com/blueshift-labs hosts Pulsar tooling, but
+    that is internal infrastructure, not a customer-facing event surface.)
+
+gaps:
+  - No AsyncAPI document, so the event surface is not machine-readable.
+  - >-
+    No webhook signing of any kind on either webhook — no HMAC, no shared
+    secret, no timestamp. The strongest available authentication is HTTP Basic,
+    and only on the activity export. A receiver cannot verify that a payload
+    came from Blueshift.
+  - >-
+    No published retry or redelivery policy, and no dead-letter behaviour, so a
+    receiver outage means silent data loss on the activity export.
+  - >-
+    No API to register, list, rotate or delete webhook endpoints — configuration
+    is console-only.

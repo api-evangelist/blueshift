@@ -1,0 +1,64 @@
+generated: '2026-08-12'
+method: generated
+source: >-
+  Packaged Agent Skills generated from openapi/blueshift-openapi.yml — the real
+  OpenAPI 3.0 Blueshift publishes behind each developer.blueshift.com reference
+  page. Every operationId cited in a skill was verified to exist in that spec
+  (operationIds themselves are assigned by
+  overlays/blueshift-openapi-overlay.yaml, because Blueshift's published spec
+  declares none). Cross-cutting rules cite conventions/, errors/,
+  authentication/, rate-limits/, sandbox/ and asyncapi/.
+provider_published_skills: none
+provider_published_agents_md: none
+note: >-
+  Searched first for provider-published Agent Skills or an AGENTS.md — Blueshift
+  publishes neither. It does publish an MCP server (mcp/blueshift-mcp.yml), which
+  is a different agent surface: the MCP tools are read-heavy analyst operations,
+  while these skills cover the write-heavy REST integration flows that the MCP
+  server does not reach. See mcp/blueshift-tool-crosswalk.yml for the split.
+
+skills:
+  - file: blueshift-ingest-customer-and-event.md
+    name: Ingest a customer profile and their behavioural events
+    api: openapi/blueshift-openapi.yml
+    operations:
+      - postV1Customers
+      - postV1CustomersBulk
+      - postV1Event
+      - postV1Bulkevents
+      - getV1EventDebug
+      - getV1EventHistory
+
+  - file: blueshift-trigger-transactional-campaign.md
+    name: Trigger a transactional campaign without sending it twice
+    api: openapi/blueshift-openapi.yml
+    operations:
+      - postV1CampaignsExecute
+      - postV1CampaignsBulkExecute
+      - getV2CampaignsJson
+      - getV1CampaignsByCampaignUuidDetailJson
+
+  - file: blueshift-build-audience-and-launch.md
+    name: Build an audience and launch a campaign against it
+    api: openapi/blueshift-openapi.yml
+    operations:
+      - getV1SegmentsList
+      - getV1SegmentsBySegmentUuidMatchingUsersJson
+      - postV1CustomUserListsCreate
+      - putV1CustomUserListsBulkAddUsersToListByListId
+      - postV1CampaignsByCampaignType
+      - patchV1CampaignsByCampaignUuidUpdateSchedule
+      - patchV1CampaignsByCampaignUuidLaunch
+      - patchV1CampaignsByCampaignUuidPause
+      - putV1CampaignsByCampaignUuidArchive
+
+  - file: blueshift-personalize-with-catalogs-and-live-content.md
+    name: Personalize a site or app with catalogs and live content
+    api: openapi/blueshift-openapi.yml
+    operations:
+      - postV1Catalogs
+      - getV1Catalogs
+      - putV1CatalogsByCatalogUuidJson
+      - getV1CatalogsByCatalogUuidJson
+      - getV1OnsiteSlotsJson
+      - postLive

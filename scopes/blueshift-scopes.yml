@@ -1,0 +1,121 @@
+generated: '2026-08-12'
+method: probed
+source: >-
+  https://api.getblueshift.com/.well-known/oauth-authorization-server and
+  https://app.getblueshift.com/.well-known/oauth-protected-resource — fetched
+  anonymously 2026-08-12, both HTTP 200.
+docs: https://help.blueshift.com/hc/en-us/articles/49713147943187-The-Blueshift-MCP-Server-Beta
+description: >-
+  Blueshift declares eight OAuth 2.0 scopes, published in machine-readable form
+  in both its RFC 8414 authorization-server metadata and its RFC 9728
+  protected-resource metadata, on all four API/app hosts (US and EU). They apply
+  to the MCP server, not the REST API — the REST API has no OAuth at all. The
+  scope set is a clean read/write pair over four domains, which is materially
+  better granularity than the two all-or-nothing API keys the REST API offers.
+  Descriptions below are derived from the scope names and the corresponding MCP
+  tool categories; Blueshift publishes the scope strings but no scope reference
+  page, so no description here is quoted from Blueshift.
+
+applies_to: Blueshift MCP Server
+not_applicable_to: >-
+  Blueshift REST API — authenticates with HTTP Basic and an API key, and
+  declares no oauth2 securityScheme in its OpenAPI.
+
+authorization_server: https://app.getblueshift.com
+authorization_endpoint: https://app.getblueshift.com/oauth/authorize
+token_endpoint: https://app.getblueshift.com/oauth/token
+registration_endpoint: https://app.getblueshift.com/oauth/register
+grant_types:
+  - authorization_code
+  - client_credentials
+  - refresh_token
+response_types:
+  - code
+code_challenge_methods:
+  - S256
+token_endpoint_auth_methods:
+  - none
+  - client_secret_basic
+  - client_secret_post
+
+scope_count: 8
+scopes:
+  - name: campaigns:read
+    access: read
+    domain: Campaigns
+    description: >-
+      Read campaigns, their configuration, schedules and performance statistics.
+    description_source: derived
+  - name: campaigns:write
+    access: write
+    domain: Campaigns
+    description: >-
+      Create and modify campaigns, including schedule changes and lifecycle
+      transitions.
+    description_source: derived
+  - name: segments:read
+    access: read
+    domain: Segments
+    description: Read segment definitions and audience membership counts.
+    description_source: derived
+  - name: segments:write
+    access: write
+    domain: Segments
+    description: Create and modify segments.
+    description_source: derived
+  - name: templates:read
+    access: read
+    domain: Templates
+    description: >-
+      Read email, push and SMS templates and their shared assets.
+    description_source: derived
+  - name: templates:write
+    access: write
+    domain: Templates
+    description: Create and modify templates.
+    description_source: derived
+  - name: customers:read
+    access: read
+    domain: Customer profiles
+    description: >-
+      Read customer profiles, events, transactions and campaign activity. This
+      is the scope that reaches personal data.
+    description_source: derived
+  - name: customers:write
+    access: write
+    domain: Customer profiles
+    description: Create and modify customer profiles and their attributes.
+    description_source: derived
+
+observations:
+  - >-
+    The scope set does NOT cover every MCP tool category. Reporting and
+    dashboards, schema discovery, recommendations, the AI campaign optimizer,
+    pages and scripts, image management and marketing insights all appear in
+    Blueshift's published tool catalogue with no corresponding scope, so either
+    those tools fall under an existing scope by association or the scope model
+    has not caught up with the tool surface. Blueshift publishes nothing that
+    resolves this, and it is not inferred here.
+  - >-
+    Dynamic client registration is open (registration_endpoint present,
+    token_endpoint_auth_methods includes "none"), which is what lets an MCP
+    client connect with only a URL.
+  - >-
+    The same eight scopes are served identically from api.getblueshift.com,
+    api.eu.getblueshift.com, app.getblueshift.com and app.eu.getblueshift.com.
+
+x-evidence:
+  fetched: '2026-08-12'
+  probes:
+    - url: https://api.getblueshift.com/.well-known/oauth-authorization-server
+      status: 200
+      file: well-known/blueshift-oauth-authorization-server.json
+    - url: https://api.getblueshift.com/.well-known/oauth-protected-resource
+      status: 200
+      file: well-known/blueshift-oauth-protected-resource.json
+    - url: https://app.getblueshift.com/.well-known/oauth-authorization-server
+      status: 200
+      file: well-known/blueshift-app-oauth-authorization-server.json
+    - url: https://app.getblueshift.com/.well-known/oauth-protected-resource
+      status: 200
+      file: well-known/blueshift-app-oauth-protected-resource.json
