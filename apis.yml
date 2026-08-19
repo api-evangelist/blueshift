@@ -14,7 +14,7 @@ image: https://blueshift.com/wp-content/uploads/2025/10/web-featured-image.webp
 url: https://raw.githubusercontent.com/api-evangelist/blueshift/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:marketing-integration-graph
-specificationVersion: '0.21'
+specificationVersion: '0.23'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
