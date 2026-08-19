@@ -3,13 +3,13 @@ method: searched
 status: published
 source: https://help.blueshift.com/hc/en-us/articles/49714422787347-Blueshift-MCP-Server-tools-Beta
 description: 'Blueshift operates an official hosted remote MCP server, in public beta, at https://app.getblueshift.com/mcp
-  (US and rest of world) and https://app.eu.getblueshift.com/mcp (EU). Transport is streamable HTTP
-  (the setup docs explicitly say HTTP, not SSE) and authorization is OAuth 2.0: an anonymous POST
-  of tools/list returns 401 with an RFC 9728 WWW-Authenticate challenge pointing at the host''s own
-  protected-resource metadata, so the live tool schemas require an authenticated introspection we
-  do not perform. The tool list below is therefore captured from Blueshift''s own published tool catalogue
-  — names, descriptions, categories and read/write class — and carries no inputSchema. The same 401-with-resource_metadata
-  behaviour is served by api.getblueshift.com/mcp and api.eu.getblueshift.com/mcp.'
+  (US and rest of world) and https://app.eu.getblueshift.com/mcp (EU). Transport is streamable HTTP (the
+  setup docs explicitly say HTTP, not SSE) and authorization is OAuth 2.0: an anonymous POST of tools/list
+  returns 401 with an RFC 9728 WWW-Authenticate challenge pointing at the host''s own protected-resource
+  metadata, so the live tool schemas require an authenticated introspection we do not perform. The tool
+  list below is therefore captured from Blueshift''s own published tool catalogue — names, descriptions,
+  categories and read/write class — and carries no inputSchema. The same 401-with-resource_metadata behaviour
+  is served by api.getblueshift.com/mcp and api.eu.getblueshift.com/mcp.'
 server:
   name: blueshift
   transport: http
@@ -58,9 +58,9 @@ coverage:
   write: 34
   categories: 23
   input_schemas: 0
-  note: Blueshift’s own catalogue marks 90 of the 131 tools as not yet published, so the live server
-    exposes a subset. The published/unpublished flag is Blueshift’s, carried through verbatim. inputSchema
-    is 0 because the live tools/list is OAuth-gated.
+  note: Blueshift’s own catalogue marks 90 of the 131 tools as not yet published, so the live server exposes
+    a subset. The published/unpublished flag is Blueshift’s, carried through verbatim. inputSchema is
+    0 because the live tools/list is OAuth-gated.
 categories:
   Account & configuration: 2
   Attributes & usage analytics: 3
@@ -87,15 +87,14 @@ categories:
   Utilities & system: 9
 tools:
 - name: list_campaigns_v2
-  description: Search and list campaigns with filtering by name, status, type (one-time, recurring,
-    segment triggered, event triggered, live content), author, tags, and more. Supports pagination
-    and sorting.
+  description: Search and list campaigns with filtering by name, status, type (one-time, recurring, segment
+    triggered, event triggered, live content), author, tags, and more. Supports pagination and sorting.
   category: Campaigns
   access: read
   published: true
 - name: get_campaign_full
-  description: Retrieve the complete, unfiltered configuration of a campaign including all fields
-    preserved — triggers, conditions, experiment groups, scheduling, and settings.
+  description: Retrieve the complete, unfiltered configuration of a campaign including all fields preserved
+    — triggers, conditions, experiment groups, scheduling, and settings.
   category: Campaigns
   access: read
   published: false
@@ -107,8 +106,8 @@ tools:
   published: true
 - name: get_campaign_statistics
   description: Primary tool for campaign performance metrics including sends, opens, clicks, conversions,
-    revenue, and rates. Supports filtering by channel, campaign, trigger, template, and time range.
-    Also used for segment trends and recommended items reporting.
+    revenue, and rates. Supports filtering by channel, campaign, trigger, template, and time range. Also
+    used for segment trends and recommended items reporting.
   category: Campaigns
   access: read
   published: true
@@ -130,8 +129,8 @@ tools:
   access: read
   published: true
 - name: get_segment_details
-  description: Retrieve detailed configuration and filter criteria for a specific segment, including
-    all V2 conditions and components.
+  description: Retrieve detailed configuration and filter criteria for a specific segment, including all
+    V2 conditions and components.
   category: Segments
   access: read
   published: true
@@ -143,14 +142,14 @@ tools:
   published: false
 - name: update_segment_v2
   description: Update an existing V2 segment — add, modify, or delete conditions and components including
-    user attributes, events, transactions, and segment references. Supports resource draft pointers
-    for iterative editing.
+    user attributes, events, transactions, and segment references. Supports resource draft pointers for
+    iterative editing.
   category: Segments
   access: write
   published: false
 - name: search_users
-  description: Search and filter users by attributes, segments, or dynamic inline queries. Supports
-    count only mode for funnel analysis, cohort sizing, and retention measurement.
+  description: Search and filter users by attributes, segments, or dynamic inline queries. Supports count
+    only mode for funnel analysis, cohort sizing, and retention measurement.
   category: Segments
   access: read
   published: true
@@ -166,8 +165,7 @@ tools:
   access: read
   published: false
 - name: list_email_templates
-  description: List email templates with optional filtering by name, tags, editor type, status, and
-    author.
+  description: List email templates with optional filtering by name, tags, editor type, status, and author.
   category: Templates
   access: read
   published: true
@@ -183,15 +181,14 @@ tools:
   access: write
   published: false
 - name: update_email_template
-  description: Update an existing email template's subject, preheader, content, or recommendation
-    settings.
+  description: Update an existing email template's subject, preheader, content, or recommendation settings.
   category: Templates
   access: write
   published: false
 - name: render_email
   description: Render a Liquid email template with personalizations and optionally generate a screenshot
-    with AI-powered visual analysis. Supports rendering by user identifier, manual personalizations,
-    or optimizer experiment context.
+    with AI-powered visual analysis. Supports rendering by user identifier, manual personalizations, or
+    optimizer experiment context.
   category: Templates
   access: read
   published: false
@@ -212,8 +209,8 @@ tools:
   access: read
   published: true
 - name: list_shared_assets
-  description: List reusable content blocks (HTML, rich text, subject lines, visual editor blocks)
-    with filtering by type, name, tags, and usage counts.
+  description: List reusable content blocks (HTML, rich text, subject lines, visual editor blocks) with
+    filtering by type, name, tags, and usage counts.
   category: Shared assets
   access: read
   published: true
@@ -229,14 +226,14 @@ tools:
   access: read
   published: true
 - name: search_customer
-  description: Search for customers by common identifiers — email, customer ID, phone, UUID, device
-    ID, or cookie.
+  description: Search for customers by common identifiers — email, customer ID, phone, UUID, device ID,
+    or cookie.
   category: Customer profiles & data
   access: read
   published: false
 - name: condensed_profile
-  description: Retrieve an AI-optimized user profile with behavioral analytics, engagement patterns,
-    and summary insights.
+  description: Retrieve an AI-optimized user profile with behavioral analytics, engagement patterns, and
+    summary insights.
   category: Customer profiles & data
   access: read
   published: true
@@ -261,8 +258,8 @@ tools:
   access: read
   published: false
 - name: get_schema
-  description: Return the full segmentation schema including events, user attributes, transactions,
-    operators, and timeline helpers. Supports output masking for large payloads (50K+ tokens).
+  description: Return the full segmentation schema including events, user attributes, transactions, operators,
+    and timeline helpers. Supports output masking for large payloads (50K+ tokens).
   category: Schema & data discovery
   access: read
   published: true
@@ -278,8 +275,7 @@ tools:
   access: read
   published: true
 - name: get_events_schema
-  description: Get detailed schema for specific event types including available properties and data
-    types.
+  description: Get detailed schema for specific event types including available properties and data types.
   category: Schema & data discovery
   access: read
   published: true
@@ -300,26 +296,26 @@ tools:
   access: read
   published: false
 - name: get_recommendation_authoring_schema
-  description: Retrieve the recommendation authoring schema with available filters, events, and data
-    stores for building catalog item blocks.
+  description: Retrieve the recommendation authoring schema with available filters, events, and data stores
+    for building catalog item blocks.
   category: Schema & data discovery
   access: read
   published: false
 - name: attribute_usage_statistics
-  description: Get usage statistics for all attributes across users, events, products, or user base
-    — including campaign, segment, and template usage counts.
+  description: Get usage statistics for all attributes across users, events, products, or user base —
+    including campaign, segment, and template usage counts.
   category: Attributes & usage analytics
   access: read
   published: true
 - name: attribute_usages
-  description: Check specific attributes (up to 40) for usage across campaigns, segments, templates,
-    or count of users where the attribute is set.
+  description: Check specific attributes (up to 40) for usage across campaigns, segments, templates, or
+    count of users where the attribute is set.
   category: Attributes & usage analytics
   access: read
   published: true
 - name: get_user_insight_attributes
-  description: Return active predictive scores, predictive affinities, computed attributes, and RFM
-    definitions available for the account.
+  description: Return active predictive scores, predictive affinities, computed attributes, and RFM definitions
+    available for the account.
   category: Attributes & usage analytics
   access: read
   published: true
@@ -329,8 +325,8 @@ tools:
   access: read
   published: true
 - name: search_products
-  description: Search and filter catalog products by attributes like SKU, title, brand, category,
-    price, and availability. Supports AND/OR/NOT conditions and pagination.
+  description: Search and filter catalog products by attributes like SKU, title, brand, category, price,
+    and availability. Supports AND/OR/NOT conditions and pagination.
   category: Product catalog
   access: read
   published: true
@@ -345,8 +341,8 @@ tools:
   access: read
   published: true
 - name: get_product_attribute_stats
-  description: Get distribution statistics for product attribute values (e.g., category breakdown
-    for purchase events).
+  description: Get distribution statistics for product attribute values (e.g., category breakdown for
+    purchase events).
   category: Product catalog
   access: read
   published: false
@@ -361,8 +357,8 @@ tools:
   access: read
   published: true
 - name: get_recommendation_scheme
-  description: Retrieve detailed configuration for a specific recommendation scheme including blocks
-    and settings.
+  description: Retrieve detailed configuration for a specific recommendation scheme including blocks and
+    settings.
   category: Recommendations
   access: read
   published: false
@@ -409,8 +405,8 @@ tools:
   access: read
   published: false
 - name: get_opportunity
-  description: Get full opportunity details including AI analysis, generated content, and scoring
-    for a specific experiment group.
+  description: Get full opportunity details including AI analysis, generated content, and scoring for
+    a specific experiment group.
   category: Campaign optimizer (AI)
   access: read
   published: false
@@ -420,8 +416,8 @@ tools:
   access: read
   published: false
 - name: list_optimizer_runs
-  description: List optimization runs across the account with filtering by campaign type, status,
-    significance, and pagination.
+  description: List optimization runs across the account with filtering by campaign type, status, significance,
+    and pagination.
   category: Campaign optimizer (AI)
   access: read
   published: false
@@ -432,8 +428,8 @@ tools:
   access: read
   published: false
 - name: get_optimizer_state
-  description: Get current optimizer state, configuration, active runs, and test allocations for an
-    experiment group.
+  description: Get current optimizer state, configuration, active runs, and test allocations for an experiment
+    group.
   category: Campaign optimizer (AI)
   access: read
   published: false
@@ -459,8 +455,7 @@ tools:
   access: read
   published: false
 - name: list_optimizer_analyses
-  description: List stored AI analyses for an experiment group — the reasoning behind opportunity
-    identification.
+  description: List stored AI analyses for an experiment group — the reasoning behind opportunity identification.
   category: Campaign optimizer (AI)
   access: read
   published: false
@@ -475,8 +470,8 @@ tools:
   access: read
   published: false
 - name: create_report
-  description: Create a reusable campaign performance report (chart or table) that can be added to
-    dashboards. Supports multiple chart types, groupings, and time comparisons.
+  description: Create a reusable campaign performance report (chart or table) that can be added to dashboards.
+    Supports multiple chart types, groupings, and time comparisons.
   category: Reports & dashboards
   access: write
   published: false
@@ -513,8 +508,8 @@ tools:
   access: read
   published: true
 - name: get_user_insights_statistics
-  description: Query customer analytics for audience composition by attributes, predictive scores,
-    RFM tiers, and more.
+  description: Query customer analytics for audience composition by attributes, predictive scores, RFM
+    tiers, and more.
   category: Reports & dashboards
   access: read
   published: true
@@ -545,14 +540,13 @@ tools:
   access: write
   published: false
 - name: get_live_content
-  description: Retrieve personalized live content for a specific slot and user — useful for testing
-    personalization.
+  description: Retrieve personalized live content for a specific slot and user — useful for testing personalization.
   category: Live content & onsite slots
   access: read
   published: false
 - name: list_promotions_v1
-  description: List all promotions with status, values, expiration dates, and use type (single use
-    or multi use).
+  description: List all promotions with status, values, expiration dates, and use type (single use or
+    multi use).
   category: Promotions
   access: read
   published: true
@@ -572,8 +566,8 @@ tools:
   access: read
   published: true
 - name: list_audit_trails
-  description: List audit trail records for understanding user behavior, investigating changes, and
-    debugging. Filter by author, resource type, action, date range, and resource name.
+  description: List audit trail records for understanding user behavior, investigating changes, and debugging.
+    Filter by author, resource type, action, date range, and resource name.
   category: Audit & change tracking
   access: read
   published: false
@@ -595,8 +589,8 @@ tools:
   access: read
   published: false
 - name: list_marketing_insights
-  description: List all marketing insights for the account with filtering by status, insight type,
-    and severity.
+  description: List all marketing insights for the account with filtering by status, insight type, and
+    severity.
   category: Marketing insights & ideation
   access: read
   published: false
@@ -607,8 +601,8 @@ tools:
   access: read
   published: false
 - name: create_marketing_insight
-  description: Save a structured marketing insight with trend analysis, metrics, key findings, and
-    by entity breakdowns.
+  description: Save a structured marketing insight with trend analysis, metrics, key findings, and by
+    entity breakdowns.
   category: Marketing insights & ideation
   access: write
   published: false
@@ -628,20 +622,19 @@ tools:
   access: read
   published: false
 - name: create_ideation_proposal
-  description: Save a structured, data-backed ideation proposal with audience sizing, RICE scoring,
-    execution plans, and resource mapping.
+  description: Save a structured, data-backed ideation proposal with audience sizing, RICE scoring, execution
+    plans, and resource mapping.
   category: Marketing insights & ideation
   access: write
   published: false
 - name: update_ideation_proposal
-  description: Update an existing proposal or record execution progress with step-by-step tracking
-    and asset linking.
+  description: Update an existing proposal or record execution progress with step-by-step tracking and
+    asset linking.
   category: Marketing insights & ideation
   access: write
   published: false
 - name: generate_chart
-  description: Generate chart images (line, bar, area, scatter, pie, histogram) from data you pass
-    in.
+  description: Generate chart images (line, bar, area, scatter, pie, histogram) from data you pass in.
   category: Content & document generation
   access: write
   published: false
@@ -697,14 +690,14 @@ tools:
   access: read
   published: true
 - name: load_domain_reference
-  description: Load domain reference documentation on demand for specialized knowledge — campaign
-    analysis workflows, segment creation patterns, email template authoring, and more.
+  description: Load domain reference documentation on demand for specialized knowledge — campaign analysis
+    workflows, segment creation patterns, email template authoring, and more.
   category: Documentation & help
   access: read
   published: true
 - name: generate_link
-  description: Generate a Blueshift dashboard link for any resource (segment, campaign, template,
-    algorithm, report, dashboard, customer, etc.).
+  description: Generate a Blueshift dashboard link for any resource (segment, campaign, template, algorithm,
+    report, dashboard, customer, etc.).
   category: Utilities & system
   access: read
   published: false
@@ -726,20 +719,20 @@ tools:
   access: write
   published: false
 - name: tool_search
-  description: Search for and discover available tools by keyword or intent. Returns ranked matches
-    with invocation hints.
+  description: Search for and discover available tools by keyword or intent. Returns ranked matches with
+    invocation hints.
   category: Utilities & system
   access: read
   published: false
 - name: phase_handoff
-  description: Compress context and switch tool packs for long-running, multi-phase agent workflows.
-    Preserves working memory across context boundaries.
+  description: Compress context and switch tool packs for long-running, multi-phase agent workflows. Preserves
+    working memory across context boundaries.
   category: Utilities & system
   access: read
   published: false
 - name: update_agents_md
-  description: Create or update the AGENTS.MD awareness document that is automatically injected into
-    future sessions.
+  description: Create or update the AGENTS.MD awareness document that is automatically injected into future
+    sessions.
   category: Utilities & system
   access: write
   published: false
@@ -750,8 +743,8 @@ tools:
   access: read
   published: false
 - name: github_issues
-  description: Create, list, fetch, comment on, and close GitHub issues in the Blueshift MCP tools
-    repository. Blueshift internal use only.
+  description: Create, list, fetch, comment on, and close GitHub issues in the Blueshift MCP tools repository.
+    Blueshift internal use only.
   category: Utilities & system
   access: read
   published: false
@@ -810,3 +803,10 @@ tools:
   category: Pages & scripts
   access: read
   published: false
+deployment:
+  mode: remote
+  endpoint: https://app.getblueshift.com/mcp
+  verified: probed
+  probe: gated
+  checked: '2026-08-12'
+  source: catalog MCP census

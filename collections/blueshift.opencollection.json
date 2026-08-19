@@ -1,0 +1,2380 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Blueshift APIs",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Adapters",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List adapters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/account_adapters",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "SMS",
+                "type": "query",
+                "description": "Specify the channel type to filter adapters:\n\n• `Email` - Email service providers (e.g., Sendgrid, Mailgun)\n• `SMS` - SMS service providers (e.g., Twilio, 46elks)\n• `Push Message` - Push notification providers\n• `Webhook` - Webhook integrations\n• `InApp` - In-app message providers\n• `Segment Report` - Segment reporting integrations"
+              },
+              {
+                "name": "adapter_name",
+                "value": "46elks",
+                "type": "query",
+                "description": "Filter results by adapter provider name (e.g., `sendgrid`, `sparkpost`, `46elks`, `twilio`)."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to list all adapters in your Blueshift account. Adapters connect your account to third-party services (e.g., Mailgun for email, Infobip for SMS), and you may have multiple per channel."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Event",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send bulk events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/bulkevents",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to send multiple events from your server or use javascript events that call the API."
+        },
+        {
+          "info": {
+            "name": "Debug event exports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/data_connectors/:data_connector_uuid/debug",
+            "params": [
+              {
+                "name": "data_connector_uuid",
+                "value": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "Specify the UUID of the data connector (event export integration)."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to download the first 10 success and errored events in last 5 minutes."
+        },
+        {
+          "info": {
+            "name": "Send an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/event",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to send an event from your server or use javascript events to call the API."
+        },
+        {
+          "info": {
+            "name": "Most recent event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/event/debug",
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to fetch the most recent event. It returns the latest events our server has received for each event type."
+        },
+        {
+          "info": {
+            "name": "Get event history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/event/history",
+            "params": [
+              {
+                "name": "event_name",
+                "value": "app_install",
+                "type": "query",
+                "description": "The name of the event for which to fetch history."
+              },
+              {
+                "name": "limit",
+                "value": "10",
+                "type": "query",
+                "description": "Maximum number of records to return. Defaults to system limit if not specified.\n\n**Maximum value**: `50`."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Retrieves up to 50 most recent successful events for the given event name, starting with the latest."
+        },
+        {
+          "info": {
+            "name": "Summary of events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/event/summary.json",
+            "params": [
+              {
+                "name": "timestamp_start",
+                "value": "2023-04-25T00:00:00Z",
+                "type": "query",
+                "description": "Specify a timestamp in ISO 8601 format to filter data for events that occurred after it."
+              },
+              {
+                "name": "timestamp_end",
+                "value": "2023-04-26T23:59:59Z",
+                "type": "query",
+                "description": "Specify a timestamp in ISO 8601 format to filter data for events that occured before it."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get a summary of counted events. By default, this endpoint returns data for the last 7 days."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Performance summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/campaigns.json",
+            "params": [
+              {
+                "name": "start_time",
+                "value": "2023-05-05T20:41:21.000Z",
+                "type": "query",
+                "description": "Specify a timestamp in the ISO 8601 format to filter the performance data of the campaigns that ran after it."
+              },
+              {
+                "name": "end_time",
+                "value": "2023-10-06T20:41:21.000Z",
+                "type": "query",
+                "description": "Specify a timestamp in the ISO 8601 format to filter the performance data of the campaigns that ran before it."
+              },
+              {
+                "name": "status",
+                "value": "launched",
+                "type": "query",
+                "description": "Specify a status to filter the campaigns."
+              },
+              {
+                "name": "tag_data",
+                "value": "Regions:NA,EU,APAC,LATAM,GreaterChina",
+                "type": "query",
+                "description": "Specify tags to filter the campaigns."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to export the performance data of all the campaigns for a given date range."
+        },
+        {
+          "info": {
+            "name": "Bulk archive campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/bulk_archive",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to archive multiple campaigns by providing an array of UUIDs."
+        },
+        {
+          "info": {
+            "name": "Bulk trigger campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/bulk_execute",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to trigger multiple campaigns."
+        },
+        {
+          "info": {
+            "name": "Bulk unarchive campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/bulk_unarchive",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to unarchive multiple campaigns by providing an array of UUIDs."
+        },
+        {
+          "info": {
+            "name": "Trigger a campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/execute",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to trigger an event-triggered or API-triggered campaign for a specific user."
+        },
+        {
+          "info": {
+            "name": "Create a campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/:campaign_type",
+            "params": [
+              {
+                "name": "campaign_type",
+                "value": "",
+                "type": "path",
+                "description": "Specify how the campaign is triggered. Choose an option from the list."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create a campaign and specify its attributes."
+        },
+        {
+          "info": {
+            "name": "Detailed report without stats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/:campaign_uuid.json",
+            "params": [
+              {
+                "name": "campaign_uuid",
+                "value": "a43b685d-65e3-5303-64d8-d4b4ab075b5f",
+                "type": "path",
+                "description": "Specify the UUID of the campaign for which you want a detailed report. You can copy the UUID from the URL of the campaign on dashboard. For example, if you open a campaign in the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details`."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get a detailed report of a specific campaign that does not include campaign statistics."
+        },
+        {
+          "info": {
+            "name": "Archive a single campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/:campaign_uuid/archive",
+            "params": [
+              {
+                "name": "campaign_uuid",
+                "value": "",
+                "type": "path",
+                "description": "Specify the UUID of the campaign to archive."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to archive a specific campaign by its UUID."
+        },
+        {
+          "info": {
+            "name": "Detailed report with stats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/:campaign_uuid/detail.json",
+            "params": [
+              {
+                "name": "campaign_uuid",
+                "value": "a43b685d-65e3-5303-64d8-d4b4ab075b5f",
+                "type": "path",
+                "description": "Specify the UUID of the campaign for which you want a detailed report. For example, if you open an campaign in the Blueshift app, its URL looks like: `https://app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details`. You can copy the UUID from the URL of the campaign on dashboard."
+              },
+              {
+                "name": "end_time",
+                "value": "2023-08-05T07:05:38.000Z",
+                "type": "query",
+                "description": "Specify a timestamp in the ISO 8601 format to filter the report of the campaign upto it."
+              },
+              {
+                "name": "start_time",
+                "value": "2023-07-05T07:05:38.000Z",
+                "type": "query",
+                "description": "Specify a timestamp in the ISO 8601 format to filter the report of the campaign after it."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get a detailed report of a specific campaign."
+        },
+        {
+          "info": {
+            "name": "Launch a campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/:campaign_uuid/launch",
+            "params": [
+              {
+                "name": "campaign_uuid",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the campaign to be launched."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to immediately launch a campaign. \n\nCampaigns that are archived or already completed cannot be launched. The API returns validation errors similar to those shown on the campaign UI."
+        },
+        {
+          "info": {
+            "name": "Pause a campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/:campaign_uuid/pause",
+            "params": [
+              {
+                "name": "campaign_uuid",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the campaign to pause."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to pause a campaign that is currently running or scheduled. This action is not applicable to campaigns that are completed or archived."
+        },
+        {
+          "info": {
+            "name": "Unarchive a single campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/:campaign_uuid/unarchive",
+            "params": [
+              {
+                "name": "campaign_uuid",
+                "value": "",
+                "type": "path",
+                "description": "Specify the UUID of the campaign to unarchive."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to unarchive a specific campaign by its UUID."
+        },
+        {
+          "info": {
+            "name": "Update campaign schedule",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.getblueshift.com/api/v1/campaigns/:campaign_uuid/update_schedule",
+            "params": [
+              {
+                "name": "campaign_uuid",
+                "value": "",
+                "type": "path",
+                "description": "Specify the UUID of the campaign to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to update the schedule of an existing campaign."
+        },
+        {
+          "info": {
+            "name": "List campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v2/campaigns.json",
+            "params": [
+              {
+                "name": "name",
+                "value": "Members-only Banner",
+                "type": "query",
+                "description": "Search for campaigns that contain the specified string in the name of the campaign."
+              },
+              {
+                "name": "email",
+                "value": "janedoe@acme.com",
+                "type": "query",
+                "description": "Search for campaigns created by specified author."
+              },
+              {
+                "name": "created_after",
+                "value": "2024-05-21T07:05:00.000Z",
+                "type": "query",
+                "description": "Search for campaigns created after specified date and time."
+              },
+              {
+                "name": "created_before",
+                "value": "2024-05-24T07:05:00.000Z",
+                "type": "query",
+                "description": "Search for campaigns created before specified date and time."
+              },
+              {
+                "name": "startdate",
+                "value": "2024-05-22T02:26:00.000Z",
+                "type": "query",
+                "description": "Search for campaigns that started after specified date and time. If the start date is not specified, for one time campaigns, response contains only campaigns that have a start date within the last 30 days. For other campaign types, if start date is not specified, all campaigns are returned irrespective of start date."
+              },
+              {
+                "name": "archived",
+                "value": "true",
+                "type": "query",
+                "description": "Search for campaigns with specified archived status. Set as true for archived campaigns."
+              },
+              {
+                "name": "status",
+                "value": "launched",
+                "type": "query",
+                "description": "Search for campaigns with specified status."
+              },
+              {
+                "name": "exec_term",
+                "value": "one_time",
+                "type": "query",
+                "description": "Search for campaigns of specified type. Value can be one_time, recurring, on_going (segment triggered), transactional (event triggered), or onsite (live content)."
+              },
+              {
+                "name": "per_page",
+                "value": "4",
+                "type": "query",
+                "description": "Specify the number of records to be returned per page"
+              },
+              {
+                "name": "page",
+                "value": "3",
+                "type": "query",
+                "description": "Specify the page number for the search results."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the list of campaigns."
+        },
+        {
+          "info": {
+            "name": "Get a customer's campaign activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v2/customer_campaign_activity",
+            "params": [
+              {
+                "name": "email",
+                "value": "jane.doe@example.com",
+                "type": "query",
+                "description": "Customer's email."
+              },
+              {
+                "name": "customer_id",
+                "value": "cust_91455",
+                "type": "query",
+                "description": "Retailer/customer ID."
+              },
+              {
+                "name": "phone_number",
+                "value": "+14155550172",
+                "type": "query",
+                "description": "Customer's phone number."
+              },
+              {
+                "name": "uuid",
+                "value": "e909605f-3eb3-4e2a-a666-648dedae5b89",
+                "type": "query",
+                "description": "Customer's Blueshift UUID."
+              },
+              {
+                "name": "start_time",
+                "value": "2026-07-01T00:00:00Z",
+                "type": "query",
+                "description": "ISO8601 start of the activity window (inclusive); cannot be more than 366 days in the past."
+              },
+              {
+                "name": "end_time",
+                "value": "2026-07-30T23:59:59Z",
+                "type": "query",
+                "description": "ISO8601 end of the activity window (exclusive); must be on or after start_time and cannot be in the future."
+              },
+              {
+                "name": "cursor",
+                "value": "2026-07-15T08:30:00Z",
+                "type": "query",
+                "description": "ISO8601 pagination token from a prior response's cursor field, used to fetch older activity past the 10,000-record cap; must fall within (start_time, end_time]."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Returns a customer's campaign activity (sends, opens, clicks, purchases, revenue) for up to 366 days."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Catalog",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of catalogs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/catalogs",
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get a list of all catalogs."
+        },
+        {
+          "info": {
+            "name": "Create a catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/catalogs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create a catalog in Blueshift."
+        },
+        {
+          "info": {
+            "name": "Get catalog details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/catalogs/:catalog_uuid.json",
+            "params": [
+              {
+                "name": "catalog_uuid",
+                "value": "",
+                "type": "path",
+                "description": "Specify the UUID of the catalog. You can get the catalog's UUID from its URL. For example, if you open a catalog on the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/catalogs/<CATALOG_UUID>/details`."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the details of one catalog at a time."
+        },
+        {
+          "info": {
+            "name": "Add items to a catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/catalogs/:catalog_uuid.json",
+            "params": [
+              {
+                "name": "catalog_uuid",
+                "value": "89ee8378-a887-474b-8afe-e2369cc9297c",
+                "type": "path",
+                "description": "Specify the UUID of the catalog to which you want to add the items. You can get the catalog's UUID from its URL. For example, if you open a catalog on the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/catalogs/<CATALOG_UUID>/details`."
+              },
+              {
+                "name": "syncUpdateWithProductData",
+                "value": "true",
+                "type": "query",
+                "description": "Optional query parameter. When set to `true`, the API returns the product_id and UUID for products that are added successfully. When set to `false` or not provided, returns a simple status response."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to add items to a catalog."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Custom user lists",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add user to list",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/custom_user_lists/add_user_to_list/:list_id",
+            "params": [
+              {
+                "name": "list_id",
+                "value": "41148",
+                "type": "path",
+                "description": "Specify the ID of the custom user list to which you want to add a user. You can find the list ID in the URL when viewing the list in the Blueshift app. For example: `https://app.getblueshift.com/dashboard#/app/custom_list/41148/edit` - the list ID here is `41148`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to add a user to a custom list."
+        },
+        {
+          "info": {
+            "name": "Bulk add users to list",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/custom_user_lists/bulk_add_users_to_list/:list_id",
+            "params": [
+              {
+                "name": "list_id",
+                "value": "",
+                "type": "path",
+                "description": "Specify the ID of the list to which you want to add users in bulk."
+              },
+              {
+                "name": "async",
+                "value": "",
+                "type": "query",
+                "description": "Set this parameter to `true` to add users to the list asynchronously. In async mode, you can send up to 500 identifier values in one API call, and the request runs in the background after it is accepted. Omit this parameter or set it to `false` to add users synchronously, where you can send up to 25 identifier values in one API call. The response format is the same in both modes."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Bulk add users to a custom list — up to 25 per call, or 500 with `async=true`."
+        },
+        {
+          "info": {
+            "name": "Bulk remove users from list",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/custom_user_lists/bulk_remove_users_from_list/:list_id",
+            "params": [
+              {
+                "name": "list_id",
+                "value": "",
+                "type": "path",
+                "description": "Specify the ID of the list from which you want to remove users in bulk."
+              },
+              {
+                "name": "async",
+                "value": "",
+                "type": "query",
+                "description": "Set this parameter to `true` to remove users from the list asynchronously. In async mode, you can send up to 500 identifier values in one API call, and the request runs in the background after it is accepted. Omit this parameter or set it to `false` to remove users synchronously, where you can send up to 25 identifier values in one API call. The response format is the same in both modes."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Bulk remove users from a custom list — up to 25 per call, or 500 with `async=true`."
+        },
+        {
+          "info": {
+            "name": "Create empty list",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/custom_user_lists/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create an empty user list."
+        },
+        {
+          "info": {
+            "name": "Get customer list details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/custom_user_lists/id/:custom_user_list_id",
+            "params": [
+              {
+                "name": "custom_user_list_id",
+                "value": "",
+                "type": "path",
+                "description": "Specify the ID of the list."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get details of the specified customer list from your account."
+        },
+        {
+          "info": {
+            "name": "Overwrite users in a list",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/custom_user_lists/overwrite_list/:list_id",
+            "params": [
+              {
+                "name": "list_id",
+                "value": "",
+                "type": "path",
+                "description": "Specify the ID of the list to which you want to overwrite users."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to overwrite all users in a custom list."
+        },
+        {
+          "info": {
+            "name": "Remove user from list",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/custom_user_lists/remove_user_from_list/:list_id",
+            "params": [
+              {
+                "name": "list_id",
+                "value": "",
+                "type": "path",
+                "description": "Specify the ID of the list from which you want to remove a user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to remove a user from a custom list."
+        },
+        {
+          "info": {
+            "name": "Get seed lists from your account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/custom_user_lists/seed_lists",
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the seed lists from your account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Customer",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Trigger customer import",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/customer_attributes/trigger_import",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Triggers a launched S3 customer attributes import task."
+        },
+        {
+          "info": {
+            "name": "Search customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/customers",
+            "params": [
+              {
+                "name": "email",
+                "value": "janedoe@acme.com",
+                "type": "query",
+                "description": "Specify the email ID of the customer you want to search for."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to search for a customer using the email ID that you added to our platform."
+        },
+        {
+          "info": {
+            "name": "Create or update customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/customers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create a new customer or update an existing customer."
+        },
+        {
+          "info": {
+            "name": "Bulk create/update customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/customers/bulk",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create or update details of multiple customers."
+        },
+        {
+          "info": {
+            "name": "Delete a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/customers/delete",
+            "params": [
+              {
+                "name": "delete_all_matching_customers",
+                "value": "true",
+                "type": "query",
+                "description": "Specify this value to true if you want to delete all matching profiles of a customer."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to permanently delete all personal data of your customer."
+        },
+        {
+          "info": {
+            "name": "Stop tracking a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/customers/forget",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to permanently delete all personal data associated with a customer and remove them from tracking."
+        },
+        {
+          "info": {
+            "name": "Merge customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/customers/merge",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to programmatically merge two duplicate customers, effectively unifying them as one."
+        },
+        {
+          "info": {
+            "name": "Start tracking a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/customers/unforget",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to start tracking a customer. After tracking is enabled, the customer becomes eligible for future campaigns."
+        },
+        {
+          "info": {
+            "name": "Get customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/customers/:uuid",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "path",
+                "description": "Specify the UUID of the customer whose details you want to get."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the details of a customer using the customer's UUID."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Customer groups",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Delete customer group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.getblueshift.com/api/v1/customer_group/:group_id",
+            "params": [
+              {
+                "name": "group_id",
+                "value": "grp_orionretail",
+                "type": "path",
+                "description": "The ID of the customer group to delete. This is not the UUID."
+              },
+              {
+                "name": "delete_users",
+                "value": "false",
+                "type": "query",
+                "description": "Determines whether the users associated with the group are also deleted.\n\n- `false` — Deletes the group and preserves all associated user records.\n- `true` — Deletes the group and permanently removes all associated users."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Deletes a customer group. Set `delete_users` to keep or remove the associated users."
+        },
+        {
+          "info": {
+            "name": "Remove user from customer group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.getblueshift.com/api/v1/customer_group/:group_id/user/:user_uuid",
+            "params": [
+              {
+                "name": "group_id",
+                "value": "grp_orionretail",
+                "type": "path",
+                "description": "The ID of the customer group. This is not the UUID."
+              },
+              {
+                "name": "user_uuid",
+                "value": "57fbca61-3eed-43ea-aaa6-c35307296035",
+                "type": "path",
+                "description": "The UUID of the user to remove from the group."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Removes a user from a customer group without deleting the user record."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get customer events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/customer_search/show_events",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "query",
+                "description": "Specify the uuid of the customer whose event details you want to fetch."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to fetch the details of the events for a customer using the customer's UUID."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Email template",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List email templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/email_templates.json",
+            "params": [
+              {
+                "name": "name",
+                "value": "Support email",
+                "type": "query",
+                "description": "Search for email templates that contain the specified string in the name of the template."
+              },
+              {
+                "name": "archived",
+                "value": "true",
+                "type": "query",
+                "description": "Search for templates with specified archived status. Specify value as `0` to get a list of un-archived templates, or as `1` to get a list of archived templates. Leave blank to get a list of all templates."
+              },
+              {
+                "name": "resource.editor_type",
+                "value": "bee_editor",
+                "type": "query",
+                "description": "Search for templates of the specified type. Specify value as `html` to get a list of HTML templates or `bee_editor` to get a list of Visual Editor templates. Leave blank to get a list of all templates."
+              },
+              {
+                "name": "per_page",
+                "value": "1",
+                "type": "query",
+                "description": "Specify the number of records to be returned per page"
+              },
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "description": "Specify the page number for the search results."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the list of email templates."
+        },
+        {
+          "info": {
+            "name": "Create email template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/email_templates.json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create an email template."
+        },
+        {
+          "info": {
+            "name": "Send a test mail",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/email_templates/test_send.json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to send a test mail to a specific email address."
+        },
+        {
+          "info": {
+            "name": "Get template details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/email_templates/:TEMPLATE_UUID.json",
+            "params": [
+              {
+                "name": "TEMPLATE_UUID",
+                "value": "9da0744e-***-**-85d7-***4ac745b",
+                "type": "path",
+                "description": "Specify the UUID of the template. The template uuids can be found by [querying the index](https://developer.blueshift.com/reference/email-template#get_api-v1-email-templates-json), or from the URL when you view a template in the Blueshift app. For example, in `https://app.getblueshift.com/dashboard#/email_template_studio/<TEMPLATE_UUID>/edit/info`, the `<TEMPLATE_UUID>` is the uuid you need."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get a JSON representation of your email template along with a list of campaigns using the template."
+        },
+        {
+          "info": {
+            "name": "Update email template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/email_templates/:TEMPLATE_UUID.json",
+            "params": [
+              {
+                "name": "TEMPLATE_UUID",
+                "value": "9da0744e-***-**-85d7-***4ac745b",
+                "type": "path",
+                "description": "Specify the UUID of the template. The template uuids can be found by [querying the index](https://developer.blueshift.com/reference/email-template#get_api-v1-email-templates-json), or from the URL when you view a template in the Blueshift app. For example, in `https://app.getblueshift.com/dashboard#/email_template_studio/<TEMPLATE_UUID>/edit/info`, the `<TEMPLATE_UUID>` is the uuid you need."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to update an email template."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Email validation",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Validate multiple email addresses",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/emails/bulk_validate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to validate up to 30 email addresses. This feature requires custom setup. Contact Blueshift Support or your CSM to enable it."
+        },
+        {
+          "info": {
+            "name": "Validate a single email address",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/emails/validate",
+            "params": [
+              {
+                "name": "email",
+                "value": "janedoe@acme.com",
+                "type": "query",
+                "description": "The email address to validate."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to validate a single email address and evaluate its deliverability and risk profile."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "External fetch",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List external fetch templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/external_fetches.json",
+            "params": [
+              {
+                "name": "per_page",
+                "value": "2",
+                "type": "query",
+                "description": "Specify the number of records to be returned per page"
+              },
+              {
+                "name": "page",
+                "value": "2",
+                "type": "query",
+                "description": "Specify the page number for the search results."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the list of external fetch templates."
+        },
+        {
+          "info": {
+            "name": "Create an external fetch template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/external_fetches.json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create an external fetch template."
+        },
+        {
+          "info": {
+            "name": "Update an external fetch template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/external_fetches/:template_uuid",
+            "params": [
+              {
+                "name": "template_uuid",
+                "value": "8da0744e-141d-4c9d-85d7-c89a54ac745a",
+                "type": "path",
+                "description": "Specify the UUID of the template that you want to update. You can get the template UUID from the URL when you view a template in the Blueshift app. For example, in `https://app.getblueshift.com/dashboard#/app/external_fetches/<TEMPLATE_UUID>/edit`, the <TEMPLATE_UUID> is the uuid that you need."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to update an external fetch template."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Interest alerts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update or alert customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/interests/alert",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to send an update to or to alert customers about topics that they have subscribed to."
+        },
+        {
+          "info": {
+            "name": "Get customer subscriptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/interests/user_subscriptions",
+            "params": [
+              {
+                "name": "email",
+                "value": "janedoe@acme.com",
+                "type": "query",
+                "description": "Specify the customer's email address. For example, abc@def.com. You must atleast specify this value, or one of the following fields: uuid, customer_id, phone_number, or device_id."
+              },
+              {
+                "name": "uuid",
+                "value": "e909605f-3eb3-4e2a-a666-648dedae5b89",
+                "type": "query",
+                "description": "The unique identifier for the customer."
+              },
+              {
+                "name": "customer_id",
+                "value": "812123",
+                "type": "query",
+                "description": "Specify the customer ID."
+              },
+              {
+                "name": "phone_number",
+                "value": "",
+                "type": "query",
+                "description": "Specify the phone number of the customer. Ensure that it includes the country code, starts with a +, follows the E.164 standard, does not start with a 0, and contains 6 to 14 characters. For example, +14155553467."
+              },
+              {
+                "name": "device_id",
+                "value": "8abe3faa-d48d-4e4a-00ca-beae01f1c987",
+                "type": "query",
+                "description": "Specify the UUID of the device."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get all the topics that a customer has subscribed to."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Live Activities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Start a Live Activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/live_activity/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Starts a Live Activity on one or more customers' devices."
+        },
+        {
+          "info": {
+            "name": "Update a Live Activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/live_activity/update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Updates the content of a running Live Activity, or ends it."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Live content",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List live content slots",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/onsite_slots.json",
+            "params": [
+              {
+                "name": "name",
+                "value": "mobile_top_banner",
+                "type": "query",
+                "description": "Search for live content slot that contain the specified string in the name of the slot. Leave blank to get a list of all slots."
+              },
+              {
+                "name": "slot_format",
+                "value": "JSON",
+                "type": "query",
+                "description": "Search for live content slots based on their format. This filter is case insensitive, and values can be HTML, JSON, Popup, or Landing Page. Leave blank to get a list of all slots."
+              },
+              {
+                "name": "active",
+                "value": "true",
+                "type": "query",
+                "description": "Search for live content slots based on active filter. when 'active' is true, it returns slots linked to campaigns not in 'Completed' or 'Archived' states. when 'active' is false, it return slots those unused by campaigns or associated with campaigns in 'Completed' or 'Archived' states. Leave blank to get a list of all slots."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the list of live content slots."
+        },
+        {
+          "info": {
+            "name": "Live content",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/live",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to insert content recommendations in your website and mobile apps."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Promotions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add promo codes to promotion",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/promotions/:promotion_uuid/add_promocodes",
+            "params": [
+              {
+                "name": "promotion_uuid",
+                "value": "",
+                "type": "path",
+                "description": "Specify the UUID of the promotion to which you want to add promo codes."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to add promo codes to existing promotion."
+        },
+        {
+          "info": {
+            "name": "Overwrite promo codes in promotion",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/promotions/:promotion_uuid/overwrite",
+            "params": [
+              {
+                "name": "promotion_uuid",
+                "value": "",
+                "type": "path",
+                "description": "Specify the UUID of the promotion to which you want to add promo codes."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to replace all existing promo codes in a promotion with a new set of codes."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Push template",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List push templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/push_templates.json",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Search for push templates that contain the specified string in the name of the template."
+              },
+              {
+                "name": "archived",
+                "value": "",
+                "type": "query",
+                "description": "Search for templates with specified archived status. Value can be `0` to get a list of un-archived templates or `1` to get a list of archived templates. Leave blank to get a list of all templates."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Specify the number of records to be returned per page"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Specify the page number for the search results."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the list of push templates."
+        },
+        {
+          "info": {
+            "name": "Create a push template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/push_templates.json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create a push template."
+        },
+        {
+          "info": {
+            "name": "Push a test message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/push_templates/test_push.json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to push a test message to users."
+        },
+        {
+          "info": {
+            "name": "Update a push template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/push_templates/:template_uuid",
+            "params": [
+              {
+                "name": "template_uuid",
+                "value": "9da0744e-141d-4c9d-85d7-c89a54ac745b",
+                "type": "path",
+                "description": "Specify the UUID of the template that you want to update. You can get the template UUID from the URL when you view a template in the Blueshift app. For example, in `https://app.getblueshift.com/dashboard#/app/push_template/studio/<TEMPLATE_UUID>/edit/info`, the <TEMPLATE_UUID> is the uuid that you need."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to update a push template."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Segments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of segments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/segments/list",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Search for segments that contain the specified string in the name."
+              },
+              {
+                "name": "archived",
+                "value": "",
+                "type": "query",
+                "description": "Search for segments with specified archived status. Value can be `0` to get a list of un-archived segments or `1` to get a list of archived segments. Leave blank to get a list of all segments."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Specify the number of records to be returned per page"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Specify the page number for the search results."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get the list of segments."
+        },
+        {
+          "info": {
+            "name": "Get segment membership counts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/segments/:segment_uuid/matching_users.json",
+            "params": [
+              {
+                "name": "segment_uuid",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the segment."
+              },
+              {
+                "name": "refresh",
+                "value": "",
+                "type": "query",
+                "description": "Trigger job to update segment counts. Counts are updated asynchronously in the background. Use refresh=true to trigger a new count update, and subsequently poll with refresh=false to retrieve updated counts."
+              },
+              {
+                "name": "channels",
+                "value": "email",
+                "type": "query",
+                "description": "Channels can be one of: 'users', 'email', 'push', 'sms', or 'inApp'. Parameter indicates which channel audience counts to refresh."
+              },
+              {
+                "name": "bypass_global",
+                "value": "",
+                "type": "query",
+                "description": "Set 'true' to return counts bypassing the global inclusion segments."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to get count of users in the segment."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Shared assets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List shared assets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/shared_assets.json",
+            "params": [
+              {
+                "name": "asset_type[]",
+                "value": "html,visual_editor",
+                "type": "query",
+                "description": "Filter by one or more asset types. Repeat the parameter for multiple values. Allowed values: `html`, `rich_text`, `visual_editor`, `subject`."
+              },
+              {
+                "name": "display_name",
+                "value": "Banner",
+                "type": "query",
+                "description": "Returns assets whose display name contains the specified substring. An empty string returns all."
+              },
+              {
+                "name": "archived",
+                "value": "",
+                "type": "query",
+                "description": "Archived status filter. Use `0` for active/unarchived, `1` for archived, or omit to include both. In the response, this field is returned as a boolean (`true`/`false`)."
+              },
+              {
+                "name": "page",
+                "value": "0",
+                "type": "query",
+                "description": "Which page of results to fetch. **Zero-based index.** Example: `page=0&per_page=25` returns the first 25 results, `page=1&per_page=25` returns the next 25."
+              },
+              {
+                "name": "per_page",
+                "value": "25",
+                "type": "query",
+                "description": "The number of results to return per page."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Retrieve a list of shared assets: HTML, rich text, subject lines, and visual editor content."
+        },
+        {
+          "info": {
+            "name": "Create a shared asset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/shared_assets.json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create a shared asset."
+        },
+        {
+          "info": {
+            "name": "Update a shared asset",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/shared_assets/:uuid.json",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "type": "path",
+                "description": "The UUID of the shared asset to update. This value is returned when you create an asset."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to update a shared asset."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "SMS template",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List SMS templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/sms_templates.json",
+            "params": [
+              {
+                "name": "resource.message_type",
+                "value": "sms",
+                "type": "query",
+                "description": "Search for SMS templates by the message type - sms or mms."
+              },
+              {
+                "name": "name",
+                "value": "Template SMS test",
+                "type": "query",
+                "description": "Search for SMS templates that contain the specified string in the name of the template."
+              },
+              {
+                "name": "archived",
+                "value": "1",
+                "type": "query",
+                "description": "Search for templates with specified archived status. Value can be `0` to get a list of un-archived templates or `1` to get a list of archived templates. Leave blank to get a list of all templates."
+              },
+              {
+                "name": "per_page",
+                "value": "5",
+                "type": "query",
+                "description": "Specify the number of records to be returned per page"
+              },
+              {
+                "name": "page",
+                "value": "2",
+                "type": "query",
+                "description": "Specify the page number for the search results."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to list all SMS templates. The SMS template has the content that the Blueshift platform uses to create and send text messages to your customers."
+        },
+        {
+          "info": {
+            "name": "Create an SMS template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/sms_templates.json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to create an SMS template."
+        },
+        {
+          "info": {
+            "name": "Send a test SMS",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getblueshift.com/api/v1/sms_templates/test_send.json",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to send a test message. You can use this endpoint to test an SMS template that you create in Blueshift."
+        },
+        {
+          "info": {
+            "name": "Update an SMS template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.getblueshift.com/api/v1/sms_templates/:template_uuid",
+            "params": [
+              {
+                "name": "template_uuid",
+                "value": "9da0744e-141d-4c9d-85d7-c89a54ac745b",
+                "type": "path",
+                "description": "Specify the UUID of the template that you want to update. You can copy the UUID from the URL of the template on the Blueshift app. For example, if you open a template in the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/sms_template/<template_uuid>/edit`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to update an existing SMS template."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Subscription groups",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List subscription groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/subscription_groups",
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Retrieve all subscription groups in your account, including archived ones."
+        },
+        {
+          "info": {
+            "name": "List subscription groups (lite)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/subscription_groups/index_lite",
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Retrieve a lightweight list of subscription groups without metadata."
+        },
+        {
+          "info": {
+            "name": "Get a subscription group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/subscription_groups/:uuid",
+            "params": [
+              {
+                "name": "uuid",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the subscription group. You can get the subscription group's UUID from its URL. For example, if you open a subscription group on the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/subscription-groups/09de09a9-243f-494e-8f7f-44c610692a74/edit`, where the UUID is `09de09a9-243f-494e-8f7f-44c610692a74`."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Retrieve details of a specific subscription group using its UUID."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List tags and tag folders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getblueshift.com/api/v1/tag_contexts/list",
+            "params": [
+              {
+                "name": "resource_type",
+                "value": "Campaign",
+                "type": "query",
+                "description": "Filter by resource type (e.g., `Campaign`, `Segment`, `Template:EmailTemplate`, `SharedAsset`, `Syndication`).\n\n**Note:** Must exactly match the resource type. Not required when using `resource_uuid` since UUIDs are unique across all resource types."
+              },
+              {
+                "name": "resource_uuid",
+                "value": "311499b0-35b9-4f1a-9f04-aa600078a447",
+                "type": "query",
+                "description": "Filter tags for a specific resource by its UUID. **No need to specify `resource_type` when using UUID** - UUIDs are unique across all resources.\n\n**Finding the UUID:**\n• Campaign: `https://app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details`\n• Segment: `https://app.getblueshift.com/dashboard#/app/segments/<SEGMENT_UUID>/edit/events`\n• Template: `https://app.getblueshift.com/dashboard#/app/templates/<TEMPLATE_UUID>/edit`\n\nReturns empty array `[]` if UUID doesn't exist or has no tags."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Use this endpoint to list all the tags and tag folders in your Blueshift account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
