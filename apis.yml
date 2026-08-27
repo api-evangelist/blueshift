@@ -55,98 +55,740 @@ maintainers:
   - FN: APIs.json
     email: info@apis.io
 apis:
-  - name: Blueshift REST API
-    description: >-
-      The Blueshift REST API: 81 operations across 21 resource groups covering customer profiles and
-      privacy operations (create/update, bulk, merge, forget/unforget, delete), event ingestion
-      (single, bulk, summary, history, debug), product and content catalogs, segments and segment
-      membership counts, custom user lists, campaign lifecycle (create, schedule, launch, pause,
-      archive, trigger, bulk trigger) and campaign reporting, email/push/SMS templates and test
-      sends, shared assets, external fetch templates, promotions, interest alerts, subscription
-      groups, iOS Live Activities, adapters, tags and email validation. HTTP Basic authentication
-      with an API key as the username and an empty password; two key classes (Event API key and User
-      API key) split the surface.
-    humanURL: https://developer.blueshift.com/reference/welcome
-    baseURL: https://api.getblueshift.com
-    tags:
-      - Customer Data Platform
-      - Customer Engagement
-      - Marketing Automation
-      - Cross-Channel Messaging
-      - Segmentation
-      - Event Tracking
-      - Product Catalog
-    tags_raw:
-      - customer-data-platform
-      - customer-engagement
-      - marketing-automation
-      - cross-channel-messaging
-      - segmentation
-      - event-tracking
-      - product-catalog
-    properties:
-      - type: OpenAPI
-        url: openapi/blueshift-openapi.yml
-      - type: Overlay
-        url: overlays/blueshift-openapi-overlay.yaml
-      - type: Postman
-        url: postman/blueshift-postman-collection.json
-      - type: Authentication
-        url: authentication/blueshift-authentication.yml
-      - type: ErrorCatalog
-        url: errors/blueshift-problem-types.yml
-      - type: Conventions
-        url: conventions/blueshift-conventions.yml
-      - type: Idempotency
-        url: conventions/blueshift-conventions.yml
-      - type: RateLimits
-        url: rate-limits/blueshift-rate-limits.yml
-      - type: DataModel
-        url: data-model/blueshift-data-model.yml
-      - type: Webhooks
-        url: asyncapi/blueshift-webhooks.yml
-      - type: AgentSkill
-        url: skills/_index.yml
-      - type: Sandbox
-        url: sandbox/blueshift-sandbox.yml
-      - type: Documentation
-        url: https://developer.blueshift.com/docs/introduction
-      - type: APIReference
-        url: https://developer.blueshift.com/reference/welcome
-  - name: Blueshift MCP Server
-    description: >-
-      Official hosted remote MCP server, in public beta, exposing a catalogue of 131 tools (97 read,
-      34 write) across campaigns, segments, customer profiles, catalogs, templates, shared assets,
-      tags, reporting and dashboards, schema discovery, recommendations, the AI campaign optimizer,
-      marketing insights and image management. Streamable HTTP transport with OAuth 2.0
-      authorization; the server publishes RFC 8414 authorization-server metadata and RFC 9728
-      protected-resource metadata, supports dynamic client registration and PKCE, and declares eight
-      read/write scopes. Regional endpoints for US and EU. Blueshift's own catalogue marks 41 of the
-      131 tools as currently published.
-    humanURL: https://help.blueshift.com/hc/en-us/articles/49713147943187-The-Blueshift-MCP-Server-Beta
-    baseURL: https://app.getblueshift.com/mcp
-    tags:
-      - MCP
-      - agent-native
-      - Customer Engagement
-      - Marketing Automation
-    tags_raw:
-      - mcp
-      - agent-native
-      - customer-engagement
-      - marketing-automation
-    properties:
-      - type: MCPServer
-        url: mcp/blueshift-mcp.yml
-      - type: ToolCrosswalk
-        url: mcp/blueshift-tool-crosswalk.yml
-      - type: OAuthScopes
-        url: scopes/blueshift-scopes.yml
-      - type: WellKnown
-        url: well-known/blueshift-well-known.yml
-      - type: Documentation
-        url: https://help.blueshift.com/hc/en-us/articles/49713147943187-The-Blueshift-MCP-Server-Beta
+- name: Blueshift MCP Server
+  description: >-
+    Official hosted remote MCP server, in public beta, exposing a catalogue of 131 tools (97 read, 34
+    write) across campaigns, segments, customer profiles, catalogs, templates, shared assets, tags, reporting
+    and dashboards, schema discovery, recommendations, the AI campaign optimizer, marketing insights and
+    image management. Streamable HTTP transport with OAuth 2.0 authorization; the server publishes RFC
+    8414 authorization-server metadata and RFC 9728 protected-resource metadata, supports dynamic client
+    registration and PKCE, and declares eight read/write scopes. Regional endpoints for US and EU. Blueshift's
+    own catalogue marks 41 of the 131 tools as currently published.
+  humanURL: >-
+    https://help.blueshift.com/hc/en-us/articles/49713147943187-The-Blueshift-MCP-Server-Beta
+  baseURL: https://app.getblueshift.com/mcp
+  tags:
+  - MCP
+  - agent-native
+  - Customer Engagement
+  - Marketing Automation
+  tags_raw:
+  - mcp
+  - agent-native
+  - customer-engagement
+  - marketing-automation
+  properties:
+  - type: MCPServer
+    url: mcp/blueshift-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/blueshift-tool-crosswalk.yml
+  - type: OAuthScopes
+    url: scopes/blueshift-scopes.yml
+  - type: WellKnown
+    url: well-known/blueshift-well-known.yml
+  - type: Documentation
+    url: >-
+      https://help.blueshift.com/hc/en-us/articles/49713147943187-The-Blueshift-MCP-Server-Beta
+- aid: blueshift:blueshift-adapters-api
+  name: Blueshift Adapters API
+  description: >-
+    Adapters are entities that provide integration to various services with Blueshift. For example, we
+    provide adapters for various services such as Mailgun, Sendgrid, and Sparkpost for sending emails,
+    and Infobip and Attentive adapters for SMSes. Similarly, we provide adapters for various channels
+    and integrations.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Adapters
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-adapters-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-campaigns-api
+  name: Blueshift Campaigns API
+  description: Manage your campaigns in Blueshift.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-campaigns-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-catalog-api
+  name: Blueshift Catalog API
+  description: A catalog is a list of items which may include content or products.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-catalog-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-custom-user-lists-api
+  name: Blueshift Custom user lists API
+  description: >-
+    A custom user list contains information about the users of your site such as name, email, phone number,
+    and location. You can use this list as a segment and run campaigns for them.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Custom user lists
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-custom-user-lists-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-customer-api
+  name: Blueshift Customer API
+  description: >-
+    Blueshift hosts 360 degree customer profile for each of your users to represent all of their demographic,
+    behavioral and engagement activity.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Customer
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-customer-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-customer-groups-api
+  name: Blueshift Customer groups API
+  description: >-
+    Customer groups link multiple customer profiles to a common parent entity with shared attributes.
+    Use these endpoints to delete a group or remove a user from a group.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Customer groups
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-customer-groups-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-email-template-api
+  name: Blueshift Email template API
+  description: Email template lifecycle management
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Email template
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-email-template-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-email-validation-api
+  name: Blueshift Email validation API
+  description: Validate single or bulk email addresses to assess deliverability and risk.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Email validation
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-email-validation-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-event-api
+  name: Blueshift Event API
+  description: Use the event APIs to send events from your servers.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Event
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-event-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-external-fetch-api
+  name: Blueshift External fetch API
+  description: >-
+    External fetch is a Blueshift capability that lets you include dynamic content from external servers
+    that is fetched “just in time” before sending a message.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - External fetch
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-external-fetch-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-interest-alerts-api
+  name: Blueshift Interest alerts API
+  description: >-
+    Interest alerts store information about users' interests. When an event occurs in an area or topic
+    in which multiple users are interested, you can trigger a single API call to send a notification to
+    all the users who are interested in that topic.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Interest alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-interest-alerts-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-live-activities-api
+  name: Blueshift Live Activities API
+  description: The Live Activities API from Blueshift — 2 operation(s) for live activities.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Live Activities
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-live-activities-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-live-content-api
+  name: Blueshift Live content API
+  description: >-
+    Use the Live content API endpoint to insert content recommendations in your website and mobile apps.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Live content
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-live-content-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-promotions-api
+  name: Blueshift Promotions API
+  description: >-
+    Promotions allows you to manage promo codes that you may wish to send to your customers through Blueshift
+    Campaigns
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Promotions
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-promotions-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-push-template-api
+  name: Blueshift Push template API
+  description: Push template lifecycle management
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Push template
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-push-template-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-search-api
+  name: Blueshift Search API
+  description: You can use the `customer_search` API to search for events associated with a customer.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-search-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-segments-api
+  name: Blueshift Segments API
+  description: >-
+    A segment is a list of users that satisfy a criteria. For example, you can create a segment for users
+    who are located in the San Francisco area and run campaigns for them.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Segments
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-segments-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-shared-assets-api
+  name: Blueshift Shared assets API
+  description: >-
+    Manage reusable assets such as HTML, rich text, subject lines, and visual editor content.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Shared assets
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-shared-assets-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-sms-template-api
+  name: Blueshift SMS template API
+  description: SMS template lifecycle management
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - SMS template
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-sms-template-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-subscription-groups-api
+  name: Blueshift Subscription groups API
+  description: Retrieve subscription groups and view detailed information for each subscription group.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Subscription groups
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-subscription-groups-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
+- aid: blueshift:blueshift-tags-api
+  name: Blueshift Tags API
+  description: >-
+    Tags are folder-based entities that you can use to organize your resources. Each tag folder contains
+    its own isolated set of tags.
+  humanURL: https://developer.blueshift.com/reference/welcome
+  baseURL: https://api.getblueshift.com
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/blueshift-tags-api-openapi.yml
+  - type: Postman
+    url: postman/blueshift-postman-collection.json
+  - type: Authentication
+    url: authentication/blueshift-authentication.yml
+  - type: ErrorCatalog
+    url: errors/blueshift-problem-types.yml
+  - type: Conventions
+    url: conventions/blueshift-conventions.yml
+  - type: Idempotency
+    url: conventions/blueshift-conventions.yml
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
+  - type: DataModel
+    url: data-model/blueshift-data-model.yml
+  - type: Webhooks
+    url: asyncapi/blueshift-webhooks.yml
+  - type: Sandbox
+    url: sandbox/blueshift-sandbox.yml
+  - type: Documentation
+    url: https://developer.blueshift.com/docs/introduction
+  - type: APIReference
+    url: https://developer.blueshift.com/reference/welcome
 common:
+  - type: Overlay
+    url: overlays/blueshift-openapi-overlay.yaml
+  - type: AgentSkill
+    url: skills/_index.yml
   - type: TrustCenter
     url: security/blueshift-trust-center.yml
   - type: DomainSecurity
