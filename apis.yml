@@ -797,6 +797,9 @@ apis:
   - type: APIReference
     url: https://developer.blueshift.com/reference/welcome
 common:
+  - type: CapabilityMap
+    url: capabilities/blueshift-capability-edges.yml
+    name: Blueshift Business Capability Map
   - type: Overlay
     url: overlays/blueshift-openapi-overlay.yaml
   - type: AgentSkill

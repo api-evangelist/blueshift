@@ -1,0 +1,65 @@
+slug: blueshift
+provider: Blueshift
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 5
+edges:
+- tag: Customer
+  spec_file: blueshift-customer-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.9
+  evidence: POST /api/v1/customers 'Create or update customer', POST /api/v1/customers/merge 'Merge customers',
+    POST /api/v1/customers/forget 'Stop tracking a customer'
+  reason: CRUD, search, merge and forget of unified customer profiles in a customer data platform — customer
+    master data and identity resolution.
+- tag: Segments
+  spec_file: blueshift-segments-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.8
+  evidence: GET /api/v1/segments/list  Get list of segments; GET /api/v1/segments/{segment_uuid}/matching_users.json  Get
+    segment membership counts
+  reason: Operations list customer segments and return segment membership counts within a customer data
+    platform — this is customer segmentation, not a technical grouping construct.
+- tag: Promotions
+  spec_file: blueshift-promotions-api-openapi.yml
+  capability_id: BC-440.30
+  capability_id_l1: BC-440
+  capability_name: Discount & Promotion Management
+  confidence: 0.75
+  evidence: '"Add promo codes to promotion", "Overwrite promo codes in promotion"'
+  reason: Managing promotions and their promo-code pools is squarely discount and promotion management;
+    the only ambiguity is whether it belongs with marketing campaign execution instead.
+- tag: Campaigns
+  spec_file: blueshift-campaigns-api-openapi.yml
+  capability_id: BC-400.40
+  capability_id_l1: BC-400
+  capability_name: Demand Generation Management
+  confidence: 0.7
+  evidence: POST /api/v1/campaigns/execute 'Trigger a campaign', PATCH .../launch 'Launch a campaign',
+    PATCH .../pause 'Pause a campaign'
+  reason: Creation, launch, pause and performance reporting of multi-channel marketing campaigns on a
+    customer-engagement platform — marketing campaign/lifecycle execution. Some ambiguity between Demand
+    Generation and Digital Marketing sub-capabilities.
+- tag: Custom user lists
+  spec_file: blueshift-custom-user-lists-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.7
+  evidence: PUT /api/v1/custom_user_lists/bulk_add_users_to_list/{list_id} 'Bulk add users to list', GET
+    /api/v1/custom_user_lists/seed_lists
+  reason: Building and maintaining named audience lists of customers for targeting in a CDP — customer
+    segmentation / treatment audience management. Sub-capability choice carries some uncertainty.
