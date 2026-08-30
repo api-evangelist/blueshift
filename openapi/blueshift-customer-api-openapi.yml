@@ -1,0 +1,1525 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Customer API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Customer
+  description: Blueshift hosts 360 degree customer profile for each of your users to represent all of their demographic, behavioral and engagement activity.
+paths:
+  /api/v1/customer_attributes/trigger_import:
+    post:
+      tags:
+      - Customer
+      summary: Trigger customer import
+      description: Triggers a launched S3 customer attributes import task.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - uuid
+              properties:
+                uuid:
+                  type: string
+                  description: The UUID of the customer attributes import task. You can find the UUID in the import task URL on the Blueshift dashboard. For example, for the URL `https://app.getblueshift.com/dashboard#/app/customer/import_show/23114f03-5462-4de5-b112-d316e02650d1`, the UUID is `23114f03-5462-4de5-b112-d316e02650d1`.
+                  example: 23114f03-5462-4de5-b112-d316e02650d1
+            examples:
+              trigger_import:
+                summary: Trigger a customer attributes import
+                value:
+                  uuid: 23114f03-5462-4de5-b112-d316e02650d1
+        description: Provide the UUID of the customer attributes import task that you want to trigger.
+      responses:
+        '200':
+          description: The import was triggered successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+              examples:
+                success:
+                  summary: Import triggered
+                  value:
+                    status: ok
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              example:
+                message: Not authorized
+        '404':
+          description: Resource not found - The import task with the specified UUID was not found.
+          content:
+            application/json:
+              example:
+                errors:
+                - title: error
+                  detail: 'Error: Resource not found'
+                meta:
+                  combine_errors: false
+                  no_toast: false
+                  unformatted:
+                    error:
+                    - Resource not found
+        '405':
+          description: Method not allowed - The import cannot be triggered. This can occur if the import source is not Amazon S3, the import is not in launched state, or the import is already being processed.
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us at support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway.
+        '503':
+          description: Service unavailable, please retry.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout.
+  /api/v1/customers:
+    get:
+      tags:
+      - Customer
+      summary: Search customer
+      description: Use this endpoint to search for a customer using the email ID that you added to our platform.
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: email
+        description: Specify the email ID of the customer you want to search for.
+        example: janedoe@acme.com
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        activated_at:
+                          type: string
+                          format: date-time
+                          example: '2023-01-04T21:51:09.457Z'
+                        created_at:
+                          type: string
+                          format: date-time
+                          description: The date and time when the email ID was created.
+                          example: '2023-01-04T21:49:32.247Z'
+                        custom_attributes:
+                          type: object
+                          description: Any user-specific information as custom attributes.
+                        customer_id:
+                          type: string
+                          example: '812123'
+                        device_ids:
+                          type: array
+                          example:
+                          - 4d031ed8-c40e-57d4-9c99-a3e308d8cd78, 4d031ed8-c40e-57d4-9c99-a3e308d8cd77, 4d031ed8-c40e-57d4-9c99-a3e308d8cd79
+                          items:
+                            type: string
+                        device_tokens:
+                          type: array
+                          example: '49244924492449244924492449244924492449244924'
+                          items:
+                            type: string
+                        email:
+                          type: string
+                          example: janedoe@acme.com
+                        email_hash:
+                          type: string
+                          example: 2de9b640b9ceda26ce4c3d8a919eb42c
+                        facebook:
+                          type: string
+                          example: null
+                        first_lp_url:
+                          type: string
+                          example: null
+                        first_referrer:
+                          type: string
+                          example: null
+                        first_utm_campaign:
+                          type: string
+                          example: summer_sale
+                        first_utm_content:
+                          type: string
+                          example: cta
+                        first_utm_medium:
+                          type: string
+                          example: email
+                        first_utm_source:
+                          type: string
+                          example: blueshift
+                        first_utm_term:
+                          type: string
+                          example: abandoned-wishlist
+                        firstname:
+                          type: string
+                          example: Mike
+                        lastname:
+                          type: string
+                          description: The last name of the customer.
+                          example: Doel
+                        joined_at:
+                          type: string
+                          format: date-time
+                          example: '2011-10-11T19:58:17Z'
+                        last_browser_platform:
+                          type: string
+                          example: Mac OS X
+                        last_browser_type:
+                          type: string
+                          example: Chrome
+                        last_browser_version:
+                          type: string
+                          example: 17.4
+                        last_ip:
+                          type: string
+                          example: 201.33.19.3
+                        last_location_city:
+                          type: string
+                          example: San Francisco
+                        last_location_country:
+                          type: string
+                          example: USA
+                        last_location_country_code:
+                          type: string
+                          example: US
+                        last_location_geo_latitude:
+                          type: string
+                          example: null
+                        last_location_geo_longitude:
+                          type: string
+                          example: null
+                        last_location_pin_code:
+                          type: string
+                          example: '94536'
+                        last_location_state:
+                          type: string
+                          example: California
+                        last_location_timezone:
+                          type: string
+                          example: Pacific/Los_Angeles
+                        last_lp_url:
+                          type: string
+                          example: http://site.com
+                        last_pageview_url:
+                          type: string
+                          example: null
+                        last_purchase_at:
+                          type: string
+                          example: '2021-08-25T06:06:59.410Z'
+                        last_referrer:
+                          type: string
+                          example: null
+                        last_send_at:
+                          type: string
+                          format: date-time
+                        last_utm_campaign:
+                          type: string
+                          example: null
+                        last_utm_content:
+                          type: string
+                          example: null
+                        last_utm_medium:
+                          type: string
+                          example: email
+                        last_utm_source:
+                          type: string
+                          example: null
+                        last_utm_term:
+                          type: string
+                          example: null
+                        last_visit_at:
+                          type: string
+                          example: '2024-05-23T20:10:21Z'
+                        lifetime_orders:
+                          type: integer
+                          example: 535
+                        lifetime_revenue:
+                          type: integer
+                          example: 490
+                        lifetime_visits:
+                          type: integer
+                          example: 5
+                        opt_out_of_ads:
+                          type: string
+                          example: false
+                        opted_out_of_ads_at:
+                          type: string
+                          example: null
+                        phone_number:
+                          type: string
+                          example: null
+                        predictive_engagement_percentile:
+                          type: integer
+                          example: 78
+                        predictive_purchase_intent_percentile:
+                          type: integer
+                          example: 86
+                        predictive_retention_percentile:
+                          type: integer
+                          example: 70
+                        session_last_activity_at:
+                          type: string
+                          format: date-time
+                          example: 2017-06-07 01:50:17 +0000
+                        subscribed_at:
+                          type: string
+                          example: null
+                        unsubscribed:
+                          type: string
+                          example: false
+                        unsubscribed_at:
+                          type: string
+                          example: null
+                        updated_at:
+                          type: string
+                          format: date-time
+                        uuid:
+                          type: string
+                          example: 06743da2-9589-4c01-afda-e3d85e487fa7
+                  user:
+                    type: object
+                    properties:
+                      activated_at:
+                        type: string
+                        format: date-time
+                        example: '2022-09-17T17:03:25Z'
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: '2024-10-03T04:57:24.000Z'
+                      custom_attributes:
+                        type: object
+                        description: Aside from standard attributes for user like phone number, email, and first name, you can create custom attributes if the data doesn't fit into standard categories.
+                      customer_id:
+                        type: string
+                        example: '11158123'
+                      device_ids:
+                        type: array
+                        example:
+                        - 4d031ed8-c40e-57d4-9c99-a3e308d8cd78, 4d031ed8-c40e-57d4-9c99-a3e308d8cd77, 4d031ed8-c40e-57d4-9c99-a3e308d8cd79
+                        items:
+                          type: string
+                      device_tokens:
+                        type: array
+                        example: '49244924492449244924492449244924492449244924'
+                        items:
+                          type: string
+                      email:
+                        type: string
+                        example: test_api_user@acme.com
+                      email_hash:
+                        type: string
+                        example: e169b640b9ceda26ce4c3d8a919eb42c
+                      facebook:
+                        type: string
+                        example: null
+                      first_lp_url:
+                        type: string
+                        example: null
+                      first_referrer:
+                        type: string
+                        example: null
+                      first_utm_campaign:
+                        type: string
+                        example: retargeting
+                      first_utm_content:
+                        type: string
+                        example: post-purchase-cross-sell
+                      first_utm_medium:
+                        type: string
+                        example: partners
+                      first_utm_source:
+                        type: string
+                        example: criteo
+                      first_utm_term:
+                        type: string
+                        example: web
+                      firstname:
+                        type: string
+                        example: Mike
+                      lastname:
+                        type: string
+                        description: The last name of the customer.
+                        example: Doel
+                      joined_at:
+                        type: string
+                        format: date-time
+                        example: '2011-10-11T19:58:17Z'
+                      last_browser_platform:
+                        type: string
+                        example: Mac OS X
+                      last_browser_type:
+                        type: string
+                        example: Chrome
+                      last_browser_version:
+                        type: string
+                        example: 30
+                      last_ip:
+                        type: string
+                        example: 201.33.19.3
+                      last_location_city:
+                        type: string
+                        example: San Francisco
+                      last_location_country:
+                        type: string
+                        example: USA
+                      last_location_country_code:
+                        type: string
+                        example: US
+                      last_location_geo_latitude:
+                        type: string
+                        example: '16.6178379669105'
+                      last_location_geo_longitude:
+                        type: string
+                        example: '15.6178379669105'
+                      last_location_pin_code:
+                        type: string
+                        example: '94536'
+                      last_location_state:
+                        type: string
+                        example: California
+                      last_location_timezone:
+                        type: string
+                        example: Pacific/Los_Angeles
+                      last_lp_url:
+                        type: string
+                        example: http://site.com
+                      last_pageview_url:
+                        type: string
+                        example: null
+                      last_purchase_at:
+                        type: string
+                        example: '2021-08-25T06:06:59.410Z'
+                      last_referrer:
+                        type: string
+                        example: null
+                      last_send_at:
+                        type: string
+                        format: date-time
+                      last_utm_campaign:
+                        type: string
+                        example: null
+                      last_utm_content:
+                        type: string
+                        example: null
+                      last_utm_medium:
+                        type: string
+                        example: null
+                      last_utm_source:
+                        type: string
+                        example: null
+                      last_utm_term:
+                        type: string
+                        example: null
+                      last_visit_at:
+                        type: string
+                        example: '2024-05-23T20:10:21Z'
+                      lifetime_orders:
+                        type: integer
+                        example: 207
+                      lifetime_revenue:
+                        type: integer
+                        example: 38612
+                      lifetime_visits:
+                        type: integer
+                        example: 3158
+                      opt_out_of_ads:
+                        type: string
+                        example: false
+                      opted_out_of_ads_at:
+                        type: string
+                        example: null
+                      phone_number:
+                        type: string
+                        example: null
+                      predictive_engagement_percentile:
+                        type: integer
+                        example: 78
+                      predictive_purchase_intent_percentile:
+                        type: integer
+                        example: 86
+                      predictive_retention_percentile:
+                        type: integer
+                        example: 70
+                      session_last_activity_at:
+                        type: string
+                        format: date-time
+                        example: 2017-06-07 01:50:17 +0000
+                      subscribed_at:
+                        type: string
+                        example: null
+                      unsubscribed:
+                        type: string
+                        example: false
+                      unsubscribed_at:
+                        type: string
+                        example: null
+                      updated_at:
+                        type: string
+                        format: date-time
+                      uuid:
+                        type: string
+                        example: 06743da2-9589-4c01-afda-e3d85e487fa7
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '413':
+          description: "You can upload maximum 50 users in one api call\t- The server is refusing to process a request because the request payload is larger than the server is willing or able to process."
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+    post:
+      tags:
+      - Customer
+      summary: Create or update customer
+      description: Use this endpoint to create a new customer or update an existing customer.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              properties:
+                email:
+                  type: string
+                  example: janedoe@acme.com
+                  description: Specify the email ID of the customer that you want to create or whose details you want to update. Ensure that the email that you provide in this field does not contain more than 64 characters.
+                customer_id:
+                  type: string
+                  example: '38759877'
+                  description: Specify the customer ID of the customer that you want to create or whose details you want to update.
+                phone_number:
+                  type: string
+                  description: Specify the phone number of the customer that you want to create or whose details you want to update. Ensure that it includes the country code, starts with a `+`, follows the [E.164 standard](https://en.wikipedia.org/wiki/E.164), does not start with a `0`, and contains 6 to 14 characters.
+                  example: '+919742888933'
+                subscription_groups:
+                  type: array
+                  description: Specify the user's subscription preferences.
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The ID of the subscription group.
+                      subscribed:
+                        type: boolean
+                        description: Enter `true` if the user is subscribed, or `false` if unsubscribed.
+                  example:
+                  - id: newsletter
+                    subscribed: true
+                  - id: weekly_promo
+                    subscribed: false
+                firstname:
+                  type: string
+                  example: Mike
+                  description: Specify the firstname of the customer that you want to create or whose details you want to update.
+                lastname:
+                  type: string
+                  example: Doel
+                  description: Specify the lastname of the customer that you want to create or whose details you want to update.
+                gender:
+                  type: string
+                  example: male
+                  description: Specify the gender (if required) of the customer that you want to create or whose details you want to update.
+        description: Create customer and update customer attributes
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                        example: test_api_user@acme.com
+                        description: The email address of the user that you want to create or update. For example, `test_api_user@acme.com`.
+                      email_domain:
+                        type: string
+                        description: Email domain of the user.
+                        example: yahoo.com
+                      email_hard_bounced:
+                        type: boolean
+                        example: 'true'
+                      email_hash:
+                        type: string
+                        example: a58639ea568b694d6e056ee72d0b9531
+                      email_spam_reported:
+                        type: string
+                        example: 'false'
+                      customer_id:
+                        type: string
+                        example: '812123'
+                        description: A customer ID to uniquely identify a customer.
+                      firstname:
+                        type: string
+                        example: Jane
+                        description: The first name of the customer.
+                      lastname:
+                        type: string
+                        example: Doe
+                        description: The last name of the customer.
+                      gender:
+                        type: string
+                        example: female
+                      phone_number:
+                        type: string
+                        example: null
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: '2024-10-03T04:57:24.000Z'
+                      joined_at:
+                        type: string
+                        format: date-time
+                        example: '2011-10-11T19:58:17Z'
+                      updated_at:
+                        type: string
+                        format: date-time
+                      lifetime_orders:
+                        type: integer
+                        example: 2508
+                      lifetime_revenue:
+                        type: integer
+                        example: 61008
+                      lifetime_visits:
+                        type: integer
+                        example: 9299
+                      lifetime_promotions_redeemed:
+                        type: integer
+                        example: 0
+                      lifetime_referrals:
+                        type: integer
+                        example: 0
+                      lifetime_reviews:
+                        type: integer
+                        example: 0
+                      lifetime_sends:
+                        type: integer
+                        example: 0
+                      lifetime_timespent:
+                        type: string
+                        format: date-time
+                      promotions:
+                        type: object
+                      bsft_control_bucket:
+                        type: string
+                        description: Each customer, identified or anonymous, is randomly assigned a control bucket number between 1 to 100.
+                        example: '31'
+                      custom_attributes:
+                        type: object
+                        description: Aside from standard attributes for user like phone number, email, and first name, you can create custom attributes if the data doesn't fit into standard categories.
+                      devices:
+                        type: array
+                        items:
+                          type: string
+                      predictive_engagement_percentile:
+                        type: integer
+                        example: 78
+                      predictive_purchase_intent_percentile:
+                        type: integer
+                        example: 86
+                      predictive_retention_percentile:
+                        type: integer
+                        example: 70
+                      session_last_activity_at:
+                        type: string
+                        format: date-time
+                        example: 2017-06-07 01:50:17 +0000
+                      user_at_home_location:
+                        type: string
+                        example: 'false'
+                      uuid:
+                        type: string
+                        description: A universally unique identifier to uniquely identify a customer.
+                        example: 06743da2-9589-4c01-afda-e3d85e487fa7
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '413':
+          description: "You can upload maximum 50 users in one api call\t- The server is refusing to process a request because the request payload is larger than the server is willing or able to process."
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+  /api/v1/customers/bulk:
+    post:
+      tags:
+      - Customer
+      summary: Bulk create/update customer
+      description: Use this endpoint to create or update details of multiple customers.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customers:
+                  type: array
+                  description: Specify the details of the customers that you want to create or of the customers whose details you want to update.
+                  items:
+                    type: object
+                    additionalProperties: true
+                    properties:
+                      email:
+                        type: string
+                        example: johndoe@acme.com
+                        description: Either email or customer ID are mandatory. Specify the email address of the customer that you want to create or whose details you want to update. Ensure that the email that you provide here contains less than 64 characters.
+                      customer_id:
+                        type: string
+                        example: '6769'
+                        description: Either email or customer ID are mandatory. Specify the customer ID of the customer that you want to create or whose details you want to update.
+                      firstname:
+                        type: string
+                        example: John
+                        description: Specify the firstname of the customer that you want to create or whose details you want to update.
+                      lastname:
+                        type: string
+                        example: doe
+                        description: Specify the lastname of the customer that you want to create or whose details you want to update.
+                      uuid:
+                        type: string
+                        example: 225e6b3b-31b3-4738-b21e-80d71ac6cecc
+                        description: Specify the UUID of the customer that you want to create or whose details you want to update.
+                      subscription_groups:
+                        type: array
+                        description: Specify the user's subscription preferences.
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The ID of the subscription group.
+                            subscribed:
+                              type: boolean
+                              description: Enter `true` if the user is subscribed, or `false` if unsubscribed.
+                        example:
+                        - id: newsletter
+                          subscribed: true
+                        - id: weekly_promo
+                          subscribed: false
+      responses:
+        '200':
+          description: OK - Request processed. Check the errors array to verify all customers succeeded. Even with 200 OK, individual customers can fail if identifiers are missing.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - title: Success - All customers processed
+                  type: object
+                  properties:
+                    customers:
+                      type: array
+                      items: {}
+                      maxItems: 0
+                      description: Empty array when all customers succeeded.
+                    errors:
+                      type: array
+                      items: {}
+                      maxItems: 0
+                      description: Empty array when all customers succeeded.
+                  example:
+                    customers: []
+                    errors: []
+                - title: Partial Failure - Some customers missing identifiers
+                  type: object
+                  properties:
+                    customers:
+                      type: array
+                      description: Contains customer objects that failed processing.
+                      items:
+                        type: object
+                        additionalProperties: true
+                    errors:
+                      type: array
+                      description: Contains error details for failed customers.
+                      items:
+                        type: object
+                        properties:
+                          status:
+                            type: integer
+                            example: 400
+                          error_data:
+                            type: object
+                            properties:
+                              user_identifier_missing:
+                                type: array
+                                items:
+                                  type: string
+                                example:
+                                - No valid identifier found
+                  example:
+                    customers:
+                    - lastname: Williams
+                      customer_id: null
+                    errors:
+                    - status: 400
+                      error_data:
+                        user_identifier_missing:
+                        - No valid identifier found
+        '400':
+          description: Bad Request - Malformed request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: bad_request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '413':
+          description: You can upload up to 50 users in an API call.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+  /api/v1/customers/delete:
+    post:
+      tags:
+      - Customer
+      summary: Delete a customer
+      description: Use this endpoint to permanently delete all personal data of your customer.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: query
+        name: delete_all_matching_customers
+        description: Specify this value to true if you want to delete all matching profiles of a customer.
+        example: true
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Specify the email address of the customer that you want to delete.
+                  example: janedoe@acme.com
+                customer_id:
+                  type: string
+                  example: '48759893'
+                  description: Specify the customer ID of the customer that you want to delete.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '413':
+          description: You can upload up to 50 users in an API call.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+  /api/v1/customers/forget:
+    post:
+      tags:
+      - Customer
+      summary: Stop tracking a customer
+      description: Use this endpoint to permanently delete all personal data associated with a customer and remove them from tracking.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: Specify the email address of the customer you want to stop tracking.
+                  type: string
+                  example: janedoe@acme.com
+                customer_id:
+                  description: Specify the ID of the customer you want to stop tracking.
+                  type: string
+                  example: '48759893'
+                cookie:
+                  description: Specify the cookie ID assigned to the customer by your website to stop tracking them.
+                  type: string
+                  example: BSFT-COOKIE-9876543210
+                device_id:
+                  description: Specify the device ID linked to the customer's mobile or web device to stop tracking them.
+                  type: string
+                  example: AEBE52E7-03EE-455A-B3C4-E57283966239
+        description: Provide an email address, customer ID, cookie, or device ID to stop tracking a customer and remove their personal data.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Retry with exponential backoff.
+        '413':
+          description: You can upload up to 50 users in an API call.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us at support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway.
+        '503':
+          description: Service unavailable, please retry.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout.
+  /api/v1/customers/merge:
+    post:
+      tags:
+      - Customer
+      summary: Merge customers
+      description: Use this endpoint to programmatically merge two duplicate customers, effectively unifying them as one.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer_id:
+                  description: Specify the customer_id of the duplicate customer.
+                  example: '48759893'
+                  type: string
+                bsft_new_customer_id:
+                  description: Specify the customer_id of the customer that you want to use going forward. This is the ID to whom we will merge details of the duplicate customer.
+                  example: '18271400'
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '413':
+          description: You can upload up to 50 users in an API call.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+  /api/v1/customers/unforget:
+    post:
+      tags:
+      - Customer
+      summary: Start tracking a customer
+      description: Use this endpoint to start tracking a customer. After tracking is enabled, the customer becomes eligible for future campaigns.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: Specify the email address of the customer you want to start tracking.
+                  type: string
+                  example: janedoe@acme.com
+                customer_id:
+                  description: Specify the ID of the customer you want to start tracking.
+                  type: string
+                  example: '48759893'
+                cookie:
+                  description: Specify the cookie ID assigned to the customer by your website for tracking purposes.
+                  type: string
+                  example: BSFT-COOKIE-9876543210
+                device_id:
+                  description: Specify the device ID linked to the customer's mobile or web device.
+                  type: string
+                  example: AEBE52E7-03EE-455A-B3C4-E57283966239
+        description: Provide an email address, customer ID, cookie, or device ID to resume tracking for a customer whose tracking was stopped.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Retry with exponential backoff.
+        '413':
+          description: You can upload up to 50 users in an API call.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us at support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway.
+        '503':
+          description: Service unavailable, please retry.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout.
+  /api/v1/customers/{uuid}:
+    get:
+      tags:
+      - Customer
+      summary: Get customer
+      description: Use this endpoint to get the details of a customer using the customer's UUID.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        required: true
+        name: uuid
+        description: Specify the UUID of the customer whose details you want to get.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer:
+                    type: object
+                    properties:
+                      activated_at:
+                        type: string
+                        format: date-time
+                        example: '2022-09-17T17:03:25Z'
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: '2024-10-03T04:57:24.000Z'
+                      custom_attributes:
+                        type: object
+                        description: Aside from standard attributes for user like phone number, email, and first name, you can create custom attributes if the data doesn't fit into standard categories.
+                      customer_id:
+                        type: string
+                        example: '812123'
+                      device_ids:
+                        type: array
+                        example:
+                        - 4d031ed8-c40e-57d4-9c99-a3e308d8cd78, 4d031ed8-c40e-57d4-9c99-a3e308d8cd77, 4d031ed8-c40e-57d4-9c99-a3e308d8cd79
+                        items:
+                          type: string
+                      device_tokens:
+                        type: array
+                        example: '49244924492449244924492449244924492449244924'
+                        items:
+                          type: string
+                      email:
+                        type: string
+                        example: test_api_user@acme.com
+                      email_hash:
+                        type: string
+                        example: e169b640b9ceda26ce4c3d8a919eb42c
+                      facebook:
+                        type: string
+                        example: null
+                      first_lp_url:
+                        type: string
+                        example: null
+                      first_referrer:
+                        type: string
+                        example: https://www.example.com/Shopping/Checkout/SelectPayment
+                      first_utm_campaign:
+                        type: string
+                        example: granularremarketing
+                      first_utm_content:
+                        type: string
+                        example: ip-warming-campaign-2
+                      first_utm_medium:
+                        type: string
+                        example: cpc
+                      first_utm_source:
+                        type: string
+                        example: google
+                      first_utm_term:
+                        type: string
+                        example: abandoned-wishlist
+                      firstname:
+                        type: string
+                        example: Mike
+                      lastname:
+                        type: string
+                        example: Doel
+                        description: The last name of the customer.
+                      joined_at:
+                        type: string
+                        format: date-time
+                        example: '2011-10-11T19:58:17Z'
+                      last_browser_platform:
+                        type: string
+                        example: Mac OS X
+                      last_browser_type:
+                        type: string
+                        example: Chrome
+                      last_browser_version:
+                        type: string
+                        example: '30'
+                      last_ip:
+                        type: string
+                        example: 201.33.19.3
+                      last_location_city:
+                        type: string
+                        example: San Francisco
+                      last_location_country:
+                        type: string
+                        example: USA
+                      last_location_country_code:
+                        type: string
+                        example: US
+                      last_location_geo_latitude:
+                        type: string
+                        example: 'null'
+                      last_location_geo_longitude:
+                        type: string
+                        example: 'null'
+                      last_location_pin_code:
+                        type: string
+                        example: '94536'
+                      last_location_state:
+                        type: string
+                        example: California
+                      last_location_timezone:
+                        type: string
+                        example: Pacific/Los_Angeles
+                      last_lp_url:
+                        type: string
+                        example: http://site.com
+                      last_pageview_url:
+                        type: string
+                        example: null
+                      last_purchase_at:
+                        type: string
+                        example: '2021-08-25T06:06:59.410Z'
+                      last_referrer:
+                        type: string
+                        example: null
+                      last_send_at:
+                        type: string
+                        format: date-time
+                      last_utm_campaign:
+                        type: string
+                        example: null
+                      last_utm_content:
+                        type: string
+                        example: null
+                      last_utm_medium:
+                        type: string
+                        example: null
+                      last_utm_source:
+                        type: string
+                        example: null
+                      last_utm_term:
+                        type: string
+                        example: null
+                      last_visit_at:
+                        type: string
+                        example: '2024-05-23T20:10:21Z'
+                      lifetime_orders:
+                        type: integer
+                        example: 0
+                      lifetime_revenue:
+                        type: integer
+                        example: 0
+                      lifetime_visits:
+                        type: integer
+                        example: 5
+                      opt_out_of_ads:
+                        type: string
+                        example: false
+                      opted_out_of_ads_at:
+                        type: string
+                        example: null
+                      phone_number:
+                        type: string
+                        example: null
+                      predictive_engagement_percentile:
+                        type: integer
+                        example: 78
+                      predictive_purchase_intent_percentile:
+                        type: integer
+                        example: 86
+                      predictive_retention_percentile:
+                        type: integer
+                        example: 70
+                      session_last_activity_at:
+                        type: string
+                        format: date-time
+                        example: 2017-06-07 01:50:17 +0000
+                      subscribed_at:
+                        type: string
+                        example: null
+                      unsubscribed:
+                        type: string
+                        example: false
+                      unsubscribed_at:
+                        type: string
+                        example: null
+                      updated_at:
+                        type: string
+                        format: date-time
+                      uuid:
+                        type: string
+                        example: 06743da2-9589-4c01-afda-e3d85e487fa7
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '413':
+          description: You can upload up to 50 users in an API call.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

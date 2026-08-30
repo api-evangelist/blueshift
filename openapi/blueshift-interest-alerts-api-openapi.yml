@@ -1,0 +1,229 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Interest alerts API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Interest alerts
+  description: Interest alerts store information about users' interests. When an event occurs in an area or topic in which multiple users are interested, you can trigger a single API call to send a notification to all the users who are interested in that topic.
+paths:
+  /api/v1/interests/alert:
+    post:
+      tags:
+      - Interest alerts
+      summary: Update or alert customers
+      description: Use this endpoint to send an update to or to alert customers about topics that they have subscribed to.
+      security:
+      - event_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - event
+              - topic
+              - author
+              - metadata
+              properties:
+                event:
+                  type: string
+                  description: Specify the name of the event for which the alert is being sent.
+                  example: interest_news_alert
+                topic:
+                  type: string
+                  description: Specify the topic that the alert is for.
+                  example: sports
+                author:
+                  type: string
+                  description: Specify the email address for the author of the alert.
+                  example: john.doe@blueshift.com
+                metadata:
+                  type: object
+                  description: 'Custom attributes providing additional information about the alert. Examples: city, discount, coupon code, match details, product information.'
+                  example:
+                    live_match_today: true
+                    teams: Lakers vs Warriors
+        description: Update customers about a topic that they have subscribed to.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: true or false
+                    example: true
+        '400':
+          description: Bad Request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        topic:
+                          type: string
+                          example: can't be blank
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - Some/all of the products have invalid data, please check the response for more information on.
+        '429':
+          description: Rate limit exceeded - Too many requests
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+  /api/v1/interests/user_subscriptions:
+    get:
+      tags:
+      - Interest alerts
+      summary: Get customer subscriptions
+      description: Use this endpoint to get all the topics that a customer has subscribed to.
+      security:
+      - event_api_auth: []
+      parameters:
+      - name: email
+        description: 'Specify the customer''s email address. For example, abc@def.com. You must atleast specify this value, or one of the following fields: uuid, customer_id, phone_number, or device_id.'
+        example: janedoe@acme.com
+        in: query
+        schema:
+          type: string
+      - name: uuid
+        description: The unique identifier for the customer.
+        example: e909605f-3eb3-4e2a-a666-648dedae5b89
+        in: query
+        schema:
+          type: string
+      - name: customer_id
+        description: Specify the customer ID.
+        example: '812123'
+        in: query
+        schema:
+          type: string
+      - name: phone_number
+        description: Specify the phone number of the customer. Ensure that it includes the country code, starts with a +, follows the E.164 standard, does not start with a 0, and contains 6 to 14 characters. For example, +14155553467.
+        in: query
+        schema:
+          type: string
+      - name: device_id
+        description: Specify the UUID of the device.
+        example: 8abe3faa-d48d-4e4a-00ca-beae01f1c987
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topics:
+                    type: array
+                    items:
+                      type: string
+                      example: Politics
+        '400':
+          description: Bad Request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        topic:
+                          type: string
+                          example: can't be blank
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. Ensure that you are using the correct API endpoint. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '422':
+          description: Unprocessable Entity - Some/all of the products have invalid data, please check the response for more information on.
+        '429':
+          description: Rate limit exceeded - Too many requests
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

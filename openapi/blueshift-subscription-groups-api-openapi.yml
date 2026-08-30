@@ -1,0 +1,252 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Subscription groups API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Subscription groups
+  description: Retrieve subscription groups and view detailed information for each subscription group.
+paths:
+  /api/v1/subscription_groups:
+    get:
+      tags:
+      - Subscription groups
+      summary: List subscription groups
+      description: Retrieve all subscription groups in your account, including archived ones.
+      security:
+      - user_api_auth: []
+      responses:
+        '200':
+          description: A list of subscription groups.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscription_groups:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        subscription_group_id:
+                          type: string
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        user_id:
+                          type: integer
+                        account_id:
+                          type: integer
+                        uuid:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                        subscription_group_label:
+                          type: string
+                        archived:
+                          type: boolean
+                        author:
+                          type: string
+              example:
+                subscription_groups:
+                - subscription_group_id: weekly_updates
+                  description: Weekly marketing newsletter
+                  user_id: 4821
+                  account_id: 182
+                  uuid: a1b2c3d4-5678-49ab-9cde-0123456789ab
+                  created_at: '2025-10-12T08:15:27.000Z'
+                  updated_at: '2025-11-03T12:44:10.000Z'
+                  subscription_group_label: Weekly Updates
+                  archived: false
+                  author: Emily Johnson
+                - subscription_group_id: promotions
+                  description: Seasonal and promotional campaigns
+                  user_id: 5930
+                  account_id: 182
+                  uuid: b2c3d4e5-6789-40fa-8123-abcdef123456
+                  created_at: '2025-09-18T07:52:01.000Z'
+                  updated_at: '2025-09-30T09:21:33.000Z'
+                  subscription_group_label: Promotions
+                  archived: false
+                  author: Michael Lee
+        '401':
+          description: Unauthorized - API authentication failed.
+          content:
+            application/json:
+              example:
+                message: Not authorized
+        '404':
+          description: Endpoint not found.
+          content:
+            application/json:
+              example:
+                message: Not Found
+        '429':
+          description: Too Many Requests - Rate limit exceeded.
+        '500':
+          description: Internal Server Error - Unexpected server error.
+        '502':
+          description: Bad Gateway - Invalid response from upstream server.
+        '503':
+          description: Service Unavailable - Temporary outage.
+        '504':
+          description: Gateway Timeout - Server took too long to respond.
+  /api/v1/subscription_groups/index_lite:
+    get:
+      tags:
+      - Subscription groups
+      summary: List subscription groups (lite)
+      description: Retrieve a lightweight list of subscription groups without metadata.
+      security:
+      - user_api_auth: []
+      responses:
+        '200':
+          description: A lite list of subscription groups.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscription_groups:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        subscription_group_id:
+                          type: string
+                        uuid:
+                          type: string
+                        subscription_group_label:
+                          type: string
+              example:
+                subscription_groups:
+                - subscription_group_id: weekly_updates
+                  uuid: a1b2c3d4-5678-49ab-9cde-0123456789ab
+                  subscription_group_label: Weekly Updates
+                - subscription_group_id: promotions
+                  uuid: b2c3d4e5-6789-40fa-8123-abcdef123456
+                  subscription_group_label: Promotions
+        '401':
+          description: Unauthorized - API authentication failed.
+          content:
+            application/json:
+              example:
+                message: Not authorized
+        '404':
+          description: Endpoint not found.
+          content:
+            application/json:
+              example:
+                message: Not Found
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Bad Gateway
+        '503':
+          description: Service Unavailable
+        '504':
+          description: Gateway Timeout
+  /api/v1/subscription_groups/{uuid}:
+    get:
+      tags:
+      - Subscription groups
+      summary: Get a subscription group
+      description: Retrieve details of a specific subscription group using its UUID.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: uuid
+        required: true
+        schema:
+          type: string
+        description: UUID of the subscription group. You can get the subscription group's UUID from its URL. For example, if you open a subscription group on the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/subscription-groups/09de09a9-243f-494e-8f7f-44c610692a74/edit`, where the UUID is `09de09a9-243f-494e-8f7f-44c610692a74`.
+      responses:
+        '200':
+          description: Subscription group details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscription_group:
+                    type: object
+                    properties:
+                      subscription_group_id:
+                        type: string
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      user_id:
+                        type: integer
+                      account_id:
+                        type: integer
+                      uuid:
+                        type: string
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+                      subscription_group_label:
+                        type: string
+                      archived:
+                        type: boolean
+                      author:
+                        type: string
+              example:
+                subscription_group:
+                  subscription_group_id: weekly_updates
+                  description: Weekly marketing newsletter
+                  user_id: 4821
+                  account_id: 182
+                  uuid: a1b2c3d4-5678-49ab-9cde-0123456789ab
+                  created_at: '2025-10-12T08:15:27.000Z'
+                  updated_at: '2025-11-03T12:44:10.000Z'
+                  subscription_group_label: Weekly Updates
+                  archived: false
+                  author: Emily Johnson
+        '401':
+          description: Unauthorized - API authentication failed.
+          content:
+            application/json:
+              example:
+                message: Not authorized
+        '404':
+          description: Subscription group not found.
+          content:
+            application/json:
+              example:
+                message: Not Found
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Bad Gateway
+        '503':
+          description: Service Unavailable
+        '504':
+          description: Gateway Timeout
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

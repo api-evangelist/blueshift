@@ -1,0 +1,512 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift External fetch API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: External fetch
+  description: External fetch is a Blueshift capability that lets you include dynamic content from external servers that is fetched “just in time” before sending a message.
+paths:
+  /api/v1/external_fetches.json:
+    get:
+      summary: List external fetch templates
+      description: Use this endpoint to get the list of external fetch templates.
+      tags:
+      - External fetch
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: per_page
+        description: Specify the number of records to be returned per page
+        example: 2
+        in: query
+        schema:
+          type: string
+      - name: page
+        description: Specify the page number for the search results.
+        example: 2
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  template:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: '2023-08-29T01:41:27.000Z'
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: '2023-08-29T05:15:39.000Z'
+                        uuid:
+                          type: string
+                          example: f8220927-20b7-409c-b970-8c17a24e1010
+                        author:
+                          type: string
+                          example: Jane Doe
+                        resource:
+                          type: object
+                          properties:
+                            updated_at:
+                              type: string
+                              format: date-time
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+    post:
+      summary: Create an external fetch template
+      description: Use this endpoint to create an external fetch template.
+      tags:
+      - External fetch
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - alias_name
+              - http_method
+              - url
+              properties:
+                alias_name:
+                  type: string
+                  description: Specify the name of the external fetch template. The alias_name can contain lowercase alphanumeric characters and underscores only.
+                  example: fetch_weekly_promotions
+                author:
+                  type: string
+                  example: john.doe@blueshift.com
+                  description: Specify the email address of the author of the template.
+                http_method:
+                  type: string
+                  description: HTTP method to fetch the data. Set `GET` or `POST` as the method.
+                  example: GET
+                  enum:
+                  - GET
+                  - POST
+                auth_header:
+                  type: string
+                  description: Along with the `auth_token`, specifies the details for secure URLs.
+                  example: your_auth_header
+                auth_token:
+                  type: string
+                  description: Along with the `auth_header`, specifies the details for secure URLs.
+                  example: your_auth_token
+                url:
+                  type: string
+                  description: The external URL. The external fetch URL may include dynamic liquid variables such as user id, email address, product ids, and more.
+                  example: https://api.example.com/data
+                body:
+                  type: string
+                  description: Specify the `JSON` payload if the `http_method` is `POST`.
+                  example:
+                    user_id: 4981
+                    email: jane.doe@acme.com
+                    first_name: Jane
+                    last_name: Doe
+                    preferences:
+                      language: en_US
+                      newsletter_subscription: true
+                test_context:
+                  type: string
+                  description: Specify the test context for the template.
+                  example: 'This is a test fetch to update user profile (user: 4981)'
+        description: Specify the details of the external fetch template.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/external_fetches/{template_uuid}:
+    put:
+      summary: Update an external fetch template
+      description: Use this endpoint to update an external fetch template.
+      tags:
+      - External fetch
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: template_uuid
+        description: Specify the UUID of the template that you want to update. You can get the template UUID from the URL when you view a template in the Blueshift app. For example, in `https://app.getblueshift.com/dashboard#/app/external_fetches/<TEMPLATE_UUID>/edit`, the <TEMPLATE_UUID> is the uuid that you need.
+        example: 8da0744e-141d-4c9d-85d7-c89a54ac745a
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alias_name:
+                  type: string
+                  description: Specify the name of the external fetch template. The alias_name can contain lowercase alphanumeric characters and underscores only.
+                  example: fetch_weekly_promotions_jane_doe
+                author:
+                  type: string
+                  description: Specify the email address of the author of the template.
+                  example: john.doe@blueshift.com
+                http_method:
+                  type: string
+                  description: HTTP method to fetch the data. Set `GET` or `POST` as the method.
+                  example: GET
+                  enum:
+                  - GET
+                  - POST
+                auth_header:
+                  type: string
+                  description: Along with the `auth_token`, specifies the details for secure URLs.
+                  example: your_auth_header
+                auth_token:
+                  type: string
+                  description: Along with the `auth_header`, specifies the details for secure URLs.
+                  example: your_auth_token
+                url:
+                  type: string
+                  description: The external URL. The external fetch URL may include dynamic liquid variables such as user id, email address, product ids, and more.
+                  example: https://example.com/api/v2/additional_seat_link?license_key={(user_transaction.license_key)}
+                body:
+                  type: string
+                  description: Specify the `JSON` payload if the `http_method` is `POST`.
+                test_context:
+                  type: string
+                  description: Specify the test context for the template.
+                  example:
+                    user_transaction:
+                      license_key: some_value
+        description: Update an external fetch template.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

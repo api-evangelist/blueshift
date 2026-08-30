@@ -1,0 +1,960 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Catalog API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Catalog
+  description: A catalog is a list of items which may include content or products.
+paths:
+  /api/v1/catalogs:
+    get:
+      summary: Get list of catalogs
+      description: Use this endpoint to get a list of all catalogs.
+      tags:
+      - Catalog
+      security:
+      - user_api_auth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  catalogs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          description: The catalog's UUID.
+                          example: dd0d2987-9e57-47d4-9380-8a3e959cbe8e
+                        name:
+                          type: string
+                          description: The name of the catalog.
+                          example: Books
+                        catalog_type:
+                          type: string
+                          description: The type of the catalog.
+                          example: ecommerce
+                        upload_method:
+                          type: string
+                          description: The method that you use to upload the catalog to our platform.
+                          example: file
+                        url:
+                          type: string
+                          description: The URL of the catalog on your site.
+                          example: https://www.example.com/catalog/books
+                        update_frequency:
+                          type: string
+                          description: The frequency at which our platform receives data from your service to update the catalog.
+                          example: daily
+                        product_price_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the products' prices.
+                          example: price
+                        product_name_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the products' names.
+                          example: title
+                        product_id_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the products' IDs.
+                          example: sku
+                        product_image_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the URLs of the products' images.
+                          example: image_url
+                        product_msrp_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the products' maximum selling price.
+                          example: msrp
+                        product_url_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the products' URLs.
+                          example: product_url
+                        last_processed:
+                          type: string
+                          format: date-time
+                          description: The timestamp when the catalog was last updated in ISO 8601 format.
+                          example: '2024-10-03T04:58:34.000Z'
+                        catalog_headers:
+                          type: array
+                          example: '"title", "price", "image_url", "author", "isbn", "on_sale_date", "url", "sku", "itemformat", "language", "saleStatus", "consumerImprint", "formatFamily", "pages", "subject"'
+                          items:
+                            type: string
+                        status:
+                          type: string
+                          example: success
+                        product_count:
+                          type: integer
+                          description: The number of items in the catalog.
+                          example: 9882
+                        product_category_column_name:
+                          type: array
+                          example: '"subject"'
+                          items:
+                            type: string
+                        file_settings:
+                          type: array
+                          items:
+                            type: string
+                          example: ''
+                        category_options:
+                          type: array
+                          items:
+                            type: string
+                          example: ''
+                        product_tag_column_name:
+                          type: array
+                          items:
+                            type: string
+                            example: tags
+                        tag_options:
+                          type: string
+                          example: ''
+                        product_brand_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the product brand.
+                          example: author
+                        is_passive:
+                          type: boolean
+                          description: Indicates the availability of the product.
+                          example: true
+                        is_active:
+                          type: boolean
+                          description: Indicates the availability of the product.
+                          example: true
+                        product_start_date_column_name:
+                          type: string
+                          description: The name of the column in the database that indicates the start date on which a product will be available.
+                          example: on_sale_date
+                        product_end_date_column_name:
+                          type: string
+                          description: The name of the column in the database that indicates the last date on which a product will be available.
+                          example: on_sale_end_date
+                        parent_sku_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the parent sku that ties all variants or child products together.
+                          example: parent_sku
+                        product_inventory_column_name:
+                          type: string
+                          description: The name of the column in the database that lists the product inventory.
+                        default_root_category:
+                          type: string
+                          description: The default root category for the catalog.
+                        start_at:
+                          type: string
+                          format: date-time
+                          description: The date and time at which the catalog becomes available.
+                        end_at:
+                          type: string
+                          format: date-time
+                          description: The date and time at which the catalog in no longer available.
+                        archived:
+                          type: boolean
+                          description: Indicates if the catalog is archived.
+                          example: false
+                        author:
+                          type: string
+                          description: The user who created the catalog.
+                          example: John Doe
+                        access_key:
+                          type: string
+                          description: The access key used to create the catalog.
+                          example: your_secure_access_key_here
+                        file_options:
+                          type: object
+                          properties:
+                            format:
+                              type: string
+                              description: The format of the catalog file.
+                              example: csv
+                            col_sep:
+                              type: string
+                              description: The separator used in the csv file.
+                              example: '|'
+                            encoding:
+                              type: string
+                              description: The encoding for the csv file.
+                              example: utf-8
+                        error_access_key:
+                          type: string
+                          description: The access key for errors.
+                        catalog_file_name:
+                          type: string
+                          description: The filename of the uploaded catalog file.
+                          example: products.csv
+                        login:
+                          type: string
+                          description: The user login for the catalog.
+                        password:
+                          type: string
+                          description: The password for the catalog.
+                        host:
+                          type: string
+                        path:
+                          type: string
+                        port:
+                          type: string
+                        s3_access_key:
+                          type: string
+                          description: The access key for the S3 bucket from which the catalog is uploaded.
+                          example: ABCDEFPLOI7NY4NP5KON
+                        secret_access_key:
+                          type: string
+                          description: The secret access key for the S3 bucket from which the catalog is uploaded.
+                        bucket:
+                          type: string
+                          description: The name of the S3 bucket from which the catalog is uploaded.
+                        s3_path:
+                          type: string
+                          description: The path for the S3 bucket from which the catalog is uploaded.
+                        s3_aws_region:
+                          type: string
+                          description: The region for the S3 bucket from which the catalog is uploaded.
+                          example: us-west-2
+                        sftp_login:
+                          type: string
+                          description: The region for the S3 bucket from which the catalog is uploaded.
+                        sftp_password:
+                          type: string
+                          description: The sftp password for the location from which the catalog is uploaded.
+                        sftp_port:
+                          type: string
+                          description: The sftp port for the location from which the catalog is uploaded.
+                        sftp_path:
+                          type: string
+                          description: The sftp folder path for the location from which the catalog is uploaded.
+                        sftp_host:
+                          type: string
+                          description: The sftp host for the location from which the catalog is uploaded.
+                        last_catalog_file:
+                          type: object
+                          description: Last catalog upload details for recurring catalog uploads.
+                          properties:
+                            id:
+                              type: string
+                              description: The ID for the file last uploaded for the catalog.
+                              example: '332983'
+                            uuid:
+                              type: string
+                              description: The catalog's UUID.
+                              example: 7fbea614-c257-4745-a1cb-22f6d7b87f74
+                            catalog_id:
+                              type: string
+                              description: The catalog ID.
+                              example: '2151'
+                            file_name:
+                              type: string
+                              description: The file name of the file last uploaded for the catalog.
+                              example: products.csv
+                            total_records:
+                              type: string
+                              description: Total number of records in uploaded file.
+                              example: '9882'
+                            processed_records:
+                              type: string
+                              description: Total number of records processed.
+                              example: '9882'
+                            errored_records:
+                              type: string
+                              description: Number of records that resulted in an error.
+                              example: '0'
+                            status:
+                              type: string
+                              description: The status of the file upload.
+                              example: success
+                            created_at:
+                              type: string
+                              format: date-time
+                              description: The date and time for the upload.
+                              example: '2018-10-03T04:57:24.000Z'
+                            updated_at:
+                              type: string
+                              format: date-time
+                              description: The date and time for the upload.
+                              example: '2018-10-03T04:58:34.000Z'
+                            s3_key:
+                              type: string
+                              description: The access key ID to access your S3 folder.
+                              example: your_secure_access_key_here
+                            error_file_s3_key:
+                              type: string
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '413':
+          description: "You can upload maximum 50 users in one api call\t- The server is refusing to process a request because the request payload is larger than the server is willing or able to process."
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+    post:
+      summary: Create a catalog
+      description: Create a catalog in Blueshift.
+      tags:
+      - Catalog
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                catalog:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Specify a name for the catalog that you want to create. Ensure that the value that provide in this field is unique.
+                      example: Winter Collection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  catalog_uuid:
+                    type: string
+                    description: The UUID of the catalog that got created.
+                    example: 0215377e-71c2-4a4f-8ec2-3a7d04ad0461
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/catalogs/{catalog_uuid}.json:
+    get:
+      summary: Get catalog details
+      description: Use this endpoint to get the details of one catalog at a time.
+      tags:
+      - Catalog
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        required: true
+        name: catalog_uuid
+        description: Specify the UUID of the catalog. You can get the catalog's UUID from its URL. For example, if you open a catalog on the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/catalogs/<CATALOG_UUID>/details`.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    description: The catalog's UUID.
+                    example: 1234asdfjh-asdfjh123425-asdjk1234
+                  name:
+                    type: string
+                    description: The name of the catalog.
+                  catalog_type:
+                    type: string
+                    description: The type of the catalog for example, `e-commerce`.
+                  url:
+                    type: string
+                    description: The URL of the catalog on your site.
+                  upload_method:
+                    type: string
+                    description: The method that you use to upload the catalog to our platform. For example, `api`, `file`.
+                    example: api
+                  update_frequency:
+                    type: integer
+                    description: The frequency at which our platform receives data from your service to update the catalog.
+                  product_price_column_name:
+                    type: string
+                    description: The name of the column in the database that lists the products' prices.
+                  product_name_column_name:
+                    type: string
+                    description: The name of the column in the database that lists the products' names.
+                  product_id_column_name:
+                    type: string
+                    description: The name of the column in the database that lists the products' IDs.
+                  product_image_column_name:
+                    type: string
+                    description: The name of the column in the database that lists the URLs of the products' images.
+                  product_msrp_column_name:
+                    type: string
+                    description: The name of the column in the database that lists the products' maximum selling price.
+                  product_url_column_name:
+                    type: string
+                    description: The name of the column in the database that lists the products' URLs.
+                  last_processed:
+                    type: string
+                    format: date-time
+                    description: The timestamp when the catalog was last updated in ISO 8601 format.
+        '400':
+          description: Bad Request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_id:
+                          type: string
+                          description: can't be blank
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '413':
+          description: "You can upload maximum 100 products in one api call\t- The server is refusing to process a request because the request payload is larger than the server is willing or able to process."
+        '422':
+          description: Unprocessable Entity - Some/all of the products have invalid data, please check the response for more information on.
+        '429':
+          description: "Rate limit exceeded\t- Too many requests"
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+    put:
+      summary: Add items to a catalog
+      description: Use this endpoint to add items to a catalog.
+      tags:
+      - Catalog
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        required: true
+        name: catalog_uuid
+        description: Specify the UUID of the catalog to which you want to add the items. You can get the catalog's UUID from its URL. For example, if you open a catalog on the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/catalogs/<CATALOG_UUID>/details`.
+        schema:
+          type: string
+        example: 89ee8378-a887-474b-8afe-e2369cc9297c
+      - name: syncUpdateWithProductData
+        description: Optional query parameter. When set to `true`, the API returns the product_id and UUID for products that are added successfully. When set to `false` or not provided, returns a simple status response.
+        in: query
+        schema:
+          type: boolean
+        example: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                catalog:
+                  type: object
+                  properties:
+                    products:
+                      type: array
+                      description: Specify the items that you want to add to the catalog.
+                      items:
+                        type: object
+                        required:
+                        - image
+                        - product_id
+                        - title
+                        - web_link
+                        - availability
+                        - category
+                        additionalProperties: true
+                        properties:
+                          brand:
+                            type: string
+                            description: Specify the brand name of the item.
+                            example: TechBrand
+                          category:
+                            type: array
+                            items:
+                              type: string
+                            description: Specify the category identifiers starting from the root of the taxonomy.
+                            example:
+                            - Electronics
+                            - Electronics > Laptops
+                          image:
+                            type: string
+                            description: Specify the link to the image of the item. Ensure that the URL that you provide in this field does not contain more than 500 characters.
+                            example: https://example.com/images/product.jpg
+                          msrp:
+                            type: string
+                            description: Specify the maximum suggested retail price of the item (numeric value without currency symbol).
+                            example: '999.99'
+                          price:
+                            type: string
+                            description: Specify the selling price of an item (numeric value without currency symbol).
+                            example: '899.99'
+                          product_id:
+                            type: string
+                            description: Specify the unique identifier of the item. This is what you pass in the product_ids in your events, and the values specified here must be the same. Ensure that the value that you provide in this field does not contain more than 64 characters.
+                            example: PROD123456
+                          availability:
+                            type: string
+                            description: Specify the availability of the item.
+                            example: in_stock
+                          tags:
+                            type: array
+                            description: Specify an array of strings denoting grouping of similar products into collections or groups.
+                            items:
+                              type: string
+                            example:
+                            - bestseller
+                            - premium
+                          parent_sku:
+                            type: string
+                            description: Provide the SKU to tie all variants or child products together.
+                            example: SKU-PARENT-001
+                          title:
+                            type: string
+                            description: Specify the title of the item. Ensure that the title that you provide in this field does not contain more than 255 characters.
+                            example: Premium Laptop 15-inch
+                          web_link:
+                            type: string
+                            description: Specify the URL of the item on your website. Ensure that the URL that you provide in this field does not contain more than 500 characters.
+                            example: https://example.com/products/laptop-001
+                          latitude:
+                            type: string
+                            description: Specify the latitude of the product location (must be between -90 and 90).
+                            example: '40.7128'
+                          longitude:
+                            type: string
+                            description: Specify the longitude of the product location (must be between -180 and 180).
+                            example: '-74.0060'
+            example:
+              catalog:
+                products:
+                - image: https://example.com/images/product.jpg
+                  product_id: PROD123456
+                  title: Premium Laptop 15-inch
+                  web_link: https://example.com/products/laptop-001
+                  availability: in_stock
+                  category:
+                  - Electronics
+                  - Electronics > Laptops
+                  brand: TechBrand
+                  msrp: '999.99'
+                  price: '899.99'
+                  tags:
+                  - bestseller
+                  - premium
+                  parent_sku: SKU-PARENT-001
+                  latitude: '40.7128'
+                  longitude: '-74.0060'
+      responses:
+        '200':
+          description: Products added successfully. Response format varies based on the `syncUpdateWithProductData` query parameter.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  description: Response when `syncUpdateWithProductData` is not provided or set to `false`.
+                  properties:
+                    status:
+                      type: string
+                      example: ok
+                - type: object
+                  description: Response when `syncUpdateWithProductData=true`.
+                  properties:
+                    success:
+                      type: object
+                      properties:
+                        products:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              product_id:
+                                type: string
+                                description: The unique identifier of the item that was successfully added.
+                              uuid:
+                                type: string
+                                description: The UUID of the item in Blueshift.
+                    failure:
+                      type: array
+                      description: Array of items that failed to be added.
+                      items:
+                        type: object
+                        properties:
+                          errors:
+                            type: array
+                            items:
+                              type: object
+                              additionalProperties:
+                                type: array
+                                items:
+                                  type: string
+                          product:
+                            type: object
+                            description: The product details that failed validation.
+                            properties:
+                              brand:
+                                type: string
+                              category:
+                                type: array
+                                items:
+                                  type: string
+                              image:
+                                type: string
+                              msrp:
+                                type: string
+                              price:
+                                type: string
+                              product_id:
+                                type: string
+                              availability:
+                                type: string
+                              tags:
+                                type: array
+                                items:
+                                  type: string
+                              parent_sku:
+                                type: string
+                              title:
+                                type: string
+                              web_link:
+                                type: string
+                              catalog_uuid:
+                                type: string
+                              sku:
+                                type: string
+                              latitude:
+                                type: string
+                              longitude:
+                                type: string
+              examples:
+                without_sync_param:
+                  summary: Response without syncUpdateWithProductData or when set to false
+                  value:
+                    status: ok
+                with_sync_param:
+                  summary: Response when syncUpdateWithProductData=true
+                  value:
+                    success:
+                      products:
+                      - product_id: PROD123456
+                        uuid: 8da44313-e540-449d-9513-6eb36285bfe3
+                    failure: []
+        '400':
+          description: Bad Request - The request was invalid or cannot be otherwise served.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    type: string
+              example:
+                status: 400
+                error: 'Json Parse error: unexpected character at line 10, column 11 [parse.c:671]'
+        '401':
+          description: Unauthorized - API authentication failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: Not authorized
+        '404':
+          description: Not Found - The catalog was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  error:
+                    type: string
+              example:
+                status: '404'
+                error: Not Found
+        '413':
+          description: Payload Too Large - You can upload maximum 100 products in one API call.
+        '422':
+          description: Unprocessable Entity - Some/all of the products have invalid data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    description: Array of error objects with field-level validation errors.
+                    items:
+                      type: object
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                  products:
+                    type: array
+                    description: Array of products that failed validation.
+                    items:
+                      type: object
+                      properties:
+                        brand:
+                          type: string
+                        category:
+                          type: array
+                          items:
+                            type: string
+                        image:
+                          type: string
+                        msrp:
+                          type: string
+                        price:
+                          type: string
+                        sku:
+                          type: string
+                        availability:
+                          type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                        parent_sku:
+                          type: string
+                        title:
+                          type: string
+                        web_link:
+                          type: string
+                        catalog_uuid:
+                          type: string
+                        latitude:
+                          type: string
+                        longitude:
+                          type: string
+              example:
+                errors:
+                - msrp:
+                  - is not a number
+                  price:
+                  - is not a number
+                  latitude:
+                  - Must be between -90 and 90
+                products:
+                - image: https://example.com/images/product.jpg
+                  title: Premium Laptop 15-inch
+                  web_link: https://example.com/products/laptop-001
+                  category:
+                  - Electronics
+                  - Electronics > Laptops
+                  msrp: '999.99'
+                  price: '899.99'
+                  tags:
+                  - bestseller
+                  - premium
+                  parent_sku: SKU-PARENT-001
+                  catalog_uuid: 89ee8378-a887-474b-8afe-e2369cc9297c
+                  sku: PROD123456
+                  availability: in_stock
+                  brand: TechBrand
+                  latitude: '40.7128'
+                  longitude: '-74.0060'
+        '429':
+          description: Too Many Requests - Rate limit exceeded.
+        '500':
+          description: Internal Server Error - Please contact Blueshift support.
+        '502':
+          description: Bad Gateway - Service unavailable, please retry with exponential backoff.
+        '503':
+          description: Service Unavailable - Please retry with exponential backoff.
+        '504':
+          description: Gateway Timeout - Please retry with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

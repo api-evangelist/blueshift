@@ -1,0 +1,170 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Tags API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Tags
+  description: Tags are folder-based entities that you can use to organize your resources. Each tag folder contains its own isolated set of tags.
+paths:
+  /api/v1/tag_contexts/list:
+    get:
+      tags:
+      - Tags
+      summary: List tags and tag folders
+      description: Use this endpoint to list all the tags and tag folders in your Blueshift account.
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: resource_type
+        description: 'Filter by resource type (e.g., `Campaign`, `Segment`, `Template:EmailTemplate`, `SharedAsset`, `Syndication`).
+
+
+          **Note:** Must exactly match the resource type. Not required when using `resource_uuid` since UUIDs are unique across all resource types.'
+        example: Campaign
+        in: query
+        schema:
+          type: string
+      - name: resource_uuid
+        description: 'Filter tags for a specific resource by its UUID. **No need to specify `resource_type` when using UUID** - UUIDs are unique across all resources.
+
+
+          **Finding the UUID:**
+
+          • Campaign: `https://app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details`
+
+          • Segment: `https://app.getblueshift.com/dashboard#/app/segments/<SEGMENT_UUID>/edit/events`
+
+          • Template: `https://app.getblueshift.com/dashboard#/app/templates/<TEMPLATE_UUID>/edit`
+
+
+          Returns empty array `[]` if UUID doesn''t exist or has no tags.'
+        example: 311499b0-35b9-4f1a-9f04-aa600078a447
+        in: query
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Specifies the tag folder's ID.
+                      example: 180
+                    account_id:
+                      type: integer
+                      description: Specifies ID of the account under which the tag folder is created.
+                      example: 182
+                    name:
+                      type: string
+                      description: The name of the tag folder.
+                      example: Category
+                    description:
+                      type: string
+                      description: Specifies the description of the tag's folder that you provide when you create the tag.
+                      example: New users push for the top categories
+                    color:
+                      type: string
+                      description: Specifies the hex-code of the color that you choose for the tag.
+                      example: '#76ef4f'
+                    allowed_tags:
+                      type: string
+                      description: Specifies the list of tags that you add in the folder.
+                      example: new member top categories push
+                    usage_type:
+                      type: string
+                      description: Type of tag usage (e.g., 'organization' for organizational tags).
+                      example: organization
+                    tagged_items:
+                      type: array
+                      description: Lists the entities that have this tag. For example, email templates, shared assets, or segments.
+                      items:
+                        type: object
+                        properties:
+                          uuid:
+                            type: string
+                            description: The UUID of the enitity that has this tag.
+                            example: d0d3e2d0-983f-4fb0-8d14-70da314120cd
+                          name:
+                            type: string
+                            description: The name of the entitity that has this tag.
+                            example: Black Friday 2024
+                          resource_type:
+                            type: string
+                            description: The type of the entity. For example, `Template:EmailTemplate`, `Campaign`, `SharedAsset`.
+                            example: Campaign
+                          tags:
+                            type: string
+                            description: The list of tags attached to this entity.
+                            example: Black Friday 2024:Wishlist
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '413':
+          description: You can upload up to 50 users in an API call.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

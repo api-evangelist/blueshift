@@ -1,0 +1,257 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Segments API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Segments
+  description: A segment is a list of users that satisfy a criteria. For example, you can create a segment for users who are located in the San Francisco area and run campaigns for them.
+paths:
+  /api/v1/segments/list:
+    get:
+      summary: Get list of segments
+      description: Use this endpoint to get the list of segments.
+      tags:
+      - Segments
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: name
+        description: Search for segments that contain the specified string in the name.
+        in: query
+        schema:
+          type: string
+      - name: archived
+        description: Search for segments with specified archived status. Value can be `0` to get a list of un-archived segments or `1` to get a list of archived segments. Leave blank to get a list of all segments.
+        in: query
+        schema:
+          type: integer
+      - name: per_page
+        description: Specify the number of records to be returned per page
+        in: query
+        schema:
+          type: string
+      - name: page
+        description: Specify the page number for the search results.
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  segments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: High value customers
+                        uuid:
+                          type: string
+                          example: e24f90d8-53df-46fd-8014-ff1bfa8774b5
+                        mixin_key:
+                          type: integer
+                          example: null
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: '2024-08-25T06:06:59.412Z'
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: '2021-08-25T06:06:59.412Z'
+                        status:
+                          type: string
+                        approxusers:
+                          type: integer
+                          description: Approximate number of users in the segment. Includes known as well as anonymous users.
+                        email_users:
+                          type: integer
+                          description: Approximate number of emailable users in the segment. Excludes opted-out users.
+                        sms_users:
+                          type: integer
+                          description: Approximate number of SMS users in the segment. Excludes opted-out users.
+                        push_users:
+                          type: integer
+                          description: Approximate number of Mobile Push enabled users in the segment. Excludes opted-out users.
+                        approxusers_updated_at:
+                          type: integer
+                        version:
+                          type: integer
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+  /api/v1/segments/{segment_uuid}/matching_users.json:
+    get:
+      summary: Get segment membership counts
+      description: Use this endpoint to get count of users in the segment.
+      tags:
+      - Segments
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: segment_uuid
+        description: UUID of the segment.
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: refresh
+        description: Trigger job to update segment counts. Counts are updated asynchronously in the background. Use refresh=true to trigger a new count update, and subsequently poll with refresh=false to retrieve updated counts.
+        in: query
+        schema:
+          type: boolean
+      - name: channels
+        description: 'Channels can be one of: ''users'', ''email'', ''push'', ''sms'', or ''inApp''. Parameter indicates which channel audience counts to refresh.'
+        in: query
+        example: email
+        schema:
+          type: string
+      - name: bypass_global
+        description: Set 'true' to return counts bypassing the global inclusion segments.
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh_status:
+                    type: string
+                    example: refreshing
+                    description: <p>'refreshing'- indicates count calculation job has triggered and awaiting counts to be computed in the background.</p> <p>'ready' - indicates count calculation job completed and counts have been updated at timestamp indicated in 'approxusers_updated_at'.</p>
+                  approxusers:
+                    type: integer
+                    example: 45
+                  email_users:
+                    type: integer
+                    example: 20
+                  sms_users:
+                    type: integer
+                  push_users:
+                    type: integer
+                  in_app_users:
+                    type: integer
+                  approxusers_updated_at:
+                    type: string
+                    format: date-time
+                    example: '2021-08-25T06:06:59.412Z'
+                    description: Timestamp when segment counts were last updated.
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

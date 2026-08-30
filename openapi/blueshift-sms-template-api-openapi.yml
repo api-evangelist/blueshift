@@ -1,0 +1,706 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift SMS template API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: SMS template
+  description: SMS template lifecycle management
+paths:
+  /api/v1/sms_templates.json:
+    get:
+      tags:
+      - SMS template
+      summary: List SMS templates
+      description: Use this endpoint to list all SMS templates. The SMS template has the content that the Blueshift platform uses to create and send text messages to your customers.
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: resource.message_type
+        description: Search for SMS templates by the message type - sms or mms.
+        example: sms
+        in: query
+        schema:
+          type: string
+          enum:
+          - sms
+          - mms
+      - name: name
+        description: Search for SMS templates that contain the specified string in the name of the template.
+        example: Template SMS test
+        in: query
+        schema:
+          type: string
+      - name: archived
+        description: Search for templates with specified archived status. Value can be `0` to get a list of un-archived templates or `1` to get a list of archived templates. Leave blank to get a list of all templates.
+        example: '1'
+        in: query
+        schema:
+          type: integer
+      - name: per_page
+        description: Specify the number of records to be returned per page
+        example: '5'
+        in: query
+        schema:
+          type: string
+      - name: page
+        description: Specify the page number for the search results.
+        example: '2'
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: Properties of the SMS template.
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the template
+                      example: Template SMS test
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Date and time of the template's creation.
+                      example: '2024-10-03T04:57:24.000Z'
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Date and time when the template got updated.
+                    uuid:
+                      type: string
+                      description: The universally unique identifier of the template.
+                      example: bb8e4fd8-12cf-3409-899b-7d2b4ecfc93b
+                    archived:
+                      type: boolean
+                      description: Describes whether the template is archived or not.
+                      example: true
+                    is_destroy:
+                      type: boolean
+                      description: Describes whether you can delete the template or not.
+                      example: false
+                    author:
+                      type: string
+                      description: The name of the author of the template.
+                      example: Jane Doe
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+    post:
+      tags:
+      - SMS template
+      summary: Create an SMS template
+      description: Use this endpoint to create an SMS template.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - template
+              - template_property
+              properties:
+                template:
+                  type: object
+                  description: Specify the properties of the template.
+                  required:
+                  - name
+                  - resource
+                  - skip_user_on_external_fetch_error
+                  properties:
+                    name:
+                      type: string
+                      description: Specify the name of the template.
+                      example: John's SMS template
+                    author:
+                      type: string
+                      example: john.doe@blueshift.com
+                      description: Specify the email address of the author of the template. For example, `johndoe@blueshift.com`.
+                    resource:
+                      type: object
+                      description: Specify the content of the template. For a message of type MMS, the media URL is a required field.
+                      properties:
+                        message_type:
+                          type: string
+                          description: Specify the type of the template. The type can be `sms` or `mms`.
+                          example: sms
+                          enum:
+                          - sms
+                          - mms
+                          default: sms
+                        subject:
+                          type: string
+                          description: Specify the subject for an MMS template.
+                          example: Hey, {{user.firstname}}!
+                        content:
+                          type: string
+                          description: Specify the content of the template. This content is used in the text message that a campaign triggers. This field is required for SMS messages.
+                          example: '<!DOCTYPE html>
+
+                            <html>
+
+                            <body>
+
+                            Hellooo
+
+                            </body></html>'
+                        media_url:
+                          type: string
+                          description: Specify the URL for the media for an MMS message. This field is required for MMS messages.
+                          example: https://cdn.getblueshift.com/pictures/114354/content/sample-pic.jpeg
+                        shorten_links:
+                          type: boolean
+                          description: Specify whether we should shorten URLs in a text message. We can track link clicks if you set this value to `true`.
+                          example: true
+                          default: true
+                    tag_data:
+                      type: string
+                      description: "Specify a folder and then tags under the folder in the format `folder_name: tag1, tag2, tag3`. For example, `Regions:USA,China,Brazil,Hong Kong,India,Sweden,Canada`.\n\n  > **\U0001F4D8**  Tag data should exist in your account.\n"
+                      example: Regions:NA,EU,APAC,LATAM,GreaterChina
+                    skip_user_on_external_fetch_error:
+                      type: boolean
+                      default: true
+                      description: Message is not sent to user if the external fetch encounters an error or does not return any data)
+                      example: true
+                template_property:
+                  type: object
+                  description: Specify the campaign behavior properties for the template.
+                  required:
+                  - skip_user_on_blank_products
+                  - skip_user_on_blank_event_products
+                  properties:
+                    skip_user_on_blank_products:
+                      type: boolean
+                      default: true
+                    skip_user_on_blank_event_products:
+                      type: boolean
+                      default: true
+                    account_algorithm_uuid:
+                      type:
+                      - string
+                      - 'null'
+                      description: Specify the recommendation scheme for the template. If you leave this field blank, no change will be done to any recommendation schemes that were previously added to the template. If you send null as a value, any recommendation schemes that were previously added to the template will be removed.
+                      example: 2879b1a3-ee84-4e13-b63c-ad83674c0ca1
+                external_fetches:
+                  type: array
+                  description: Specify the external fetches for the template.
+                  example:
+                  - uuid: e789705f-3eb3-4e2a-a666-648dedae6g86
+                  - uuid: af9bbbd3-7133-4ab4-80a2-938b67c12d34
+                  items:
+                    type: object
+                    required:
+                    - uuid
+                    properties:
+                      uuid:
+                        type: string
+                transaction_mixins:
+                  type: array
+                  description: Specify the transaction mixins for the template.
+                  example:
+                  - uuid: transaction_mixin1_uuid
+                  - uuid: transaction_mixin2_uuid
+                  items:
+                    type: object
+                    required:
+                    - uuid
+                    properties:
+                      uuid:
+                        type: string
+        description: Takes the template and its details and returns a JSON that provides the UUID of the template.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the template
+                    example: John's SMS template
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Date and time of the template's creation.
+                    example: '2024-05-05T20:41:21.000Z'
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Date and time when the template got updated.
+                    example: '2024-05-11T22:04:38.000Z'
+                  uuid:
+                    type: string
+                    description: The universally unique identifier of the template.
+                    example: 67b6ad85-461c-403f-b779-64eb4e7d401c
+                  archived:
+                    type: boolean
+                    description: Describes whether the template is archived or not.
+                    example: false
+                  is_destroy:
+                    type: boolean
+                    description: Describes whether you can delete the template or not.
+                  author:
+                    type: string
+                    description: The name of the author of the template.
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+  /api/v1/sms_templates/test_send.json:
+    post:
+      tags:
+      - SMS template
+      summary: Send a test SMS
+      description: Use this endpoint to send a test message. You can use this endpoint to test an SMS template that you create in Blueshift.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - uuid
+              - mobile
+              - personalize_for
+              properties:
+                uuid:
+                  type: string
+                  description: Specify the UUID of the template that you want to use to send a test SMS message.
+                  example: 153e6eaa-cae2-45a3-a59c-f6bed9a38712
+                mobile:
+                  type: string
+                  description: Specify the mobile number of the individual who should receive the test SMS message with the country code. For example, if the phone number is `2345678` and the country code is `1`, specify the number as `12345678`.
+                  example: '167892453'
+                personalize_for:
+                  type: string
+                  description: Specify the email address of the customer whose information we should use to customize the SMS message. For example, if you want the message to contain the first name of a specific customer, specify that customer's email address.
+                  example: janedoe@acme.com
+        description: Specify the template that you want to choose and the phone number to which you want to send the message.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the test SMS send operation.
+                    example: ok
+                  failed:
+                    type: object
+                    description: Object containing any failed recipients. Empty if all successful.
+                    example: {}
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors. This includes cases where the personalization user is not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Test send failed because personalization user not found.
+                  meta:
+                    type: object
+                    properties:
+                      combine_errors:
+                        type: boolean
+                        example: false
+                      no_toast:
+                        type: boolean
+                        example: false
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/sms_templates/{template_uuid}:
+    put:
+      tags:
+      - SMS template
+      summary: Update an SMS template
+      description: Use this endpoint to update an existing SMS template.
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: template_uuid
+        description: Specify the UUID of the template that you want to update. You can copy the UUID from the URL of the template on the Blueshift app. For example, if you open a template in the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/sms_template/<template_uuid>/edit`.
+        example: 9da0744e-141d-4c9d-85d7-c89a54ac745b
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - template
+              properties:
+                template:
+                  type: object
+                  description: Specify the properties of the template.
+                  required:
+                  - resource
+                  properties:
+                    name:
+                      type: string
+                      description: Specify a new name for the template. For example, `John's SMS template`.
+                      example: Summer Rush
+                    resource:
+                      type: object
+                      description: Specify new content for the template. For a message of type MMS, the media URL is a required field.
+                      properties:
+                        subject:
+                          type: string
+                          description: Specify the subject for an MMS template.
+                          example: Hey, {{user.firstname}}!
+                        content:
+                          type: string
+                          description: Specify the content of the template. This content is used in the text message that a campaign triggers. This field is required for SMS messages.
+                        media_url:
+                          type: string
+                          description: Specify the URL for the media for an MMS template. This field is required for MMS messages.
+                        shorten_links:
+                          type: boolean
+                          description: Specify whether we should shorten URLs in a text message. We can track link clicks if you set this value to `true`.
+                          example: true
+                          default: true
+                    tag_data:
+                      type: string
+                      description: 'Specify a folder and then tags under the folder in the format `folder_name: tag1, tag2, tag3`. For example, `Regions:USA,China,Brazil,Hong Kong,India,Sweden,Canada`. **📘**  Tag data should exist in your account.'
+                      example: Regions:NA,EU,APAC,LATAM,GreaterChina
+                    skip_user_on_external_fetch_error:
+                      type: boolean
+                      default: true
+                      description: Message is not sent to user if the external fetch encounters an error or does not return any data)
+                      example: true
+                template_property:
+                  type: object
+                  description: Specify the campaign behavior properties for the template.
+                  properties:
+                    skip_user_on_blank_products:
+                      type: boolean
+                      default: true
+                    skip_user_on_blank_event_products:
+                      type: boolean
+                      default: true
+                    account_algorithm_uuid:
+                      type:
+                      - string
+                      - 'null'
+                      description: Specify the recommendation scheme for the template. If you leave this field blank, no change will be done to any recommendation schemes that were previously added to the template. If you send null as a value, any recommendation schemes that were previously added to the template will be removed.
+                      example: 2879b1a3-ee84-4e13-b63c-ad83674c0ca1
+                external_fetches:
+                  type: array
+                  description: Specify the external fetches for the template. If you leave this field blank, any external fetches that were previously added to the template will be removed.
+                  example:
+                  - uuid: e789705f-3eb3-4e2a-a666-648dedae6g86
+                  - uuid: af9bbbd3-7133-4ab4-80a2-938b67c12d34
+                  items:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                transaction_mixins:
+                  type: array
+                  description: Specify the transaction mixins for the template. If you leave this field blank, any transaction mixins that were previously added to the template will be removed.
+                  example:
+                  - uuid: transaction_mixin1_uuid
+                  - uuid: transaction_mixin2_uuid
+                  items:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+        description: Specify the values of the properties that you want to update in the template.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the template
+                    example: John's SMS template
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Date and time of the template's creation.
+                    example: '2016-08-19T21:53:38.000Z'
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Date and time when the template got updated.
+                    example: '2020-11-19T12:48:13.000Z'
+                  uuid:
+                    type: string
+                    description: The universally unique identifier of the template.
+                    example: 41e574b2-72bd-4fad-bc5b-6b0aa0cc04f3
+                  archived:
+                    type: boolean
+                    description: Describes whether the template is archived or not.
+                    example: false
+                  author:
+                    type: string
+                    description: The name of the author of the template.
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

@@ -1,0 +1,2445 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Campaigns API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Campaigns
+  description: Manage your campaigns in Blueshift.
+paths:
+  /api/v1/campaigns.json:
+    get:
+      tags:
+      - Campaigns
+      summary: Performance summary
+      description: Use this endpoint to export the performance data of all the campaigns for a given date range.
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: start_time
+        description: Specify a timestamp in the ISO 8601 format to filter the performance data of the campaigns that ran after it.
+        example: '2023-05-05T20:41:21.000Z'
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: end_time
+        description: Specify a timestamp in the ISO 8601 format to filter the performance data of the campaigns that ran before it.
+        example: '2023-10-06T20:41:21.000Z'
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: status
+        description: Specify a status to filter the campaigns.
+        example: launched
+        in: query
+        schema:
+          type: string
+          enum:
+          - launched
+          - draft
+          - paused
+          - completed
+      - name: tag_data
+        description: Specify tags to filter the campaigns.
+        example: Regions:NA,EU,APAC,LATAM,GreaterChina
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  campaigns:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        campaign_executing:
+                          type: boolean
+                          example: false
+                        campaign_execution_ended_at:
+                          type: string
+                          format: date-time
+                          example: '2024-10-03T04:57:24.000Z'
+                        campaign_execution_started_at:
+                          type: string
+                          format: date-time
+                          example: '2023-10-05T04:57:24.000Z'
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: '2023-10-03T04:57:24.000Z'
+                        currency:
+                          type: string
+                          example: USD
+                        enddate:
+                          type: string
+                          format: date
+                          example: '2024-05-03T04:57:24.000Z'
+                        exec_term:
+                          type: string
+                          enum:
+                          - on_going
+                          example: on_going
+                        name:
+                          type: string
+                          example: Daily market tips
+                        recurring_number:
+                          type: number
+                          example: '1'
+                        recurring_schedule:
+                          type: string
+                          example: continuously
+                        recurring_time:
+                          type: number
+                          description: Schedule a recurring campaign to execute sends at a specific time of a day. The system tracks the campaign's last execution time (`last_recurring_execution_started_at`) and uses it to determine the next scheduled run.
+                          example: '2024-01-03T14:45:00.000Z'
+                        recurring_unit:
+                          type: string
+                          example: day
+                        segment_name:
+                          type: string
+                          example: Daily market tips segment
+                          description: The segment for which the campaign is running
+                        segment_uuid:
+                          type: string
+                          example: 9dfd5cdc-fedc-40b5-8c65-ba533c57c8bf
+                        startdate:
+                          type: string
+                          format: date-time
+                          example: '2024-01-02T14:45:00.000Z'
+                        statistics:
+                          type: object
+                          properties:
+                            activations:
+                              type: number
+                            add_to_carts:
+                              type: number
+                            assigns:
+                              type: number
+                            attributions:
+                              type: object
+                            bounces:
+                              type: number
+                            checkouts:
+                              type: number
+                            clicks:
+                              type: number
+                            deliveries:
+                              type: number
+                            end_time:
+                              type: string
+                              format: date-time
+                            media_spent:
+                              type: number
+                            opens:
+                              type: number
+                              example: 20
+                            pageloads:
+                              type: number
+                              example: 5
+                            purchases:
+                              type: number
+                              example: 75
+                            revenue:
+                              type: number
+                              example: 19618
+                            sends:
+                              type: number
+                              example: 110
+                            spam_reports:
+                              type: number
+                              example: 2
+                            start_time:
+                              type: string
+                              format: date-time
+                            timezone:
+                              type: string
+                              example: Pacific/Los_Angeles
+                            unique_clicks:
+                              type: number
+                              example: 150
+                            unique_opens:
+                              type: number
+                              example: 250
+                            unsubscribes:
+                              type: number
+                              example: 2
+                            visits:
+                              type: number
+                              example: 2160
+                        status:
+                          type: string
+                          enum:
+                          - launched
+                          - draft
+                          - paused
+                          example: paused
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: '2024-05-05T20:41:21.000Z'
+                        uuid:
+                          type: string
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/bulk_archive:
+    put:
+      summary: Bulk archive campaigns
+      description: Use this endpoint to archive multiple campaigns by providing an array of UUIDs.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: array
+                  items:
+                    type: string
+                  description: List of campaign UUIDs to archive.
+                  example:
+                  - uuid1
+                  - uuid2
+                  - uuid3
+                  - uuid4
+                  - uuid5
+      responses:
+        '200':
+          description: Campaigns archived successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  no_change:
+                    type: array
+                    items:
+                      type: string
+                    description: List of UUIDs for campaigns that were already archived.
+                    example: []
+                  blocked:
+                    type: array
+                    items:
+                      type: string
+                    description: List of UUIDs for campaigns that could not be archived due to restrictions.
+                    example: []
+                  successful:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          description: UUID of the successfully archived campaign.
+                        name:
+                          type: string
+                          description: Name of the successfully archived campaign.
+                    description: List of campaigns that were successfully archived.
+                    example:
+                    - uuid: 1a2b3c4d-5678-90ab-cdef-1234567890ab
+                      name: Holiday Season Campaign
+                    - uuid: 2b3c4d5e-6789-01bc-def0-2345678901cd
+                      name: Spring Sale Campaign
+                    - uuid: 3c4d5e6f-7890-12cd-ef01-3456789012de
+                      name: Summer Offers Campaign
+                    - uuid: 4d5e6f7g-8901-23de-f012-4567890123ef
+                      name: Autumn Clearance Sale
+                    - uuid: 5e6f7g8h-9012-34ef-0123-5678901234fg
+                      name: Winter Discounts Campaign
+                  failed:
+                    type: array
+                    items:
+                      type: string
+                    description: List of UUIDs for campaigns that could not be archived.
+                    example: []
+        '400':
+          description: Bad request - Invalid parameters or request conditions.
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - One or more campaigns not found.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/bulk_execute:
+    post:
+      tags:
+      - Campaigns
+      summary: Bulk trigger campaigns
+      description: Use this endpoint to trigger multiple campaigns.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payloads:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+                    properties:
+                      email:
+                        description: Specify the email address of the user for whom you want to trigger the campaign.
+                        type: string
+                        example: john.doe@blueshift.com
+                      campaign_uuid:
+                        description: Specify the UUID of the campaign that needs to be triggered. You can copy the UUID from the URL of the campaign on the Blueshift app. For example, if you open a campaign in the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details`.
+                        type: string
+                        example: 857ad5a5-1cd1-4c8a-bd9b-b2cdbb6595cc
+                      email_attachments:
+                        type: array
+                        description: Specify the URLs of the files that you want to send as an attachment along with the email.
+                        example:
+                        - '{https://cdn.getblueshift.com/examples/sample.pdf}'
+                        - '{https://cdn.getblueshift.com/static/csv/test.csv}'
+                        items:
+                          type: string
+                      _bsft_high_priority:
+                        type: boolean
+                        description: Set to true if the campaign must be processed as a high priority campaign. Blueshift first processes all high priority campaigns in a first in first out order. This is followed by all other campaigns in a first in first out order. The default value is false.
+                        default: false
+                        example: false
+                      transaction_uuid:
+                        type: string
+                        description: Optionally include the transaction UUID (must be a well formed UUID) to avoid duplicate messages. The API returns a 200 status code for a duplicate request along with a message noting that a request with the given transaction UUID was already processed.
+                        example: a0d1a0f3-6596-4e1c-b487-3639e05b6d2f
+            example:
+              campaign_uuid: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+              trigger_at: '2024-03-15T10:30:00Z'
+              users:
+              - customer_id: user123
+                email: user1@acme.com
+                transaction_uuid: txn_001
+                _bsft_high_priority: true
+              - customer_id: user456
+                email: user2@acme.com
+                transaction_uuid: txn_002
+                _bsft_high_priority: false
+        description: List of required parameters to trigger a campaign.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/bulk_unarchive:
+    put:
+      summary: Bulk unarchive campaigns
+      description: Use this endpoint to unarchive multiple campaigns by providing an array of UUIDs.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: array
+                  items:
+                    type: string
+                  description: List of campaign UUIDs to unarchive.
+                  example:
+                  - uuid1
+                  - uuid2
+                  - uuid3
+                  - uuid4
+                  - uuid5
+      responses:
+        '200':
+          description: Campaigns unarchived successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  no_change:
+                    type: array
+                    items:
+                      type: string
+                    description: List of UUIDs for campaigns that were already unarchived.
+                    example: []
+                  blocked:
+                    type: array
+                    items:
+                      type: string
+                    description: List of UUIDs for campaigns that could not be unarchived due to restrictions.
+                    example: []
+                  successful:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        uuid:
+                          type: string
+                          description: UUID of the successfully unarchived campaign.
+                        name:
+                          type: string
+                          description: Name of the successfully unarchived campaign.
+                    description: List of campaigns that were successfully unarchived.
+                    example:
+                    - uuid: 7e3a2d1e-df8a-4d9c-95f2-a12f4d2f8e19
+                      name: Holiday Sale Campaign
+                    - uuid: c15f84be-a5d4-4a3c-8096-4c8de82b0df3
+                      name: Back-to-School Promotion
+                    - uuid: f29d2345-4a6b-432d-a1de-5c3490f74f52
+                      name: Summer Discounts Campaign
+                    - uuid: 1b5e9876-5c4d-476f-91a8-b43c9ad2e4d1
+                      name: Winter Clearance Sale
+                    - uuid: e5d2a4f3-d5b4-44a6-803e-8d547c3cdb78
+                      name: Black Friday Deals
+                  failed:
+                    type: array
+                    items:
+                      type: string
+                    description: List of UUIDs for campaigns that could not be unarchived.
+                    example: []
+        '400':
+          description: Bad request - Invalid parameters or request conditions.
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - One or more campaigns not found.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/execute:
+    post:
+      tags:
+      - Campaigns
+      summary: Trigger a campaign
+      description: Use this endpoint to trigger an event-triggered or API-triggered campaign for a specific user.
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              required:
+              - email
+              - campaign_uuid
+              properties:
+                email:
+                  description: Specify the email address of the user for whom you want to trigger the campaign.
+                  type: string
+                  example: janedoe@acme.com
+                campaign_uuid:
+                  description: Specify the UUID of the campaign that you want to trigger. You can copy the UUID from the URL of the campaign on the Blueshift app. For example, if you open a campaign in the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details`.
+                  type: string
+                  example: a43b685d-65e3-5303-64d8-d4b4ab075b5f
+                email_attachments:
+                  type: array
+                  description: Specify the URLs of the files that you want to send as an attachment along with the email.
+                  example:
+                  - https://cdn.getblueshift.com/examples/sample.pdf
+                  - https://cdn.getblueshift.com/static/csv/test.csv
+                  items:
+                    type: string
+                _bsft_high_priority:
+                  description: Set to true if the campaign must be processed as a high priority campaign. Blueshift first processes all high priority campaigns in a first in first out order. This is followed by all other campaigns in a first in first out order. The default value is false.
+                  type: boolean
+                  default: false
+                  example: false
+                transaction_uuid:
+                  description: Optionally include the transaction UUID (must be a well formed UUID) to avoid duplicate messages. The API returns a 200 status code for a duplicate request along with a message noting that a request with the given transaction UUID was already processed.
+                  type: string
+                  example: a0d1a0f3-6596-4e1c-b487-3639e05b6d2f
+        description: Required parameters to trigger a campaign.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Invalid request parameters
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The specified campaign was not found. Verify the campaign UUID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: 'Unprocessable Entity - Request validation failed. Common reasons include: campaign is not event/API triggered (error_code: 101), campaign cannot be triggered through this endpoint (error_code: 102), or a valid user identifier is missing (error_code: 102).'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: campaign is not event/API triggered
+                  error_code:
+                    type: integer
+                    example: 101
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/{campaign_type}:
+    post:
+      tags:
+      - Campaigns
+      summary: Create a campaign
+      description: Use this endpoint to create a campaign and specify its attributes.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        required: true
+        name: campaign_type
+        description: Specify how the campaign is triggered. Choose an option from the list.
+        schema:
+          type: string
+          enum:
+          - event_triggered
+          - one_time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - startdate
+              properties:
+                name:
+                  type: string
+                  description: The name of the campaign.
+                  example: Spring_Sale_2025_EMAIL
+                author:
+                  type: string
+                  description: Email address of the campaign author.
+                  example: marketing_manager@company.com
+                launch:
+                  type: boolean
+                  description: "Determines if the campaign should be launched immediately (`true`) or saved as a draft (`false`). \n\n**Default**: `true`."
+                  default: true
+                  example: true
+                startdate:
+                  type: string
+                  format: date-time
+                  description: "Campaign start time in ISO 8601 format. \n\n**Default**: current time."
+                  example: '2025-03-15T12:00:00Z'
+                enddate:
+                  type: string
+                  format: date-time
+                  description: "Campaign end time in ISO 8601 format. \n\n**Default**: Runs indefinitely. \n\n**Applicable only for event-triggered campaigns.**"
+                  example: '2025-04-15T12:00:00Z'
+                segment_uuid:
+                  type: string
+                  description: "UUID of the segment associated with this campaign. \n\n**Required only for one-time campaigns.**"
+                  example: 89abc123-d456-789e-0123-45678f9a0123
+                triggering_event_name:
+                  type: string
+                  description: "The event that triggers this campaign. Must match an **Event Attribute** in the Events dashboard.  \n\nIf left blank, the campaign is **API triggered** and can only be triggered via the **Campaign Execute API**. \n\n**Applicable only for event-triggered campaigns.**"
+                  example: user_signup_confirmation
+                bypass_message_limits:
+                  type: boolean
+                  description: "Whether to bypass messaging limits. \n\n**Default**: `false`."
+                  default: false
+                  example: false
+                bypass_global_inclusion_segment:
+                  type: boolean
+                  description: "Whether to send messages to users outside the global inclusion segment. \n\n**Default**: `false`."
+                  default: false
+                  example: false
+                skip_incrementing_user_message_limits:
+                  type: boolean
+                  description: "Controls whether sent messages are excluded from the user’s message counts. \n\nWhen set to `true`, messages do not count towards the user’s message limits. \n\n**Default**: `false`."
+                  default: false
+                  example: false
+                remove_unsubscribe_from_email_headers:
+                  type: boolean
+                  description: "Whether to exclude unsubscribe headers from emails. \n\n**Default**: `false`."
+                  default: false
+                  example: false
+                send_summary_emails:
+                  type: string
+                  description: "Email address to receive the campaign execution summary. \n\n**Applicable only for one-time campaigns.**"
+                  example: campaign_summary@company.com
+                send_to_unsubscribed:
+                  type: boolean
+                  description: "Whether to send messages to unsubscribed users. \n\n**Default**: `false`."
+                  default: false
+                  example: false
+                journey_concurrency:
+                  type: string
+                  description: "Defines how often a user can enter the journey. \n\n**Options:** `once_per_lifetime`, `once_at_any_time`, `multiple`. \n\n**Default**: `multiple`."
+                  enum:
+                  - once_per_lifetime
+                  - once_at_any_time
+                  - multiple
+                  default: multiple
+                  example: multiple
+                seed_list_uuids:
+                  type: array
+                  description: An array of seed list UUIDs for testing campaigns.
+                  example:
+                  - 123e4567-e89b-12d3-a456-426614174000
+                  - 123e4567-e89b-12d3-a456-426614174001
+                  - 123e4567-e89b-12d3-a456-426614174002
+                  items:
+                    type: string
+                tag_data:
+                  type: string
+                  description: "Tags associated with the campaign. \n\n**Format**: `folder_name: tag1, tag2, tag3`. \n\n**Example**: `Regions:USA,Canada|Products:Electronics,Apparel`."
+                  example: Regions:USA,Canada|Products:Electronics,Apparel
+                triggers:
+                  type: array
+                  description: You can add only one trigger at a time. If you add multiple triggers, the endpoint returns an error.
+                  items:
+                    type: object
+                    properties:
+                      trigger_name:
+                        type: string
+                        description: Name of the trigger for reference.
+                        example: Welcome Email Trigger
+                      template_uuid:
+                        type: string
+                        description: UUID of the template linked to this trigger (email, push, SMS, etc.).
+                        example: 8da0744e-141d-4c9d-85d7-c89a54ac745a
+                      utm_source:
+                        type: string
+                        description: "UTM Source for tracking. \n\n**Default**: Set based on the account's backend configuration."
+                        example: blueshift
+                      utm_campaign:
+                        type: string
+                        description: "UTM Campaign name. \n\n**Default**: Set based on the account's backend configuration."
+                        example: spring_sale_2025
+                      utm_medium:
+                        type: string
+                        description: "UTM Medium (e.g., email, push). \n\n**Default**: Set based on the account's backend configuration."
+                        example: email
+                      utm_content:
+                        type: string
+                        description: "Identifies specific content variations within the campaign. \n\n**Default**: Set based on the account's backend configuration."
+                        example: discount_offer_banner
+                      utm_term:
+                        type: string
+                        description: "UTM Term for keyword tracking. \n\n**Default**: Set based on the account's backend configuration."
+                        example: exclusive_deal
+                      account_adapter_uuid:
+                        type: string
+                        description: "UUID of the adapter for message sending. If left blank, the trigger uses the default adapter for the channel. \n\nNot applicable for cloud app triggers. \n\n**Leave blank if using `account_adapter_liquid_expression`**."
+                        example: c2102111-e660-47df-aa3e-678d71a93644
+                      account_adapter_liquid_expression:
+                        type: string
+                        description: "Liquid expression to dynamically assign an adapter UUID. \n\n**Leave `account_adapter_uuid` blank when using this**."
+                        example: '{% case user.country %}{% when ''US'' %}c2102111-e660-47df-aa3e-678d71a93644{% else %}fallback_uuid{% endcase %}'
+                      from_name:
+                        type: string
+                        description: Sender's name for email campaigns.
+                        example: Blueshift Marketing
+                      from_address:
+                        type: string
+                        description: Sender's email address. It must match the adapter domain.
+                        example: marketing@blueshift.com
+                      reply_to_address:
+                        type: string
+                        description: Email address where replies are sent.
+                        example: support@blueshift.com
+                      custom_url_params:
+                        type: array
+                        description: Custom tracking parameters added to links.
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              description: Specify the name of the property.
+                              example: region
+                            value:
+                              type: string
+                              description: Specify the value of the property.
+                              example: North America
+        description: Specifications for the campaign to be created.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  campaign:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        description: The unique ID of the created campaign.
+                        example: 21a5b6c7-8901-4d2e-9f3g-45678abcdef
+                      name:
+                        type: string
+                        description: The name of the created campaign.
+                        example: Spring Sale 2025
+                      startdate:
+                        type: string
+                        format: date-time
+                        description: The date and time when the campaign starts in ISO 8601 format.
+                        example: '2025-03-01T09:00:00.000Z'
+                      enddate:
+                        type: string
+                        format: date-time
+                        description: The date and time when the campaign ends in ISO 8601 format.
+                        example: '2025-03-15T23:59:59.000Z'
+                      status:
+                        type: string
+                        description: The current status of the campaign.
+                        example: launched
+                      triggering_event_name:
+                        type: string
+                        description: Specify the event that triggers this campaign.
+                        example: cart_abandonment
+                      journey_concurrency:
+                        type: string
+                        description: The number of times a campaign runs for a user.
+                        example: once_at_any_time
+                      author:
+                        type: string
+                        description: The author of the campaign.
+                        example: John Doe
+                      tag_data:
+                        type: string
+                        description: Tags associated with the campaign.
+                        example: Region:US,EU,APAC
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+        '404':
+          description: Not Found - The specified campaign was not found. Verify the campaign UUID.
+        '422':
+          description: Unprocessable Entity - The campaign cannot be paused due to its current status (e.g., already completed or archived). One or more scheduling parameters may be invalid (if applicable).
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+  /api/v1/campaigns/{campaign_uuid}.json:
+    get:
+      summary: Detailed report without stats
+      description: Use this endpoint to get a detailed report of a specific campaign that does not include campaign statistics.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: campaign_uuid
+        description: Specify the UUID of the campaign for which you want a detailed report. You can copy the UUID from the URL of the campaign on dashboard. For example, if you open a campaign in the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details`.
+        example: a43b685d-65e3-5303-64d8-d4b4ab075b5f
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/{campaign_uuid}/archive:
+    put:
+      summary: Archive a single campaign
+      description: Use this endpoint to archive a specific campaign by its UUID.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: campaign_uuid
+        required: true
+        description: Specify the UUID of the campaign to archive.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Campaign archived successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  archived:
+                    type: boolean
+                    description: Indicates whether the campaign was successfully archived.
+                    example: true
+              example:
+                archived: true
+        '400':
+          description: Bad request - Invalid parameters or request conditions.
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - The specified campaign UUID was not found.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/{campaign_uuid}/detail.json:
+    get:
+      summary: Detailed report with stats
+      description: Use this endpoint to get a detailed report of a specific campaign.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: campaign_uuid
+        description: 'Specify the UUID of the campaign for which you want a detailed report. For example, if you open an campaign in the Blueshift app, its URL looks like: `https://app.getblueshift.com/dashboard#/app/campaigns/<CAMPAIGN_UUID>/details`. You can copy the UUID from the URL of the campaign on dashboard.'
+        example: a43b685d-65e3-5303-64d8-d4b4ab075b5f
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: end_time
+        description: Specify a timestamp in the ISO 8601 format to filter the report of the campaign upto it.
+        example: '2023-08-05T07:05:38.000Z'
+        required: true
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: start_time
+        description: Specify a timestamp in the ISO 8601 format to filter the report of the campaign after it.
+        example: '2023-07-05T07:05:38.000Z'
+        required: true
+        in: query
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/{campaign_uuid}/launch:
+    patch:
+      summary: Launch a campaign
+      description: "Use this endpoint to immediately launch a campaign. \n\nCampaigns that are archived or already completed cannot be launched. The API returns validation errors similar to those shown on the campaign UI."
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: campaign_uuid
+        required: true
+        description: UUID of the campaign to be launched.
+        schema:
+          type: string
+      requestBody:
+        description: No request body is required to launch a campaign.
+        content: {}
+      responses:
+        '200':
+          description: Campaign launched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    description: Unique identifier for the launched campaign.
+                    example: 09d6d2b1-684b-41c7-80d5-7001ce2653ac
+                  status:
+                    type: string
+                    description: Status of the campaign after launch.
+                    example: launched
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Timestamp when the campaign was launched.
+                    example: '2025-06-18T08:11:04.498Z'
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+        '404':
+          description: Not Found - The specified campaign was not found. Verify the campaign UUID.
+        '422':
+          description: Unprocessable Entity - The campaign cannot be paused due to its current status (e.g., already completed or archived). One or more scheduling parameters may be invalid (if applicable).
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+  /api/v1/campaigns/{campaign_uuid}/pause:
+    patch:
+      tags:
+      - Campaigns
+      summary: Pause a campaign
+      description: Use this endpoint to pause a campaign that is currently running or scheduled. This action is not applicable to campaigns that are completed or archived.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        required: true
+        name: campaign_uuid
+        description: UUID of the campaign to pause.
+        schema:
+          type: string
+      requestBody:
+        description: No additional parameters are required in the request body.
+        content: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                    description: The unique ID of the paused campaign.
+                    example: e3cd9c06-aaad-4102-84e7-03d708890695
+                  status:
+                    type: string
+                    description: The current status of the campaign.
+                    example: paused
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: The timestamp when the campaign was paused.
+                    example: '2025-07-20T11:08:27.981Z'
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+        '404':
+          description: Not Found - The specified campaign was not found. Verify the campaign UUID.
+        '422':
+          description: Unprocessable Entity - The campaign cannot be paused due to its current status (e.g., already completed or archived). One or more scheduling parameters may be invalid (if applicable).
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+  /api/v1/campaigns/{campaign_uuid}/unarchive:
+    put:
+      summary: Unarchive a single campaign
+      description: Use this endpoint to unarchive a specific campaign by its UUID.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: campaign_uuid
+        required: true
+        description: Specify the UUID of the campaign to unarchive.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Campaign unarchived successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  archived:
+                    type: boolean
+                    description: Indicates whether the campaign is archived. `false` means the campaign is unarchived.
+                    example: false
+              example:
+                archived: false
+        '400':
+          description: Bad request - Invalid parameters or request conditions.
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - The specified campaign UUID was not found.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/campaigns/{campaign_uuid}/update_schedule:
+    patch:
+      summary: Update campaign schedule
+      description: Use this endpoint to update the schedule of an existing campaign.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: campaign_uuid
+        required: true
+        description: Specify the UUID of the campaign to update.
+        schema:
+          type: string
+      requestBody:
+        description: Specify the schedule details for the campaign.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - startdate
+              properties:
+                startdate:
+                  type: string
+                  format: date-time
+                  description: 'Specify the campaign start time in ISO 8601 format.
+
+
+                    Default: current time (the campaign is launched immediately).'
+                  example: '2024-11-01T14:02:36.000Z'
+                enddate:
+                  type: string
+                  format: date-time
+                  description: 'Specify the campaign end time in ISO 8601 format.
+
+
+                    Default: null (the campaign runs forever).'
+                  example: '2024-11-15T14:02:36.000Z'
+                recurring_schedule:
+                  type: string
+                  description: 'Applicable to segment-triggered campaigns.
+
+
+                    Options: daily, continuously.'
+                  example: daily
+                repeating_schedule_attributes:
+                  type: object
+                  description: For recurring campaigns. Contains recurrence config.
+                  properties:
+                    interval_size:
+                      type: integer
+                      description: Interval size for recurrence.
+                      example: 1
+                    interval_unit:
+                      type: string
+                      description: 'Unit for the interval.
+
+
+                        Options: day, week, month.'
+                      example: day
+                    day_of_month:
+                      type: string
+                      description: 'Monthly recurrence type.
+
+
+                        Options: nth_day, nth_weekday, last_day.'
+                      example: nth_day
+                    days_of_week:
+                      type: array
+                      items:
+                        type: string
+                      description: Array of weekdays for recurrence. e.g. ["mon", "wed"].
+                      example:
+                      - mon
+                      - wed
+      responses:
+        '200':
+          description: The schedule has been successfully updated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+        '404':
+          description: Not Found - The specified campaign was not found. Verify the campaign UUID.
+        '422':
+          description: Unprocessable Entity - The campaign cannot be paused due to its current status (e.g., already completed or archived). One or more scheduling parameters may be invalid (if applicable).
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+  /api/v2/campaigns.json:
+    get:
+      summary: List campaigns
+      description: Use this endpoint to get the list of campaigns.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: name
+        description: Search for campaigns that contain the specified string in the name of the campaign.
+        example: Members-only Banner
+        in: query
+        schema:
+          type: string
+      - name: email
+        description: Search for campaigns created by specified author.
+        example: janedoe@acme.com
+        in: query
+        schema:
+          type: string
+      - name: created_after
+        description: Search for campaigns created after specified date and time.
+        example: '2024-05-21T07:05:00.000Z'
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: created_before
+        description: Search for campaigns created before specified date and time.
+        example: '2024-05-24T07:05:00.000Z'
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: startdate
+        description: Search for campaigns that started after specified date and time. If the start date is not specified, for one time campaigns, response contains only campaigns that have a start date within the last 30 days. For other campaign types, if start date is not specified, all campaigns are returned irrespective of start date.
+        example: '2024-05-22T02:26:00.000Z'
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: archived
+        description: Search for campaigns with specified archived status. Set as true for archived campaigns.
+        example: true
+        in: query
+        schema:
+          type: string
+      - name: status
+        description: Search for campaigns with specified status.
+        example: launched
+        in: query
+        schema:
+          type: string
+      - name: exec_term
+        description: Search for campaigns of specified type. Value can be one_time, recurring, on_going (segment triggered), transactional (event triggered), or onsite (live content).
+        example: one_time
+        in: query
+        schema:
+          type: string
+      - name: per_page
+        description: Specify the number of records to be returned per page
+        example: 4
+        in: query
+        schema:
+          type: string
+      - name: page
+        description: Specify the page number for the search results.
+        example: 3
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the campaign.
+                    status:
+                      type: string
+                      description: 'The current status of the campaign. Possible values: draft, launched, paused, completed.'
+                    startdate:
+                      type: string
+                      format: date-time
+                      description: The start date and time at which the campaign starts running.
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: The timestamp when the campaign was created.
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: The timestamp when the campaign was last updated.
+                    uuid:
+                      type: string
+                      description: The UUID of the campaign.
+                    exec_term:
+                      type: string
+                      description: 'The campaign type. Possible values: one_time, recurring, on_going, transactional, onsite.'
+                    next_execution_scheduled_at:
+                      type:
+                      - string
+                      - 'null'
+                      format: date-time
+                      description: For recurring campaigns, the next scheduled execution time.
+                    archived:
+                      type: boolean
+                      description: Indicates if the campaign is archived.
+                    holdout_percentage:
+                      type: number
+                      description: Specifies the campaign-level holdout percentage.
+                    segment_uuid:
+                      type:
+                      - string
+                      - 'null'
+                      description: The UUID of the associated segment, if any.
+                    segment_name:
+                      type:
+                      - string
+                      - 'null'
+                      description: The name of the associated segment, if any.
+                    author:
+                      type: string
+                      description: The author of the campaign.
+                    email:
+                      type: string
+                      description: Email address of the campaign author.
+                    prioritization_label:
+                      type: string
+                      description: Indicates campaign prioritization override, if any.
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v2/customer_campaign_activity:
+    get:
+      summary: Get a customer's campaign activity
+      description: Returns a customer's campaign activity (sends, opens, clicks, purchases, revenue) for up to 366 days.
+      tags:
+      - Campaigns
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: email
+        in: query
+        required: false
+        description: Customer's email.
+        schema:
+          type: string
+        example: jane.doe@example.com
+      - name: customer_id
+        in: query
+        required: false
+        description: Retailer/customer ID.
+        schema:
+          type: string
+        example: cust_91455
+      - name: phone_number
+        in: query
+        required: false
+        description: Customer's phone number.
+        schema:
+          type: string
+        example: '+14155550172'
+      - name: uuid
+        in: query
+        required: false
+        description: Customer's Blueshift UUID.
+        schema:
+          type: string
+        example: e909605f-3eb3-4e2a-a666-648dedae5b89
+      - name: start_time
+        in: query
+        required: true
+        description: ISO8601 start of the activity window (inclusive); cannot be more than 366 days in the past.
+        schema:
+          type: string
+          format: date-time
+        example: '2026-07-01T00:00:00Z'
+      - name: end_time
+        in: query
+        required: true
+        description: ISO8601 end of the activity window (exclusive); must be on or after start_time and cannot be in the future.
+        schema:
+          type: string
+          format: date-time
+        example: '2026-07-30T23:59:59Z'
+      - name: cursor
+        in: query
+        required: false
+        description: ISO8601 pagination token from a prior response's cursor field, used to fetch older activity past the 10,000-record cap; must fall within (start_time, end_time].
+        schema:
+          type: string
+          format: date-time
+        example: '2026-07-15T08:30:00Z'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  activities:
+                    type: array
+                    description: Array of campaign activity records for the customer within the given time window.
+                    items:
+                      type: object
+                      properties:
+                        action:
+                          type: string
+                          description: Type of activity — e.g. sent, delivered, open, click, purchase.
+                        campaign_uuid:
+                          type: string
+                          description: Unique identifier of the campaign.
+                        trigger_uuid:
+                          type: string
+                          description: Unique identifier of the trigger that fired the activity.
+                        trigger_timestamp:
+                          type: string
+                          format: date-time
+                          description: ISO8601 timestamp of when the activity occurred.
+                        trigger_name:
+                          type: string
+                          description: Human-readable name of the trigger step.
+                        trigger_type:
+                          type: string
+                          description: Type of trigger, e.g. emailtrigger.
+                        campaign_name:
+                          type: string
+                          description: Human-readable name of the campaign.
+                        creative_uuid:
+                          type: string
+                          description: Unique identifier of the creative/template used.
+                        browser_type:
+                          type: string
+                          description: Browser used by the customer; present only on engagement actions like open or click.
+                        browser_platform:
+                          type: string
+                          description: Operating system of the customer's device; present only on engagement actions.
+                        email_domain:
+                          type: string
+                          description: Domain portion of the customer's email address.
+                        extended_attributes:
+                          type: object
+                          description: Additional metadata about the activity, varies by action type.
+                  total:
+                    type: integer
+                    description: Total number of activity records matching the query.
+                  truncated:
+                    type: boolean
+                    description: True if results were capped at 10,000 records and a cursor should be used to fetch more.
+                  date_range:
+                    type: object
+                    description: Echoes back the start_time and end_time used for the query.
+                    properties:
+                      start_time:
+                        type: string
+                        format: date-time
+                      end_time:
+                        type: string
+                        format: date-time
+              examples:
+                with_activity:
+                  summary: Customer with campaign activity
+                  value:
+                    activities:
+                    - action: sent
+                      campaign_uuid: aa075690-a173-4e1b-bfed-be504f738942
+                      trigger_uuid: 62d05640-c5d8-b63d-938a-659e27369f3c
+                      trigger_timestamp: '2026-07-30T12:54:31Z'
+                      trigger_name: Send an email
+                      trigger_type: emailtrigger
+                      campaign_name: Summer Sale — Email Blast
+                      creative_uuid: 9340a0c8-cc2c-4c64-b62c-e1ac0476048e
+                      email_domain: example.com
+                      extended_attributes:
+                        bsft_template_version: 26
+                        execution_key: '2026-07-30T12:54:29Z'
+                    - action: delivered
+                      campaign_uuid: aa075690-a173-4e1b-bfed-be504f738942
+                      trigger_uuid: 62d05640-c5d8-b63d-938a-659e27369f3c
+                      trigger_timestamp: '2026-07-30T12:54:37Z'
+                      trigger_name: Send an email
+                      trigger_type: emailtrigger
+                      campaign_name: Summer Sale — Email Blast
+                      creative_uuid: 9340a0c8-cc2c-4c64-b62c-e1ac0476048e
+                      email_domain: example.com
+                      extended_attributes:
+                        bsft_template_version: 26
+                        execution_key: '2026-07-30T12:54:29Z'
+                    - action: open
+                      campaign_uuid: aa075690-a173-4e1b-bfed-be504f738942
+                      trigger_uuid: 62d05640-c5d8-b63d-938a-659e27369f3c
+                      trigger_timestamp: '2026-07-30T12:54:38Z'
+                      trigger_name: Send an email
+                      trigger_type: emailtrigger
+                      campaign_name: Summer Sale — Email Blast
+                      creative_uuid: 9340a0c8-cc2c-4c64-b62c-e1ac0476048e
+                      browser_type: chrome
+                      browser_platform: windows
+                      email_domain: example.com
+                      extended_attributes:
+                        bsft_template_version: 26
+                        execution_key: '2026-07-30T12:54:29Z'
+                        opened_by: user
+                    total: 3
+                    truncated: false
+                    date_range:
+                      start_time: '2026-07-30T12:00:00Z'
+                      end_time: '2026-07-30T13:30:00Z'
+                no_activity:
+                  summary: Customer with no activity in the window
+                  value:
+                    activities: []
+                    total: 0
+                    truncated: false
+                    date_range:
+                      start_time: '2026-07-01T00:00:00Z'
+                      end_time: '2026-07-29T23:59:59Z'
+        '400':
+          description: Bad Request - The request was invalid; see examples for specific validation error messages.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                  meta:
+                    type: object
+                    properties:
+                      combine_errors:
+                        type: boolean
+                        example: false
+                      no_toast:
+                        type: boolean
+                        example: false
+              examples:
+                missing_identifier:
+                  summary: No identifier provided
+                  value:
+                    errors:
+                    - detail: Customer identifier required (customer_id, email, phone_number, or uuid)
+                    meta:
+                      combine_errors: false
+                      no_toast: false
+                missing_start_time:
+                  summary: Missing start_time
+                  value:
+                    errors:
+                    - detail: start_time is required (ISO8601 format)
+                    meta:
+                      combine_errors: false
+                      no_toast: false
+                start_time_too_old:
+                  summary: start_time more than 366 days in the past
+                  value:
+                    errors:
+                    - detail: start_time cannot be more than 366 days in the past
+                    meta:
+                      combine_errors: false
+                      no_toast: false
+                end_time_in_future:
+                  summary: end_time in the future
+                  value:
+                    errors:
+                    - detail: end_time cannot be in the future
+                    meta:
+                      combine_errors: false
+                      no_toast: false
+                end_time_before_start_time:
+                  summary: end_time before start_time
+                  value:
+                    errors:
+                    - detail: end_time cannot be before start_time
+                    meta:
+                      combine_errors: false
+                      no_toast: false
+                invalid_date_format:
+                  summary: Invalid date format
+                  value:
+                    errors:
+                    - detail: start_time must be in ISO8601 format
+                    meta:
+                      combine_errors: false
+                      no_toast: false
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+        '404':
+          description: Not Found - The customer specified by the given identifier could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                  meta:
+                    type: object
+                    properties:
+                      combine_errors:
+                        type: boolean
+                        example: false
+                      no_toast:
+                        type: boolean
+                        example: false
+              examples:
+                customer_not_found:
+                  summary: Customer not found
+                  value:
+                    errors:
+                    - detail: User not found
+                    meta:
+                      combine_errors: false
+                      no_toast: false
+        '429':
+          description: Rate limit exceeded - Too many requests
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

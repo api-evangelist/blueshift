@@ -1,0 +1,735 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Push template API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Push template
+  description: Push template lifecycle management
+paths:
+  /api/v1/push_templates.json:
+    get:
+      summary: List push templates
+      description: Use this endpoint to get the list of push templates.
+      tags:
+      - Push template
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: name
+        description: Search for push templates that contain the specified string in the name of the template.
+        in: query
+        schema:
+          type: string
+      - name: archived
+        description: Search for templates with specified archived status. Value can be `0` to get a list of un-archived templates or `1` to get a list of archived templates. Leave blank to get a list of all templates.
+        in: query
+        schema:
+          type: integer
+      - name: per_page
+        description: Specify the number of records to be returned per page
+        in: query
+        schema:
+          type: string
+      - name: page
+        description: Specify the page number for the search results.
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  template:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: '2024-10-03T04:57:24.000Z'
+                        updated_at:
+                          type: string
+                          format: date-time
+                        uuid:
+                          type: string
+                        author:
+                          type: string
+                        resource:
+                          type: object
+                          properties:
+                            updated_at:
+                              type: string
+                              format: date-time
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+    post:
+      summary: Create a push template
+      description: Use this endpoint to create a push template.
+      tags:
+      - Push template
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - push_template
+              - template_property
+              properties:
+                push_template:
+                  type: object
+                  required:
+                  - name
+                  - content
+                  - skip_user_on_external_fetch_error
+                  properties:
+                    name:
+                      type: string
+                      description: Specify the name of the template. For example, `My API created template`.
+                      example: Summer Rush
+                    author:
+                      type: string
+                      example: john.doe@blueshift.com
+                      description: Specify the email address of the author of the template.
+                    message_type:
+                      type: string
+                      description: Only `json` message type is supported.
+                      enum:
+                      - json
+                      example: json
+                      default: json
+                    device_type:
+                      type: string
+                      description: Specify the type of device you want to target. For example, `both`, `apple`, or `android`. By default, it's set to both.
+                      enum:
+                      - apple
+                      - android
+                      - both
+                      example: apple
+                      default: both
+                    content:
+                      type: string
+                      description: Specify the `JSON` payload of the notification that is pushed to a user. For example, specify `"{\"GCM\":{\"notification\":{\"title\":\"Notification Content\"}},\"APNS\":{\"aps\":{\"alert\":\"Hello world, now we're cookin!\"}}}"`. Leave the GCM payload empty if you want the push notification to be iOS only. Similarly, leave the APNs payload empty if you want the push notification to be Android only.
+                      example: '<!DOCTYPE html>
+
+                        <html>
+
+                        <body>
+
+                        Hellooo
+
+                        </body></html>'
+                    tag_data:
+                      type: string
+                      description: "Specify a folder and then tags under the folder in the format `folder_name: tag1, tag2, tag3`. For example, `Regions:USA,China,Brazil,Hong Kong,India,Sweden,Canada`.\n\n  > **\U0001F4D8**  Tag data should exist in your account.\n"
+                      example: Regions:NA,EU,APAC,LATAM,GreaterChina
+                    skip_user_on_external_fetch_error:
+                      type: boolean
+                      default: true
+                      description: Message is not sent to user if the external fetch encounters an error or does not return any data)
+                      example: true
+                template_property:
+                  type: object
+                  description: Specify the campaign behavior properties for the template.
+                  required:
+                  - skip_user_on_blank_products
+                  - skip_user_on_blank_event_products
+                  properties:
+                    skip_user_on_blank_products:
+                      type: boolean
+                      default: true
+                    skip_user_on_blank_event_products:
+                      type: boolean
+                      default: true
+                    account_algorithm_uuid:
+                      type:
+                      - string
+                      - 'null'
+                      description: Specify the recommendation scheme for the template. If you leave this field blank, no change will be done to any recommendation schemes that were previously added to the template. If you send null as a value, any recommendation schemes that were previously added to the template will be removed.
+                external_fetches:
+                  type: array
+                  description: Specify the external fetches for the template.
+                  example:
+                  - uuid: e789705f-3eb3-4e2a-a666-648dedae6g86
+                  - uuid: af9bbbd3-7133-4ab4-80a2-938b67c12d34
+                  items:
+                    type: object
+                    required:
+                    - uuid
+                    properties:
+                      uuid:
+                        type: string
+                transaction_mixins:
+                  type: array
+                  description: Specify the transaction mixins for the template.
+                  example:
+                  - uuid: transaction_mixin1_uuid
+                  - uuid: transaction_mixin2_uuid
+                  items:
+                    type: object
+                    required:
+                    - uuid
+                    properties:
+                      uuid:
+                        type: string
+        description: Specify the details of the push template.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/push_templates/test_push.json:
+    post:
+      summary: Push a test message
+      description: Use this endpoint to push a test message to users.
+      tags:
+      - Push template
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - uuid
+              - personalize_for
+              properties:
+                uuid:
+                  type: string
+                  description: Specify the UUID of the template. You can the UUID from the URL of the template. For example, if you open the template in the Blueshift app, its URL looks like `https://app.getblueshift.com/dashboard#/app/push_template/studio/<TEMPLATE_UUID>/edit/info`.
+                  example: 9da0744e-141d-4c9d-85d7-c89a54ac745b
+                personalize_for:
+                  type: string
+                  description: The email address of the user profile for whom you want to personalize the test push message.
+                  example: janedoe@acme.com
+                email:
+                  type: string
+                  description: Specify the email address of the user to whom you want to push the test message.
+                  example: janedoe@acme.com
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/push_templates/{template_uuid}:
+    put:
+      summary: Update a push template
+      description: Use this endpoint to update a push template.
+      tags:
+      - Push template
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: template_uuid
+        description: Specify the UUID of the template that you want to update. You can get the template UUID from the URL when you view a template in the Blueshift app. For example, in `https://app.getblueshift.com/dashboard#/app/push_template/studio/<TEMPLATE_UUID>/edit/info`, the <TEMPLATE_UUID> is the uuid that you need.
+        example: 9da0744e-141d-4c9d-85d7-c89a54ac745b
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                push_template:
+                  type: object
+                  properties:
+                    message_type:
+                      type: string
+                      description: Only `json` message type is supported.
+                      enum:
+                      - json
+                      default: json
+                    device_type:
+                      type: string
+                      description: Specify the type of device you want to target.
+                      enum:
+                      - apple
+                      - android
+                      - both
+                    content:
+                      type: string
+                      description: Specify the `JSON` payload of the notification that is pushed to a user. For example, specify `"{\"GCM\":{\"notification\":{\"title\":\"Notification Content\"}},\"APNS\":{\"aps\":{\"alert\":\"Hello world, now we're cookin!\"}}}"`. Leave the GCM payload empty if you want the push notification to be iOS only. Similarly, leave the APNs payload empty if you want the push notification to be Android only.
+                    tag_data:
+                      type: string
+                      description: 'Specify a folder and then tags under the folder in the format `folder_name: tag1, tag2, tag3`. **📘**  Tag data should exist in your account.'
+                      example: Regions:NA,EU,APAC,LATAM,GreaterChina
+                    skip_user_on_external_fetch_error:
+                      type: boolean
+                      default: true
+                      description: Message is not sent to user if the external fetch encounters an error or does not return any data)
+                      example: true
+                template_property:
+                  type: object
+                  description: Specify the campaign behavior properties for the template.
+                  properties:
+                    skip_user_on_blank_products:
+                      type: boolean
+                      default: true
+                      example: true
+                    skip_user_on_blank_event_products:
+                      type: boolean
+                      default: true
+                      example: true
+                    account_algorithm_uuid:
+                      type:
+                      - string
+                      - 'null'
+                      description: Specify the recommendation scheme for the template. If you leave this field blank, no change will be done to any recommendation schemes that were previously added to the template. If you send null as a value, any recommendation schemes that were previously added to the template will be removed.
+                      example: 3879b1a3-ee84-5e13-b63c-ad83674c0ba1
+                external_fetches:
+                  type: array
+                  description: Specify the external fetches for the template. If you leave this field blank, any external fetches that were previously added to the template will be removed.
+                  items:
+                    type: string
+                  example:
+                  - <Uuid_1>
+                  - <Uuid_2>
+                  - '...'
+                transaction_mixins:
+                  type: array
+                  description: Specify the transaction mixins for the template. If you leave this field blank, any transaction mixins that were previously added to the template will be removed.
+                  example:
+                  - uuid: e789705f-3eb3-4e2a-a666-648dedae6g86
+                  - uuid: af9bbbd3-7133-4ab4-80a2-938b67c12d34
+                  items:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+        description: Update a push template.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

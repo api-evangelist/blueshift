@@ -1,0 +1,494 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Live Activities API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Live Activities
+paths:
+  /api/v1/live_activity/start:
+    post:
+      summary: Start a Live Activity
+      description: Starts a Live Activity on one or more customers' devices.
+      tags:
+      - Live Activities
+      security:
+      - event_api_auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customer_identifier_type
+              - customer_identifiers
+              - activity_attributes_type
+              - activity_attributes
+              - content_state
+              - notification
+              properties:
+                customer_identifier_type:
+                  type: string
+                  enum:
+                  - customer_id
+                  - email
+                  - phone_number
+                  description: Type of identifier used in customer_identifiers.
+                  example: email
+                customer_identifiers:
+                  type: array
+                  items:
+                    type: string
+                  description: Identifier values. Maximum 50 per call.
+                  example:
+                  - jane.doe@example.com
+                activity_attributes_type:
+                  type: string
+                  description: Name of the activity design, matching the name your app registers with registerPushToStart.
+                  example: DeliveryActivityAttribute
+                activity_attributes:
+                  type: object
+                  description: Static attributes that do not change for the life of the activity. Must include `bsftActivityId`, a unique identifier for this activity for this customer.
+                  required:
+                  - bsftActivityId
+                  properties:
+                    bsftActivityId:
+                      type: string
+                      description: Your identifier for this activity. Reuse it to update or end the activity.
+                      example: order_4482
+                  additionalProperties: true
+                  example:
+                    bsftActivityId: order_4482
+                    activityName: 'Order #4482'
+                content_state:
+                  type: object
+                  description: Dynamic content shown in the activity. The property names must exactly match the ContentState defined in your app. A mismatch is not reported as an error and the device discards the update.
+                  additionalProperties: true
+                  example:
+                    title: Order confirmed
+                    subtitle: Preparing your order
+                    progress: 0.2
+                notification:
+                  type: object
+                  description: Alert shown when the activity starts.
+                  properties:
+                    title:
+                      type: string
+                      example: 'Order #4482'
+                    body:
+                      type: string
+                      example: Your order is confirmed
+                stale_date:
+                  type: string
+                  format: date-time
+                  description: ISO 8601 timestamp after which the content is considered out of date. Must be in the future.
+                  example: '2026-07-29T18:30:00Z'
+            example:
+              customer_identifier_type: email
+              customer_identifiers:
+              - jane.doe@example.com
+              activity_attributes_type: DeliveryActivityAttribute
+              activity_attributes:
+                bsftActivityId: order_4482
+                activityName: 'Order #4482'
+              content_state:
+                title: Order confirmed
+                subtitle: Preparing your order
+                progress: 0.2
+              notification:
+                title: 'Order #4482'
+                body: Your order is confirmed
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Result of the request.
+                    example: ok
+                  dispatched_to:
+                    type: integer
+                    description: Number of devices the message was dispatched to. A value of 0 means no device received it; check the errors array.
+                    example: 1
+                  errors:
+                    type: array
+                    description: Per-identifier errors. Empty when every identifier resolved to a device.
+                    items:
+                      type: object
+                      properties:
+                        customer_identifier_type:
+                          type: string
+                        customer_identifier_value:
+                          type: string
+                        error_message:
+                          type: string
+              examples:
+                success:
+                  summary: Activity dispatched to the customer's device
+                  value:
+                    status: ok
+                    dispatched_to: 1
+                    errors: []
+                not_delivered:
+                  summary: Request accepted, but no device could be reached
+                  value:
+                    status: ok
+                    dispatched_to: 0
+                    errors:
+                    - customer_identifier_type: email
+                      customer_identifier_value: jane.doe@example.com
+                      error_message: No user found for given identifier
+        '400':
+          description: Bad Request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Missing customer_identifier_type
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: No identifiers resolved
+        '413':
+          description: Payload Too Large - Too many customer identifiers in a single call.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: You can add maximum 50 customer identifiers in one API call
+        '422':
+          description: Unprocessable Entity - The account is not configured to deliver this request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: No push adapter configured
+        '429':
+          description: Rate limit exceeded - Too many requests
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Delivery failed
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+  /api/v1/live_activity/update:
+    post:
+      summary: Update a Live Activity
+      description: Updates the content of a running Live Activity, or ends it.
+      tags:
+      - Live Activities
+      security:
+      - event_api_auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customer_identifier_type
+              - customer_identifiers
+              - activity_attributes_type
+              - bsft_activity_id
+              - content_state
+              properties:
+                customer_identifier_type:
+                  type: string
+                  enum:
+                  - customer_id
+                  - email
+                  - phone_number
+                  description: Type of identifier used in customer_identifiers.
+                  example: email
+                customer_identifiers:
+                  type: array
+                  items:
+                    type: string
+                  description: Identifier values. Maximum 50 per call.
+                  example:
+                  - jane.doe@example.com
+                activity_attributes_type:
+                  type: string
+                  description: Name of the activity design, matching the name your app registers with registerPushToStart.
+                  example: DeliveryActivityAttribute
+                bsft_activity_id:
+                  type: string
+                  description: The identifier you set as bsftActivityId when starting the activity.
+                  example: order_4482
+                content_state:
+                  type: object
+                  description: Updated dynamic content. The property names must exactly match the ContentState defined in your app.
+                  additionalProperties: true
+                  example:
+                    title: Out for delivery
+                    subtitle: Arriving by 6:45 PM
+                    progress: 0.7
+                notification:
+                  type: object
+                  description: Optional alert shown with the update. Omit it to update the activity silently.
+                  properties:
+                    title:
+                      type: string
+                      example: 'Order #4482'
+                    body:
+                      type: string
+                      example: Your order is out for delivery
+                end_activity:
+                  type: boolean
+                  description: Set to true to end the activity. The activity is removed from the Dynamic Island immediately and clears from the Lock Screen shortly after.
+                  example: false
+                stale_date:
+                  type: string
+                  format: date-time
+                  description: ISO 8601 timestamp after which the content is considered out of date.
+                  example: '2026-07-29T18:30:00Z'
+                dismissal_date:
+                  type: string
+                  format: date-time
+                  description: ISO 8601 timestamp at which the activity is dismissed from the device.
+                  example: '2026-07-29T19:00:00Z'
+            example:
+              customer_identifier_type: email
+              customer_identifiers:
+              - jane.doe@example.com
+              activity_attributes_type: DeliveryActivityAttribute
+              bsft_activity_id: order_4482
+              content_state:
+                title: Out for delivery
+                subtitle: Arriving by 6:45 PM
+                progress: 0.7
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Result of the request.
+                    example: ok
+                  dispatched_to:
+                    type: integer
+                    description: Number of devices the message was dispatched to. A value of 0 means no device received it; check the errors array.
+                    example: 1
+                  errors:
+                    type: array
+                    description: Per-identifier errors. Empty when every identifier resolved to a device.
+                    items:
+                      type: object
+                      properties:
+                        customer_identifier_type:
+                          type: string
+                        customer_identifier_value:
+                          type: string
+                        error_message:
+                          type: string
+              examples:
+                success:
+                  summary: Update dispatched to the customer's device
+                  value:
+                    status: ok
+                    dispatched_to: 1
+                    errors: []
+                not_delivered:
+                  summary: Request accepted, but the activity was not found
+                  value:
+                    status: ok
+                    dispatched_to: 0
+                    errors:
+                    - customer_identifier_type: email
+                      customer_identifier_value: jane.doe@example.com
+                      error_message: Running Live Activity not found for any device
+        '400':
+          description: Bad Request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Missing customer_identifier_type
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: No identifiers resolved
+        '413':
+          description: Payload Too Large - Too many customer identifiers in a single call.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: You can add maximum 50 customer identifiers in one API call
+        '422':
+          description: Unprocessable Entity - The account is not configured to deliver this request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: No push adapter configured
+        '429':
+          description: Rate limit exceeded - Too many requests
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Delivery failed
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

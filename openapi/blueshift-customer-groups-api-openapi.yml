@@ -1,0 +1,246 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Customer groups API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Customer groups
+  description: Customer groups link multiple customer profiles to a common parent entity with shared attributes. Use these endpoints to delete a group or remove a user from a group.
+paths:
+  /api/v1/customer_group/{group_id}:
+    delete:
+      tags:
+      - Customer groups
+      summary: Delete customer group
+      description: Deletes a customer group. Set `delete_users` to keep or remove the associated users.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        description: The ID of the customer group to delete. This is not the UUID.
+        schema:
+          type: string
+        example: grp_orionretail
+      - in: query
+        name: delete_users
+        required: false
+        description: 'Determines whether the users associated with the group are also deleted.
+
+
+          - `false` — Deletes the group and preserves all associated user records.
+
+          - `true` — Deletes the group and permanently removes all associated users.'
+        schema:
+          type: boolean
+          enum:
+          - false
+          - true
+          default: false
+        example: false
+      responses:
+        '200':
+          description: OK — The group was deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    properties:
+                      account_uuid:
+                        type: string
+                        format: uuid
+                      created_at:
+                        type: string
+                        format: date-time
+                      extended_attributes:
+                        type: object
+                      group_id:
+                        type: string
+                      updated_at:
+                        type: string
+                        format: date-time
+                      user_count:
+                        type: integer
+                      user_uuids:
+                        type: array
+                        items:
+                          type: string
+                          format: uuid
+                      uuid:
+                        type: string
+                        format: uuid
+                      version:
+                        type: string
+                      email:
+                        type: string
+                      firstname:
+                        type: string
+                      lastname:
+                        type: string
+                      timestamp:
+                        type: string
+                        format: date-time
+                  _bsft_delete_status:
+                    type: string
+                    example: success
+              examples:
+                preserve_users:
+                  summary: Group deleted, users preserved (delete_users=false)
+                  value:
+                    group:
+                      account_uuid: 6352c279-69a2-4222-b988-b01a729a6d2c
+                      created_at: '2026-03-10T07:46:30.713Z'
+                      extended_attributes:
+                        _bsft_js_pipeline: true
+                        _bsft_ts: '2026-03-10T07:46:30.656Z'
+                        email: admin@orionretail.io
+                        firstname: Orion
+                        lastname: Retail
+                        timestamp: '2026-03-10T07:46:30.656Z'
+                      group_id: grp_orionretail
+                      updated_at: '2026-03-10T07:54:38.932Z'
+                      user_count: 4
+                      user_uuids:
+                      - 062b6926-89d2-4dfd-945f-be61720b06ce
+                      - 41f446aa-43ca-4718-b45c-c68e575a371f
+                      - 81f19599-6fff-4012-8e0a-77941149b599
+                      - ae2ded0f-19b6-4d93-b5f9-66acfd579698
+                      uuid: 479b7071-997c-426e-94a5-387d97897d50
+                      version: '1'
+                      email: admin@orionretail.io
+                      firstname: Orion
+                      lastname: Retail
+                      timestamp: '2026-03-10T07:46:30.656Z'
+                    _bsft_delete_status: success
+                delete_users:
+                  summary: Group and associated users deleted (delete_users=true or omitted)
+                  value:
+                    group:
+                      account_uuid: 6352c279-69a2-4222-b988-b01a729a6d2c
+                      created_at: '2026-03-10T07:46:39.531Z'
+                      extended_attributes:
+                        _bsft_js_pipeline: true
+                        _bsft_ts: '2026-03-10T07:46:39.445Z'
+                        email: admin@veloxmedia.co
+                        firstname: Velox
+                        lastname: Media
+                        timestamp: '2026-03-10T07:46:39.445Z'
+                      group_id: grp_veloxmedia
+                      updated_at: '2026-03-10T07:49:07.179Z'
+                      user_count: 5
+                      user_uuids:
+                      - 4fb30f34-154d-49fe-800d-7bfde5806f27
+                      - 82f10575-5474-4fac-a45b-0d0b434e39e6
+                      - b408e8f6-a011-4c3a-8a16-1d99c4480d61
+                      - b5a1c08b-d2df-4da0-a63c-01f430d31ec3
+                      - b5c77c44-f013-4a96-9df4-62e3b109265b
+                      uuid: d18225f5-3a74-443f-b21c-931457688281
+                      version: '1'
+                      email: admin@veloxmedia.co
+                      firstname: Velox
+                      lastname: Media
+                      timestamp: '2026-03-10T07:46:39.445Z'
+                    _bsft_delete_status: success
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+        '404':
+          description: Not Found - The specified group ID was not found. Verify the value and try again.
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+  /api/v1/customer_group/{group_id}/user/{user_uuid}:
+    delete:
+      tags:
+      - Customer groups
+      summary: Remove user from customer group
+      description: Removes a user from a customer group without deleting the user record.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        description: The ID of the customer group. This is not the UUID.
+        schema:
+          type: string
+        example: grp_orionretail
+      - in: path
+        name: user_uuid
+        required: true
+        description: The UUID of the user to remove from the group.
+        schema:
+          type: string
+          format: uuid
+        example: 57fbca61-3eed-43ea-aaa6-c35307296035
+      responses:
+        '200':
+          description: OK — The user was removed from the group successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: User removed from group successfully
+                  group_id:
+                    type: string
+                    example: grp_orionretail
+                  user_uuid:
+                    type: string
+                    format: uuid
+                    example: 57fbca61-3eed-43ea-aaa6-c35307296035
+              example:
+                status: success
+                message: User removed from group successfully
+                group_id: grp_orionretail
+                user_uuid: 57fbca61-3eed-43ea-aaa6-c35307296035
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+        '404':
+          description: Not Found - The specified group ID or user UUID was not found. Verify the values and try again.
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

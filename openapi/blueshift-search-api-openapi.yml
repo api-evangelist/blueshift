@@ -1,0 +1,189 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Search API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Search
+  description: You can use the `customer_search` API to search for events associated with a customer.
+paths:
+  /api/v1/customer_search/show_events:
+    get:
+      tags:
+      - Search
+      summary: Get customer events
+      description: Use this endpoint to fetch the details of the events for a customer using the customer's UUID.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: query
+        required: true
+        name: uuid
+        description: Specify the uuid of the customer whose event details you want to fetch.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _bsft_doc_type:
+                      type: string
+                      description: The type of object.
+                      example: events
+                    _bsft_ts:
+                      type: string
+                      description: The timestamp in ISO 8601 format when the object was created.
+                      example: '2021-08-25T06:06:59.415Z'
+                    _bsft_type:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: The type of entity within Blueshift. Event in this case.
+                          example: events
+                        parent:
+                          type: integer
+                          description: The UUID of the customer who generated this event.
+                          example: 51aceb79-2cbc-4e2b-a132-b02de69bba15
+                    _exp:
+                      type: string
+                      example: 1627204743378
+                    account_uuid:
+                      type: string
+                      description: The ID of the account under which the user is created.
+                      example: 4b5b584f-fee7-44f3-ae3a-8ba90aa7d2d5
+                    browser_platform:
+                      type: string
+                      description: The platform the used when the event occured.
+                      example: Windows
+                    browser_type:
+                      type: string
+                      description: The broswer used when the event occured.
+                      example: Firefox
+                    browser_version:
+                      type: string
+                      description: The version of the broswer used.
+                      example: '126.0'
+                    cookie:
+                      type: string
+                      description: The Blueshift cookie created during the browser session.
+                      example: b854bae6-6dc8-c80c-6133-c45d0ba0fdc4
+                    email:
+                      type: string
+                      description: The user's email address.
+                    event:
+                      type: string
+                      description: The name of the event. For example, identify, view (product view), add_to_cart, remove_from_cart, checkout, purchase, search, your_custom_event_name (custom event) etc.
+                      example: identify
+                    event_uuid:
+                      type: string
+                      description: The unique identifier for the event.
+                      example: 3766f118-d4cd-11eb-a278-0242ac110006
+                    ip:
+                      type: string
+                      description: The IP address of the device used.
+                      example: 201.33.19.3
+                    referrer:
+                      type: string
+                      description: The URL of the page that referred the customer to the specific page on which the event occured.
+                      example: http://site.com
+                    santized_at:
+                      type: string
+                      description: The timestamp when our backend processed the event.
+                      example: '2021-08-25T06:06:59.415Z'
+                    session_uuid:
+                      type: string
+                      description: The unique identifier for the user session.
+                      example: null
+                    site:
+                      type: string
+                      description: The URL for the website accessed by the user.
+                      example: http://site.com
+                    timestamp:
+                      type: string
+                      description: The timestamp in ISO 8601 format.
+                      example: 2021-06-24T04:53:54Z",
+                    timestamp_epoch:
+                      type: string
+                      description: The number of seconds since January 1, 1970 that have passed since the occurrence of the event.
+                      example: 1624510434
+                    url:
+                      type: string
+                      description: The URL of the page that indicates where the event occured.
+                      example: http://site.com
+                    user_agent:
+                      type: string
+                      description: The user-agent that indicates the data source of the API call.
+                      example: mozilla/5.0 (macintosh; intel mac os x 10_15_7) applewebkit/537.36 (khtml, like gecko) chrome/91.0.4472.77 safari/537.36
+                    user_uuid:
+                      type: string
+                      description: The unique identifier for the customer whose events data is being searched.
+                      example: 51aceb79-2cbc-4e2b-a132-b02de69bba15
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

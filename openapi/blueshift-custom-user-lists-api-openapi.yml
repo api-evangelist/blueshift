@@ -1,0 +1,956 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Custom user lists API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Custom user lists
+  description: A custom user list contains information about the users of your site such as name, email, phone number, and location. You can use this list as a segment and run campaigns for them.
+paths:
+  /api/v1/custom_user_lists/add_user_to_list/{list_id}:
+    put:
+      summary: Add user to list
+      description: Use this endpoint to add a user to a custom list.
+      tags:
+      - Custom user lists
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: list_id
+        required: true
+        description: 'Specify the ID of the custom user list to which you want to add a user. You can find the list ID in the URL when viewing the list in the Blueshift app. For example: `https://app.getblueshift.com/dashboard#/app/custom_list/41148/edit` - the list ID here is `41148`.'
+        schema:
+          type: integer
+        example: 41148
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifier_key:
+                  type: string
+                  description: 'Specify how you want to identify the user:
+
+
+                    • Use `email` to identify by email address
+
+                    • Use `customer_id` to identify by customer ID
+
+
+                    This must match the source type configured when the list was created.'
+                  example: email
+                  enum:
+                  - email
+                  - customer_id
+                identifier_value:
+                  type: string
+                  description: 'Specify the actual identifier value:
+
+
+                    • If `identifier_key` is `email`: provide the user''s email address (e.g., `john.doe@example.com`)
+
+                    • If `identifier_key` is `customer_id`: provide the customer ID (e.g., `23a1fae1-2103-4e18-b58c-9db0ea9f7bf7`)
+
+
+                    You can find the customer ID in the URL when viewing a customer profile: `https://app.getblueshift.com/dashboard#/app/customer/<CUSTOMER_ID>/show/overview`'
+                  example: john.doe@example.com
+              required:
+              - identifier_key
+              - identifier_value
+        description: Specify the details of the user that you want to add to the list.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+  /api/v1/custom_user_lists/bulk_add_users_to_list/{list_id}:
+    put:
+      summary: Bulk add users to list
+      description: Bulk add users to a custom list — up to 25 per call, or 500 with `async=true`.
+      tags:
+      - Custom user lists
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: list_id
+        required: true
+        description: Specify the ID of the list to which you want to add users in bulk.
+        schema:
+          type: integer
+      - in: query
+        name: async
+        required: false
+        description: Set this parameter to `true` to add users to the list asynchronously. In async mode, you can send up to 500 identifier values in one API call, and the request runs in the background after it is accepted. Omit this parameter or set it to `false` to add users synchronously, where you can send up to 25 identifier values in one API call. The response format is the same in both modes.
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifier_key:
+                  type: string
+                  description: Specify the key that you use to identify the users. This field can either take `customer_id` or `email`.
+                identifier_values:
+                  type: array
+                  items:
+                    type: string
+                  description: Specify the values of the identifier key. For example, if you specify `customer_id` in the `identifier_key` field, specify the users' alphanumeric customer IDs in this field. Such as [`abcd1234`]. If you specify `email` in the `identifier_key`, specify the email address of the users you want to add to the list. Such as, [`johndoe@blueshift.com`]. You can send a maximum of 25 values in sync mode and 500 values in async mode.
+              required:
+              - identifier_key
+              - identifier_values
+        description: Specify the details of the users that you want to add to the list.
+      responses:
+        '200':
+          description: OK - The request was successful. In sync mode, the users are added to the list. In async mode, the request is accepted and runs in the background. The response format is the same in both modes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                    example: []
+              example:
+                status: ok
+                errors: []
+        '400':
+          description: Input params not valid - The request contains an invalid parameter, such as an unsupported `identifier_key`.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Input params not valid
+              example:
+                errors:
+                - detail: Input params not valid
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: The list has been deleted.
+        '413':
+          description: 'Request Entity Too Large - The number of identifier values exceeds the limit: 25 in sync mode (`async` omitted or `false`), 500 in async mode (`async=true`).'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: You can add maximum 25 users in one api call
+              examples:
+                sync_limit_exceeded:
+                  summary: Sync mode - more than 25 values
+                  value:
+                    error: You can add maximum 25 users in one api call
+                async_limit_exceeded:
+                  summary: Async mode - more than 500 values
+                  value:
+                    error: You can add maximum 500 users in one async api call
+        '422':
+          description: Functionality not supported for old list.
+        '429':
+          description: "Rate limit exceeded\t- Too many requests"
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+  /api/v1/custom_user_lists/bulk_remove_users_from_list/{list_id}:
+    put:
+      summary: Bulk remove users from list
+      description: Bulk remove users from a custom list — up to 25 per call, or 500 with `async=true`.
+      tags:
+      - Custom user lists
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: list_id
+        required: true
+        description: Specify the ID of the list from which you want to remove users in bulk.
+        schema:
+          type: integer
+      - in: query
+        name: async
+        required: false
+        description: Set this parameter to `true` to remove users from the list asynchronously. In async mode, you can send up to 500 identifier values in one API call, and the request runs in the background after it is accepted. Omit this parameter or set it to `false` to remove users synchronously, where you can send up to 25 identifier values in one API call. The response format is the same in both modes.
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifier_key:
+                  type: string
+                  description: Specify the key that you use to identify the users. This field can either take `customer_id` or `email`.
+                identifier_values:
+                  type: array
+                  items:
+                    type: string
+                  description: Specify the values of the identifier key. For example, if you specify `customer_id` in the `identifier_key` field, specify the users' alphanumeric customer IDs in this field. Such as [`abcd1234`]. If you specify `email` in the `identifier_key`, specify the email address of the users you want to remove from the list. Such as, [`johndoe@blueshift.com`]. You can send a maximum of 25 values in sync mode and 500 values in async mode.
+              required:
+              - identifier_key
+              - identifier_values
+        description: Specify the details of the users that you want to bulk remove from the list.
+      responses:
+        '200':
+          description: OK - The request was successful. In sync mode, the users are removed from the list. In async mode, the request is accepted and runs in the background. The response format is the same in both modes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                    example: []
+              example:
+                status: ok
+                errors: []
+        '400':
+          description: Input params not valid - The request contains an invalid parameter, such as an unsupported `identifier_key`.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        detail:
+                          type: string
+                          example: Input params not valid
+              example:
+                errors:
+                - detail: Input params not valid
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: The list has been deleted.
+        '413':
+          description: 'Request Entity Too Large - The number of identifier values exceeds the limit: 25 in sync mode (`async` omitted or `false`), 500 in async mode (`async=true`).'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: You can remove maximum 25 users in one api call
+              examples:
+                sync_limit_exceeded:
+                  summary: Sync mode - more than 25 values
+                  value:
+                    error: You can remove maximum 25 users in one api call
+                async_limit_exceeded:
+                  summary: Async mode - more than 500 values
+                  value:
+                    error: You can remove maximum 500 users in one async api call
+        '422':
+          description: Functionality not supported for old list.
+        '429':
+          description: "Rate limit exceeded\t- Too many requests"
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+  /api/v1/custom_user_lists/create:
+    post:
+      summary: Create empty list
+      description: Use this endpoint to create an empty user list.
+      tags:
+      - Custom user lists
+      security:
+      - user_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: SF user list
+                  description: Specify a name for the list. You can identify the list that you create using this name on the dashboard. Ensure that the name that you specify is unique.
+                description:
+                  type: string
+                  example: The list of users who are based in San Francisco.
+                  description: Specify an appropirate description of that provides context on what the list contains.
+                is_seed_list:
+                  type: integer
+                  example: 0
+                  description: Specify if this list is a seed list or not. Specify '0' if this is not a seed list. If it is, specify '1'. A seed list is a list of users -- such as internal users -- who should receive a copy of the message that you send in a campaign. You can choose a seed list in either a one-time or a recurring campaign.
+                source:
+                  type: string
+                  example: email
+                  description: "Specify the source that you want to use to add customers to this list. You can specify either `email` or `customer_id`.  If you leave this field empty, `email` is automatically selected for the list.  \n"
+              required:
+              - name
+              - description
+        description: Specify the details about the custom list.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  account_id:
+                    type: integer
+                    example: 182
+                  filename:
+                    type: string
+                  description:
+                    type: string
+                  user_count:
+                    type: integer
+                  status:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: '2024-10-03T04:57:24.000Z'
+                  updated_at:
+                    type: string
+                    format: date-time
+                  is_exporting:
+                    type: boolean
+                  user_id:
+                    type: string
+                    example: 4981
+                  source:
+                    type: string
+                  uuid:
+                    type: string
+                  is_seed_list:
+                    type: boolean
+                  deleted_at:
+                    type: string
+                    format: date-time
+                  import_method:
+                    type: string
+                  version:
+                    type: string
+                  author:
+                    type: string
+                example:
+                - id: 48
+                  account_id: 15
+                  filename: f4
+                  description: description
+                  filesize: null
+                  user_count: 0
+                  status: ready
+                  created_at: '2021-08-25T06:06:59.411Z'
+                  updated_at: '2021-08-25T06:06:59.411Z'
+                  is_exporting: false
+                  user_id: 4981
+                  source: email
+                  uuid: 35cb281b-efd6-46b8-8f95-90921e4b1d1f
+                  is_seed_list: false
+                  deleted_at: null
+                  import_method: api
+                  version: v2
+                  author: John Doe
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+  /api/v1/custom_user_lists/id/{custom_user_list_id}:
+    get:
+      summary: Get customer list details
+      description: Use this endpoint to get details of the specified customer list from your account.
+      tags:
+      - Custom user lists
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: custom_user_list_id
+        required: true
+        description: Specify the ID of the list.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 6883
+                  account_id:
+                    type: integer
+                    example: 182
+                  filename:
+                    type: string
+                    description: The file that you used to import the seed list.
+                    example: dummy_push_upload.csv_2017-11-28:T10:11:38
+                  description:
+                    type: string
+                    example: email,device_tokens,device_ids
+                  filesize:
+                    type: integer
+                    example: 159
+                  user_count:
+                    type: integer
+                    example: 1000
+                  status:
+                    type: string
+                    example: ready
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: '2024-08-25T06:06:59.412Z'
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: '2021-08-25T06:06:59.412Z'
+                  is_exporting:
+                    type: boolean
+                    example: false
+                  user_id:
+                    type: integer
+                    example: 3808
+                  source:
+                    type: string
+                    example: email
+                  uuid:
+                    type: string
+                    example: 5ab42b99-3332-4af7-8aad-91b6baa934fa
+                  is_seed_list:
+                    type: boolean
+                    example: true
+                  deleted_at:
+                    type: string
+                    format: date-time
+                    example: null
+                  version:
+                    type: string
+                    example: v1
+                  import_method:
+                    type: string
+                    example: upload
+                  author:
+                    type: string
+                    example: John Doe
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - The customer list you are looking for could not be found.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+  /api/v1/custom_user_lists/overwrite_list/{list_id}:
+    put:
+      summary: Overwrite users in a list
+      description: Use this endpoint to overwrite all users in a custom list.
+      tags:
+      - Custom user lists
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: list_id
+        required: true
+        description: Specify the ID of the list to which you want to overwrite users.
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                s3_file_path:
+                  type: string
+                  description: Specify the S3 path of the file containing identifiers that will overwrite users in the custom user list. The recommendation is to upload the file to the import/custom_lists location under the Blueshift S3 bucket.
+              required:
+              - s3_file_path
+        description: Specify the S3 file path with which you want to overwrite the user list
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+  /api/v1/custom_user_lists/remove_user_from_list/{list_id}:
+    put:
+      summary: Remove user from list
+      description: Use this endpoint to remove a user from a custom list.
+      tags:
+      - Custom user lists
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: path
+        name: list_id
+        required: true
+        description: Specify the ID of the list from which you want to remove a user.
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifier_key:
+                  type: string
+                  description: Specify the key that you use to identify a user. This field can either take `customer_id` or `email`.
+                  example: janedoe@acme.com
+                identifier_value:
+                  type: string
+                  description: Specify the value of the identifier key. For example, if you specify `customer_id` in the `identifier_key` field, specify the user's alphanumeric customer ID in this field. Such as `abcd1234`. If you specify `email` in the `identifier_key`, specify the user's email address.
+                  example: '48759893'
+              required:
+              - identifier_key
+              - identifier_value
+        description: Specify the details of the user that you want to remove from the list.
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+  /api/v1/custom_user_lists/seed_lists:
+    get:
+      summary: Get seed lists from your account
+      description: Use this endpoint to get the seed lists from your account.
+      tags:
+      - Custom user lists
+      security:
+      - user_api_auth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 6883
+                    account_id:
+                      type: integer
+                      example: 182
+                    filename:
+                      type: string
+                      description: The file that you used to import the seed list.
+                      example: dummy_push_upload.csv_2017-11-28:T10:11:38
+                    description:
+                      type: string
+                      example: email,device_tokens,device_ids
+                    filesize:
+                      type: integer
+                      example: 159
+                    user_count:
+                      type: integer
+                      example: 1000
+                    status:
+                      type: string
+                      example: ready
+                    created_at:
+                      type: string
+                      format: date-time
+                      example: '2024-10-03T04:57:24.000Z'
+                    updated_at:
+                      type: string
+                      format: date-time
+                      example: '2021-08-25T06:06:59.412Z'
+                    is_exported:
+                      type: boolean
+                      example: false
+                    user_id:
+                      type: integer
+                      example: 3808
+                    source:
+                      type: string
+                      example: email
+                    uuid:
+                      type: string
+                      example: 5ab42b99-3332-4af7-8aad-91b6baa934fa
+                    is_seed_list:
+                      type: boolean
+                      example: true
+                    deleted_at:
+                      type: string
+                      format: date-time
+                      example: null
+                    version:
+                      type: string
+                      example: v1
+                    import_method:
+                      type: string
+                      example: upload
+                    author:
+                      type: string
+                      example: John Doe
+        '400':
+          description: Bad request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found - Can happen due to resource conflicts. Re-try with exponential backoff. Contact us on support@blueshift.com if the issue persists.
+        '409':
+          description: Conflict error, please retry - The request could not be completed due to a conflict with the current state of the target resource, re-try with exponential backoff.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: "Rate limit exceeded\t- Too many requests. Contact us on support@blueshift.com for recommended throughput."
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information."
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff.
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

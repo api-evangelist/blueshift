@@ -1,0 +1,194 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Adapters API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Adapters
+  description: Adapters are entities that provide integration to various services with Blueshift. For example, we provide adapters for various services such as Mailgun, Sendgrid, and Sparkpost for sending emails, and Infobip and Attentive adapters for SMSes. Similarly, we provide adapters for various channels and integrations.
+paths:
+  /api/v1/account_adapters:
+    get:
+      tags:
+      - Adapters
+      summary: List adapters
+      description: Use this endpoint to list all adapters in your Blueshift account. Adapters connect your account to third-party services (e.g., Mailgun for email, Infobip for SMS), and you may have multiple per channel.
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: channel_name
+        description: 'Specify the channel type to filter adapters:
+
+
+          • `Email` - Email service providers (e.g., Sendgrid, Mailgun)
+
+          • `SMS` - SMS service providers (e.g., Twilio, 46elks)
+
+          • `Push Message` - Push notification providers
+
+          • `Webhook` - Webhook integrations
+
+          • `InApp` - In-app message providers
+
+          • `Segment Report` - Segment reporting integrations'
+        required: true
+        in: query
+        schema:
+          type: string
+          enum:
+          - Email
+          - SMS
+          - Push Message
+          - Webhook
+          - InApp
+          - Segment Report
+        example: SMS
+      - name: adapter_name
+        description: Filter results by adapter provider name (e.g., `sendgrid`, `sparkpost`, `46elks`, `twilio`).
+        in: query
+        schema:
+          type: string
+        example: 46elks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The unique ID of the adapter.
+                      example: 8147
+                    name:
+                      type: string
+                      description: The provider name of the adapter (e.g., Sendgrid, 46elks).
+                      example: 46elks
+                    primary_name:
+                      type: string
+                      description: The alias name of the adapter that you enter when you create it.
+                      example: test-1
+                    uuid:
+                      type: string
+                      description: The unique UUID of the adapter.
+                      example: aafcf5a4-556f-4334-8cfc-4dfd2a61c691
+                    from_name:
+                      type:
+                      - string
+                      - 'null'
+                      description: The sender name for the adapter (applicable for Email channel).
+                      example: null
+                    from_address:
+                      type:
+                      - string
+                      - 'null'
+                      description: The sender email address for the adapter (applicable for Email channel).
+                      example: null
+                    reply_to_address:
+                      type:
+                      - string
+                      - 'null'
+                      description: The reply-to email address for the adapter (applicable for Email channel).
+                      example: null
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: The date and time when the adapter was created.
+                      example: '2022-04-20T06:29:46.000Z'
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: The date and time when the adapter was last updated.
+                      example: '2022-04-20T06:29:46.000Z'
+                    is_active:
+                      type: boolean
+                      description: Indicates if the adapter is actively in use.
+                      example: false
+                    cname_record:
+                      type:
+                      - string
+                      - 'null'
+                      description: The CNAME record pointing to the domain used for sending (applicable for Email channel).
+                      example: null
+                    bypass_suppression_list:
+                      type: boolean
+                      description: Indicates whether to bypass the suppression list when sending messages.
+                      example: false
+                    channel:
+                      type: string
+                      description: The channel type for this adapter (e.g., Sms, Email, Push).
+                      example: Sms
+        '400':
+          description: The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - No adapters found matching the criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+                maxItems: 0
+                example: []
+        '409':
+          description: Conflict error, please retry. The request could not be completed due to a conflict with the current state of the target resource. Re-try with exponential backoff.
+        '413':
+          description: You can upload up to 50 users in an API call.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Rate limit exceeded. Too many requests. Contact us on support@blueshift.com for recommended throughput.
+        '500':
+          description: Internal server error. Contact Blueshift for more information.
+        '502':
+          description: Service unavailable, please retry. Bad gateway. Retry with exponential backoff.
+        '503':
+          description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
+        '504':
+          description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

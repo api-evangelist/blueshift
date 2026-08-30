@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Email validation API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Email validation
+  description: Validate single or bulk email addresses to assess deliverability and risk.
+paths:
+  /api/v1/emails/bulk_validate:
+    post:
+      tags:
+      - Email validation
+      summary: Validate multiple email addresses
+      description: Use this endpoint to validate up to 30 email addresses. This feature requires custom setup. Contact Blueshift Support or your CSM to enable it.
+      security:
+      - user_api_auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emails:
+                  type: array
+                  description: A list of email addresses to validate (max 30).
+                  items:
+                    type: string
+                  example:
+                  - janedoe@acme.com
+                  - bob@tempmail.com
+              required:
+              - emails
+      responses:
+        '200':
+          description: Bulk email validation result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties:
+                        type: object
+                        properties:
+                          address:
+                            type: string
+                          did_you_mean:
+                            type: string
+                          engagement:
+                            type: object
+                            properties:
+                              engaging:
+                                type: boolean
+                              is_bot:
+                                type: boolean
+                          is_disposable_address:
+                            type: boolean
+                          is_role_address:
+                            type: boolean
+                          reason:
+                            type: array
+                            items:
+                              type: string
+                          result:
+                            type: string
+                          risk:
+                            type: string
+              example:
+                result:
+                - janedoe@acme.com:
+                    address: janedoe@acme.com
+                    engagement:
+                      engaging: true
+                      is_bot: false
+                    is_disposable_address: false
+                    is_role_address: false
+                    reason: []
+                    result: deliverable
+                    risk: low
+                - bob@tempmail.com:
+                    address: bob@tempmail.com
+                    engagement:
+                      engaging: false
+                      is_bot: false
+                    is_disposable_address: true
+                    is_role_address: false
+                    reason:
+                    - disposable
+                    result: invalid
+                    risk: high
+        '400':
+          description: Bad Request - The request contains missing or invalid parameters.
+          content:
+            application/json:
+              example:
+                errors:
+                  email:
+                  - can't be blank or is invalid
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              example:
+                message: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              example:
+                message: Permission denied
+        '404':
+          description: Not Found - The requested API endpoint does not exist.
+          content:
+            application/json:
+              example:
+                message: Endpoint not found
+        '413':
+          description: Payload Too Large - The request payload exceeds the allowed limit.
+          content:
+            application/json:
+              example:
+                message: You can validate a maximum of 30 emails in one API call.
+        '429':
+          description: Too Many Requests - The request limit has been exceeded.
+          content:
+            application/json:
+              example:
+                message: Rate limit exceeded
+        '500':
+          description: Internal Server Error - An unexpected error occurred.
+          content:
+            application/json:
+              example:
+                message: Internal Server Error - Please contact support for more information.
+        '502':
+          description: Bad Gateway - The server received an invalid response.
+          content:
+            application/json:
+              example:
+                message: Bad Gateway - Please retry the request.
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable.
+          content:
+            application/json:
+              example:
+                message: Service Unavailable - Try again later.
+        '504':
+          description: Gateway Timeout - The server took too long to respond.
+          content:
+            application/json:
+              example:
+                message: Gateway Timeout - Retry with exponential backoff.
+  /api/v1/emails/validate:
+    get:
+      tags:
+      - Email validation
+      summary: Validate a single email address
+      description: Use this endpoint to validate a single email address and evaluate its deliverability and risk profile.
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: query
+        name: email
+        required: true
+        description: The email address to validate.
+        schema:
+          type: string
+        example: janedoe@acme.com
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      address:
+                        type: string
+                      engagement:
+                        type: object
+                        properties:
+                          engaging:
+                            type: boolean
+                          is_bot:
+                            type: boolean
+                      is_disposable_address:
+                        type: boolean
+                      is_role_address:
+                        type: boolean
+                      reason:
+                        type: array
+                        items:
+                          type: string
+                      result:
+                        type: string
+                      risk:
+                        type: string
+              example:
+                result:
+                  address: janedoe@acme.com
+                  engagement:
+                    engaging: true
+                    is_bot: false
+                  is_disposable_address: false
+                  is_role_address: false
+                  reason: []
+                  result: deliverable
+                  risk: low
+        '400':
+          description: Bad Request - The request contains missing or invalid parameters.
+          content:
+            application/json:
+              example:
+                errors:
+                  email:
+                  - can't be blank or is invalid
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              example:
+                message: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              example:
+                message: Permission denied
+        '404':
+          description: Not Found - The requested API endpoint does not exist.
+          content:
+            application/json:
+              example:
+                message: Endpoint not found
+        '413':
+          description: Payload Too Large - The request payload exceeds the allowed limit.
+          content:
+            application/json:
+              example:
+                message: You can validate a maximum of 30 emails in one API call.
+        '429':
+          description: Too Many Requests - The request limit has been exceeded.
+          content:
+            application/json:
+              example:
+                message: Rate limit exceeded
+        '500':
+          description: Internal Server Error - An unexpected error occurred.
+          content:
+            application/json:
+              example:
+                message: Internal Server Error - Please contact support for more information.
+        '502':
+          description: Bad Gateway - The server received an invalid response.
+          content:
+            application/json:
+              example:
+                message: Bad Gateway - Please retry the request.
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable.
+          content:
+            application/json:
+              example:
+                message: Service Unavailable - Try again later.
+        '504':
+          description: Gateway Timeout - The server took too long to respond.
+          content:
+            application/json:
+              example:
+                message: Gateway Timeout - Retry with exponential backoff.
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

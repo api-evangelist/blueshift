@@ -1,0 +1,431 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Live content API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Live content
+  description: Use the Live content API endpoint to insert content recommendations in your website and mobile apps.
+paths:
+  /api/v1/onsite_slots.json:
+    get:
+      summary: List live content slots
+      description: Use this endpoint to get the list of live content slots.
+      tags:
+      - Live content
+      security:
+      - user_api_auth: []
+      parameters:
+      - name: name
+        description: Search for live content slot that contain the specified string in the name of the slot. Leave blank to get a list of all slots.
+        example: mobile_top_banner
+        in: query
+        schema:
+          type: string
+      - name: slot_format
+        description: Search for live content slots based on their format. This filter is case insensitive, and values can be HTML, JSON, Popup, or Landing Page. Leave blank to get a list of all slots.
+        example: JSON
+        in: query
+        schema:
+          type: string
+      - name: active
+        description: Search for live content slots based on active filter. when 'active' is true, it returns slots linked to campaigns not in 'Completed' or 'Archived' states. when 'active' is false, it return slots those unused by campaigns or associated with campaigns in 'Completed' or 'Archived' states. Leave blank to get a list of all slots.
+        example: true
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: The list of live content slots.
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the live content slot.
+                      example: abandon_browse_html
+                    format:
+                      type: string
+                      description: The format of the live content slot.
+                      example: HTML
+                    uuid:
+                      type: string
+                      description: The UUID of the live content slot.
+                      example: 81878e0675c5c-4baa-b876-f90b0cf62e02
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /live:
+    post:
+      summary: Live content
+      description: Use this endpoint to insert content recommendations in your website and mobile apps.
+      tags:
+      - Live content
+      security:
+      - event_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                slot:
+                  type: string
+                  description: Specify the name of the slot on your website as registered on the Blueshift app.
+                  example: Promotions_Homepage_Carousel_JSON
+                api_key:
+                  type: string
+                  description: Specify the Event API key that you get from the account settings page of the Blueshift app.
+                  example: <YOUR_API_KEY>
+                user:
+                  type: object
+                  properties:
+                    customer_id:
+                      type: string
+                      description: Specify the customer ID of the user.
+                      example: '812123'
+                    email:
+                      type: string
+                      description: Specify the email address of the user.
+                      example: janedoe@acme.com
+                    cookie:
+                      type: string
+                      description: Specify the user's Blueshift cookie as an identifier for anonymous users.
+                      example: 8d74322c-7bb6-44f1-18ce-6a92c5a9672f
+                    device_id:
+                      type: string
+                      description: Specify the UUID of the device.
+                      example: 8abe3faa-d48d-4e4a-00ca-beae01f1c987
+                context:
+                  type: object
+                  properties:
+                    seed_item_ids:
+                      type: array
+                      description: Specify the IDs of the items that form the basis of replay or related items.
+                      items:
+                        type: string
+                      example:
+                      - <item_id_1>
+                      - <item_id_2>
+                      - '...'
+                    exclude_item_ids:
+                      type: array
+                      description: Specify the IDs of the items that should be excluded from the response.
+                      items:
+                        type: string
+                      example:
+                      - <item_id_1>
+                      - <item_id_2>
+                      - '...'
+                    exclude_categories:
+                      type: array
+                      description: Specify the categories that should be excluded from the response.
+                      items:
+                        type: string
+                      example:
+                      - category1
+                      - category2
+                      - '...'
+                    page_number:
+                      type: integer
+                      description: Specify this value to get more pages of recommendations if pagination is enabled for your account.
+                      example: 2
+        description: Create a live content campaign and enter the campaign name, select the target segment, flight dates, the slot name and the JSON template
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: object
+                    properties:
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            image_url:
+                              type: string
+                            name:
+                              type: string
+                            price:
+                              type: number
+                            sku:
+                              type: string
+                            url:
+                              type: string
+                        example:
+                        - image_url: https://images.randomhouse.com/cover/9780140437911
+                          name: Saint Joan
+                          price: 14
+                          sku: 9780140437911
+                          url: http://www.blueshiftreads.com/products/drama-european-english-irish-scottish-welsh/saint-joan
+                        - image_url: https://images.randomhouse.com/cover/9780142410806
+                          name: Free Baseball
+                          price: 5.99
+                          sku: 9780142410806
+                          url: http://www.blueshiftreads.com/products/juvenile-fiction-sports-recreation-baseball-softball/free-baseball
+                      user:
+                        type: object
+                        properties:
+                          firstname:
+                            type: string
+                            example: Jane
+                          lastname:
+                            type: string
+                            description: The last name of the customer.
+                            example: Doe
+                  feedback:
+                    type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          type: string
+                      selected_experiment_uuid:
+                        type: string
+                        example: 175d4f44-f1f0-438c-ad38-f4ede2047974
+                      selected_trigger_uuid:
+                        type: string
+                        example: d181abb6-d5d5-4120-8c9b-c0de724576d6
+                      skipped_triggers:
+                        type: object
+                        properties:
+                          d181abb6-d5d5-4120-8c9b-c0de724576d6:
+                            type: string
+                            example: Active ( launch preview simulation is enabled )
+                  success:
+                    type: boolean
+                  tracking:
+                    type: object
+                    properties:
+                      click_url:
+                        type: string
+                        example: http://api.getblueshift.com/track?uid=d1a50376-4f62-46d0-b4a3-36ca0bd2f9cc&eid=175d4f44-f1f0-438c-ad38-f4ede2047974&mid=42a62e43-438a-4cf9-ac1d-a24706fe3065&a=click
+                      impression_url:
+                        type: string
+                        example: http://api.getblueshift.com/track?uid=d1a50376-4f62-46d0-b4a3-36ca0bd2f9cc&eid=175d4f44-f1f0-438c-ad38-f4ede2047974&mid=42a62e43-438a-4cf9-ac1d-a24706fe3065&a=open
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic

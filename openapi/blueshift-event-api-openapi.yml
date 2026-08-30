@@ -1,0 +1,1068 @@
+openapi: 3.2.0
+info:
+  description: These APIs will help you manage different workflows in Blueshift. Our powerful REST APIs provide an easy way to integrate your data and third party applications with Blueshift.
+  version: 1.0.0
+  title: Blueshift Event API
+  contact:
+    email: support@getblueshift.com
+servers:
+- url: https://api.getblueshift.com
+- url: https://api.eu.getblueshift.com
+tags:
+- name: Event
+  description: Use the event APIs to send events from your servers.
+paths:
+  /api/v1/bulkevents:
+    post:
+      summary: Send bulk events
+      description: Use this endpoint to send multiple events from your server or use javascript events that call the API.
+      tags:
+      - Event
+      security:
+      - event_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                events:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+                    required:
+                    - event
+                    properties:
+                      customer_id:
+                        type: string
+                        description: 'Specify the customer ID. You must atleast specify this value, or one or more of the following: event/device_id/email.'
+                        example: '48759893'
+                      event:
+                        type: string
+                        description: 'Specify the name of the event. For example, view (product view), add_to_cart, remove_from_cart, checkout, purchase, search, your_custom_event_name (custom event) etc. You must atleast specify this value, or one or more of the following: customer_id/device_id/email.'
+                        example: add_to_cart
+                      device_type:
+                        type: string
+                        description: Specify the type of the device. For example, ios or android.
+                        example: android
+                      device_tokens:
+                        type: string
+                        description: Specify the token of the device.
+                        example: 12d34a5ccf37db694d48d89740bbc1f94da08e25930fc773d2af2aefdd98989c9
+                      device_id:
+                        type: string
+                        description: 'Specify the UUID of the device. You must atleast specify this value, or one or more of the following: event/customer_id/email.'
+                        example: 8abe3faa-d48d-4e4a-00ca-beae01f1c987
+                      device_idfa:
+                        type: string
+                        description: Sepcify the advertising identifier (idfa) on the device.
+                        example: 39c20522-2ce9-4466-9876-7677b89e4d3b
+                      device_idfv:
+                        type: string
+                        description: Specify the identfier for vendor (idfv) on the device.
+                        example: 6d031ec8-e40c-47d4-9c99-b3e308d8ed78
+                      device_manufacturer:
+                        type: string
+                        description: Specify the manufacturer of the device.
+                        example: apple
+                      os_name:
+                        type: string
+                        description: Specify the OS name.
+                        example: ios
+                      network_carrier:
+                        type: string
+                        description: Specify the carrier on the mobile device.
+                        example: verizon
+                      ip:
+                        type: string
+                        description: Specify the IP address of the device.
+                        example: 192.0.2.1
+                      email:
+                        type: string
+                        description: 'Specify the user''s email address. You must atleast specify this value, or one or more of the following: event/device_id/customer_id.'
+                        example: janedoe@acme.com
+                      latitude:
+                        type: string
+                        description: Specify the latitude of the user's location.
+                        example: '212.99333'
+                      longitude:
+                        type: string
+                        description: Specify the longitude of the user's location.
+                        example: '-12.39334'
+                      subscription_groups:
+                        type: array
+                        description: Specify the user's subscription preferences.
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The ID of the subscription group.
+                            subscribed:
+                              type: boolean
+                              description: Enter `true` if the user is subscribed, or `false` if unsubscribed.
+                        example:
+                        - id: newsletter
+                          subscribed: true
+                        - id: weekly_promo
+                          subscribed: false
+                    example:
+                    - customer_id: abc812122
+                      event: identify
+                      device_type: ios
+                      device_tokens: '49244924492449244924492449244924492449244924'
+                      device_id: 8abe3faa-d48d-4e4a-00ca-beae01f1c987
+                      device_idfa: 4d031ed8-c40e-57d4-9c99-a3e308d8cd78
+                      device_idfv: 6d031ec8-e40c-47d4-9c99-b3e308d8ed78
+                      device_manufacturer: apple
+                      os_name: ios
+                      network_carrier: verizon
+                      ip: 201.44.11.21
+                      email: jane.doe@acme.com
+                      latitude: '212.99333'
+                      longitude: '-12.39334'
+                      subscription_groups:
+                      - id: newsletter
+                        subscribed: true
+                      - id: weekly_promo
+                        subscribed: false
+                    - customer_id: '812123'
+                      event: purchase
+                      ip: 201.44.11.22
+                      email: jane.doe@acme.com
+                      revenue: '31.24'
+        description: Specify device_id. The device_id is the mobile specific (iOS or Android) device identifier to uniquely identify the mobile device.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: ok or bad request
+                    example: ok
+                  count:
+                    type: integer
+                    description: The count of events sent
+                    example: 0
+        '400':
+          description: Bad Request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        customer_id:
+                          type: string
+                          example: can't be blank
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '413':
+          description: "You can upload maximum 100 products in one api call\t- The server is refusing to process a request because the request payload is larger than the server is willing or able to process."
+        '422':
+          description: Unprocessable Entity - Some/all of the products have invalid data, please check the response for more information on.
+        '429':
+          description: Rate limit exceeded - Too many requests
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+  /api/v1/data_connectors/{data_connector_uuid}/debug:
+    get:
+      summary: Debug event exports
+      description: Use this endpoint to download the first 10 success and errored events in last 5 minutes.
+      tags:
+      - Event
+      security:
+      - event_api_auth: []
+      parameters:
+      - in: path
+        name: data_connector_uuid
+        required: true
+        description: Specify the UUID of the data connector (event export integration).
+        schema:
+          type: string
+        example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      type: object
+                      description: Returns the success API request payload.
+                      properties:
+                        api_key:
+                          type: string
+                          description: Masked API key used in the payload.
+                        events:
+                          type: array
+                          items:
+                            type: object
+                            description: Array of event payloads which was sent to destination.
+                  failure:
+                    type: array
+                    items:
+                      type: object
+                      description: Returns the errored API request payload.
+                      properties:
+                        _bsft_outbound_data_error:
+                          type: string
+                          description: The error message for the errored API request.
+                        events:
+                          type: array
+                          items:
+                            type: object
+                            description: Array of event payloads which was sent to destination.
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - The User API key was incorrect or this feature is not enabled for your account.
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Resource not found. This can happen due to resource conflicts. Retry with exponential backoff. If the issue persists, contact Blueshift.
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/event:
+    post:
+      summary: Send an event
+      description: Use this endpoint to send an event from your server or use javascript events to call the API.
+      tags:
+      - Event
+      security:
+      - event_api_auth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              required:
+              - event
+              properties:
+                customer_id:
+                  type: string
+                  description: 'Specify the customer ID. You must specify information in either this field or atleast in one of the following fields: `event`, `device_id`, `email`, or `group_id`. These fields are described below.'
+                  example: '812123'
+                event:
+                  type: string
+                  description: "Specify the name of the event. For example identify, view (product view), add_to_cart, remove_from_cart, checkout, purchase, search, your_custom_event_name (custom event) etc. You must atleast specify this value, or one or more of the following fields: customer_id/device_id/email. \n > **\U0001F4D8** Ensure that the event name does not contain periods (`.`), whitespaces, is not a numeric value, and contains not more than 64 characters.\n"
+                  example: identify
+                device_type:
+                  type: string
+                  description: Specify the type of the device.
+                  example: ios
+                device_token:
+                  type: string
+                  description: "Specify the token of the device.\n > **\U0001F4D8** If you use the event API to identify a user from a mobile app, ensure that you also include `device_id` and `device_token` parameters in your API call. However, we recommend that you use our SDK to identify users on a mobile app. For more information, see [Track events on your Android app](https://developer.blueshift.com/docs/events-tracking-android-sdk) and [Track events on your iOS app](https://developer.blueshift.com/docs/track-events-on-your-app-with-blueshifts-ios-sdk).\n"
+                  example: '49244924492449244924492449244924492449244924'
+                device_id:
+                  type: string
+                  description: "Specify the UUID of the device. You must atleast specify this value, or one or more of the following fields: event/customer_id/email.\n > **\U0001F4D8** If you use the event API to identify a user from a mobile app, ensure that you also include `device_id` and `device_token` parameters in your API call.  However, we recommend that you use our SDK to identify users on a mobile app. For more information, see [Track events on your Android app](https://developer.blueshift.com/docs/events-tracking-android-sdk) and [Track events on your iOS app](https://developer.blueshift.com/docs/track-events-on-your-app-with-blueshifts-ios-sdk).\n"
+                  example: 8abe3faa-d48d-4e4a-00ca-beae01f1c987
+                device_idfa:
+                  type: string
+                  description: Sepcify the advertising identifier (idfa) on the device.
+                  example: 4d031ed8-c40e-57d4-9c99-a3e308d8cd78
+                device_idfv:
+                  type: string
+                  description: Specify the identfier for vendor (idfv) on the device.
+                  example: 6d031ec8-e40c-47d4-9c99-b3e308d8ed78
+                device_manufacturer:
+                  type: string
+                  description: Specify the manufacturer of the device.
+                  example: apple
+                os_name:
+                  type: string
+                  description: Specify the OS name.
+                  example: ios
+                network_carrier:
+                  type: string
+                  description: Specify the carrier on the mobile device.
+                  example: verizon
+                ip:
+                  type: string
+                  description: Specify the IP address of the device.
+                  example: 192.0.2.1
+                email:
+                  type: string
+                  description: 'Specify the user''s email address. For example, abc@def.com. You must atleast specify this value, or one or more of the following fields: event/device_id/customer_id.'
+                  example: janedoe@acme.com
+                latitude:
+                  type: string
+                  description: Specify the latitude of the user's location.
+                  example: '212.99333'
+                longitude:
+                  type: string
+                  description: Specify the longitude of the user's location.
+                  example: '-12.39334'
+                event_uuid:
+                  type: string
+                  description: Specify a unique identifier of the event in the format `1234abcd-efghijkj-1234kfjadslk-34iu123`. For reference on the UUID format, see [RFC 4122](https://tools.ietf.org/html/rfc4122.html). Ensure that the `event_uuid` that you specify is unique. This is an optional field and you can leave this field blank.
+                  example: 4f575aa4-082c-12ed-dd00-0676ac110004
+                cookie:
+                  type: string
+                  description: User's Blueshift cookie used as an identifier for anonymous users.
+                  example: 8d74322c-7bb6-44f1-18ce-6a92c5a9672f
+                subscription_groups:
+                  type: array
+                  description: Specify the user's subscription preferences.
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The ID of the subscription group.
+                      subscribed:
+                        type: boolean
+                        description: Enter `true` if the user is subscribed, or `false` if unsubscribed.
+                  example:
+                  - id: newsletter
+                    subscribed: true
+                  - id: weekly_promo
+                    subscribed: false
+        description: Specify device_id. The device_id is the mobile specific (iOS or Android) device identifier to uniquely identify the mobile device.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: OK or Bad request
+                    example: OK
+        '400':
+          description: Bad Request - The request was invalid or cannot be otherwise served. An accompanying error message will explain further.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        customer_id:
+                          type: string
+                          example: can't be blank
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '413':
+          description: You can upload upto 100 products in an api call. The server is refusing to process a request because the request payload is larger than the server is willing or able to process.
+        '422':
+          description: Unprocessable Entity - Some/all of the products have invalid data, please check the response for more information on.
+        '429':
+          description: Rate limit exceeded - Too many requests
+        '500':
+          description: "Internal Server Error\t- Please contact blueshift for more information"
+        '502':
+          description: Service unavailable, please retry - Bad Gateway, re-try with exponential backoff
+        '503':
+          description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
+        '504':
+          description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+  /api/v1/event/debug:
+    get:
+      summary: Most recent event
+      description: Use this endpoint to fetch the most recent event. It returns the latest events our server has received for each event type.
+      tags:
+      - Event
+      security:
+      - event_api_auth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer_id:
+                    type: string
+                    example: '812123'
+                    description: The customer ID.
+                  event:
+                    type: string
+                    description: The name of the event. For example, identify, view (product view), add_to_cart, remove_from_cart, checkout, purchase, search, your_custom_event_name (custom event) etc.
+                    example: identify
+                  device_type:
+                    type: string
+                    description: The type of the device. For example, ios or android.
+                    example: ios
+                  device_tokens:
+                    type: string
+                    description: The token of the device.
+                    example: '49244924492449244924492449244924492449244924'
+                  device_id:
+                    type: string
+                    description: The UUID of the device.
+                    example: 8abe3faa-d48d-4e4a-00ca-beae01f1c987
+                  device_idfa:
+                    type: string
+                    description: The advertising identifier (idfa) on the device.
+                    example: 4d031ed8-c40e-57d4-9c99-a3e308d8cd78
+                  device_idfv:
+                    type: string
+                    description: The identfier for vendor (idfv) on the device.
+                    example: 6d031ec8-e40c-47d4-9c99-b3e308d8ed78
+                  device_manufacturer:
+                    type: string
+                    description: The manufacturer of the device.
+                    example: apple
+                  os_name:
+                    type: string
+                    description: The OS name.
+                    example: ios
+                  network_carrier:
+                    type: string
+                    description: The carrier on the mobile device.
+                    example: verizon
+                  ip:
+                    type: string
+                    description: The IP address of the device.
+                    example: 123.123.123.123
+                  email:
+                    type: string
+                    description: The user's email address.
+                    example: janedoe@acme.com
+                  latitude:
+                    type: string
+                    description: The latitude of the user's location.
+                    example: '212.99333'
+                  longitude:
+                    type: string
+                    description: The longitude of the user's location.
+                    example: '-12.39334'
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+  /api/v1/event/history:
+    get:
+      tags:
+      - Event
+      summary: Get event history
+      description: Retrieves up to 50 most recent successful events for the given event name, starting with the latest.
+      security:
+      - event_api_auth: []
+      parameters:
+      - in: query
+        name: event_name
+        required: true
+        description: The name of the event for which to fetch history.
+        schema:
+          type: string
+        example: app_install
+      - in: query
+        name: limit
+        required: false
+        description: 'Maximum number of records to return. Defaults to system limit if not specified.
+
+
+          **Maximum value**: `50`.'
+        schema:
+          type: integer
+          maximum: 50
+        example: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _bsft_ts:
+                        type: string
+                        format: date-time
+                        description: Event ingestion timestamp in ISO 8601 format.
+                        example: '2025-09-17T10:26:55.000Z'
+                      account_uuid:
+                        type: string
+                        description: UUID of the Blueshift account.
+                        example: 11112222-3333-4444-5555-666677778888
+                      event:
+                        type: string
+                        description: The event name.
+                        example: app_install
+                      event_uuid:
+                        type: string
+                        description: The unique UUID for this event occurrence.
+                        example: aaaa1111-bbbb-2222-cccc-3333dddd4444
+                      site:
+                        type: string
+                        description: The site associated with the event.
+                        example: demoappsite.com
+                      timestamp:
+                        type: string
+                        format: date-time
+                        description: The event timestamp in ISO 8601 format.
+                        example: '2025-09-17T10:26:54.688Z'
+                      timestamp_epoch:
+                        type: integer
+                        description: The event timestamp in epoch seconds.
+                        example: 1758104814
+                      user_agent:
+                        type: string
+                        description: The user agent string captured for the event.
+                        example: Dalvik/2.1.0 (Linux; U; Android 16; Pixel 8 Build/ABC123)
+                    additionalProperties: true
+              example:
+                app_install:
+                - _bsft_ts: '2025-09-17T10:26:55.000Z'
+                  account_uuid: 11112222-3333-4444-5555-666677778888
+                  app_installed_at: '2025-09-17T10:26:54.687Z'
+                  app_name: com.example.demoapp
+                  app_version: 5.0.0 (42)
+                  bsft_sdk_version: 5.0.0
+                  country_code: US
+                  device_id: abcd1234-5678-90ef-ghij-1234567890kl
+                  device_manufacturer: ExampleTech
+                  device_type: android
+                  enable_inapp: true
+                  enable_push: false
+                  event: app_install
+                  event_uuid: aaaa1111-bbbb-2222-cccc-3333dddd4444
+                  language_code: en
+                  os_name: Android 16
+                  site: demoappsite.com
+                  timestamp: '2025-09-17T10:26:54.688Z'
+                  timestamp_epoch: 1758104814
+                  user_agent: Dalvik/2.1.0 (Linux; U; Android 16; Pixel 8 Build/ABC123)
+                - _bsft_ts: '2025-09-17T06:47:22.572Z'
+                  account_uuid: 11112222-3333-4444-5555-666677778888
+                  app_installed_at: '2025-09-17T06:47:22.060Z'
+                  app_name: com.example.demoapp
+                  app_version: 5.0.0 (42)
+                  bsft_sdk_version: 5.0.0
+                  country_code: US
+                  device_id: mnop9876-5432-10fe-dcba-0987654321zx
+                  device_manufacturer: ExampleTech
+                  device_type: android
+                  enable_inapp: true
+                  enable_push: true
+                  event: app_install
+                  event_uuid: eeee5555-ffff-6666-gggg-7777hhhh8888
+                  language_code: en
+                  os_name: Android 16
+                  site: demoappsite.com
+                  timestamp: '2025-09-17T06:47:22.062Z'
+                  timestamp_epoch: 1758091642
+                  user_agent: Dalvik/2.1.0 (Linux; U; Android 16; Pixel 8 Build/XYZ456)
+        '400':
+          description: Bad request – The request is invalid due to missing or incorrect parameters.
+        '401':
+          description: Unauthorized – API authentication failed due to an invalid or missing API key.
+        '403':
+          description: Forbidden – The API key does not have sufficient permissions to perform this action.
+        '404':
+          description: Not found – The specified resource was not found.
+        '422':
+          description: Unprocessable entity – The request was well-formed but could not be processed due to validation or state errors.
+        '429':
+          description: Rate limit exceeded – Too many requests. Reduce request frequency.
+        '500':
+          description: Internal server error – An unexpected server error occurred. Contact Blueshift support if the issue persists.
+        '502':
+          description: Bad gateway – The server received an invalid response. Retry the request.
+        '503':
+          description: Service unavailable – The service is temporarily unavailable. Try again later.
+        '504':
+          description: Gateway timeout – The server took too long to respond. Retry with exponential backoff.
+  /api/v1/event/summary.json:
+    post:
+      summary: Summary of events
+      description: Use this endpoint to get a summary of counted events. By default, this endpoint returns data for the last 7 days.
+      tags:
+      - Event
+      security:
+      - user_api_auth: []
+      parameters:
+      - in: query
+        name: timestamp_start
+        description: Specify a timestamp in ISO 8601 format to filter data for events that occurred after it.
+        example: '2023-04-25T00:00:00Z'
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timestamp_end
+        description: Specify a timestamp in ISO 8601 format to filter data for events that occured before it.
+        example: '2023-04-26T23:59:59Z'
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events_chart_stats:
+                    type: array
+                    items:
+                      type: object
+                      description: This data could include events, counts, and other relevant metrics.
+                      properties:
+                        archives:
+                          type: object
+                        error:
+                          type: object
+                          properties:
+                            invalid_user_attributes:
+                              type: array
+                              items:
+                                type: number
+                                description: Number of errors due to invalid user attributes
+                                example: '[10, 15, 27]'
+                            missing_identifier:
+                              type: array
+                              items:
+                                type: number
+                                description: Number of errors due to missing identifiers
+                                example: '[20, 30, 15]'
+                        events:
+                          type: object
+                          properties:
+                            add_to_cart:
+                              type: array
+                              items:
+                                type: number
+                                description: Array of event counts for `add_to_cart` events over the timeframe.
+                                example: '[20, 30, 15]'
+                            subscription_update:
+                              type: array
+                              items:
+                                type: number
+                                description: Array of event counts for `subscription_update` events over the timeframe.
+                                example:
+                                - '53'
+                                - '42'
+                                - '16'
+                        timelapse:
+                          type: array
+                          items:
+                            type: string
+                            description: Format will be MM/DD for daily data
+                            example:
+                            - 04/25
+                            - 04/26
+                            - 04/27
+                  stats:
+                    type: object
+                    properties:
+                      add_to_cart:
+                        type: object
+                        properties:
+                          archived:
+                            type: boolean
+                            example: false
+                          count:
+                            type: number
+                            description: Event count
+                            example: 375983
+                          display_name:
+                            type: string
+                            description: Typically same as the event name, such as, view, purchase, search.
+                            example: add_to_cart
+                          type:
+                            type: string
+                      subscription_update:
+                        type: object
+                        properties:
+                          archived:
+                            type: boolean
+                          count:
+                            type: number
+                            description: Event count
+                            example: 375983
+                          display_name:
+                            type: string
+                            description: Typically same as the event name, such as, view, purchase, search.
+                            example: pageload
+                          type:
+                            type: string
+                            description: Specifies whether an event is standard or custom event.
+                            example: standard
+                  status:
+                    type: string
+                  timestamp_end:
+                    type: string
+                    format: date-time
+                    example: '2023-06-22T17:16:14.179Z'
+                  timestamp_start:
+                    type: string
+                    format: date-time
+                    example: '2023-06-21T17:16:14.179Z'
+        '400':
+          description: Bad Request - The request is invalid due to missing or incorrect parameters. This includes missing fields, invalid values, formatting issues, or conflicts such as duplicate data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Request
+        '401':
+          description: Unauthorized - API authentication failed due to an invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not authorized
+        '403':
+          description: Forbidden - The API key does not have sufficient permissions to perform this action.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        '404':
+          description: Not Found - The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Not Found
+        '422':
+          description: Unprocessable Entity - The request was well-formed but contains semantic errors.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Validation failed
+        '429':
+          description: Too Many Requests - The request limit has been exceeded. Reduce request frequency.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Too Many Requests
+        '500':
+          description: Internal Server Error - An unexpected server error occurred. Contact support if the issue persists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+        '502':
+          description: Bad Gateway - The server received an invalid response. Retry the request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bad Gateway
+        '503':
+          description: Service Unavailable - The service is temporarily unavailable. Try again later.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Service Unavailable
+        '504':
+          description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Gateway Timeout
+components:
+  securitySchemes:
+    user_api_auth:
+      type: http
+      scheme: basic
+    event_api_auth:
+      type: http
+      scheme: basic
