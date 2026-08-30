@@ -30,19 +30,19 @@ specificationVersion: '0.23'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
-  - Customer Data Platform
+  - customer-data-platform
   - Customer Engagement
-  - Marketing Automation
-  - Cross-Channel Messaging
+  - marketing-automation
+  - cross-channel-messaging
   - Email
   - SMS
   - Push Notifications
-  - Segmentation
-  - Personalization
-  - Product Recommendations
-  - Event Tracking
-  - Product Catalog
-  - MarTech
+  - segmentation
+  - personalization
+  - product-recommendations
+  - event-tracking
+  - product-catalog
+  - martech
   - MCP
   - agent-native
 tags_raw:
@@ -83,7 +83,7 @@ apis:
   - MCP
   - agent-native
   - Customer Engagement
-  - Marketing Automation
+  - marketing-automation
   tags_raw:
   - mcp
   - agent-native
@@ -243,6 +243,8 @@ apis:
   humanURL: https://developer.blueshift.com/reference/welcome
   baseURL: https://api.getblueshift.com
   tags:
+  - Customers
+  tags_raw:
   - Customer
   properties:
   - type: OpenAPI
@@ -277,6 +279,8 @@ apis:
   humanURL: https://developer.blueshift.com/reference/welcome
   baseURL: https://api.getblueshift.com
   tags:
+  - Customer Groups
+  tags_raw:
   - Customer groups
   properties:
   - type: OpenAPI
@@ -309,6 +313,8 @@ apis:
   humanURL: https://developer.blueshift.com/reference/welcome
   baseURL: https://api.getblueshift.com
   tags:
+  - EmailTemplate
+  tags_raw:
   - Email template
   properties:
   - type: OpenAPI
@@ -341,6 +347,8 @@ apis:
   humanURL: https://developer.blueshift.com/reference/welcome
   baseURL: https://api.getblueshift.com
   tags:
+  - Email Validation
+  tags_raw:
   - Email validation
   properties:
   - type: OpenAPI
