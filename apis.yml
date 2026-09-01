@@ -30,19 +30,19 @@ specificationVersion: '0.23'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
-  - customer-data-platform
+  - Customer Data Platform
   - Customer Engagement
-  - marketing-automation
-  - cross-channel-messaging
+  - Marketing Automation
+  - Cross-Channel Messaging
   - Email
   - SMS
   - Push Notifications
-  - segmentation
-  - personalization
-  - product-recommendations
-  - event-tracking
-  - product-catalog
-  - martech
+  - Segmentation
+  - Personalization
+  - Product Recommendations
+  - Event Tracking
+  - Product Catalog
+  - MarTech
   - MCP
   - agent-native
 tags_raw:
@@ -83,7 +83,7 @@ apis:
   - MCP
   - agent-native
   - Customer Engagement
-  - marketing-automation
+  - Marketing Automation
   tags_raw:
   - mcp
   - agent-native
