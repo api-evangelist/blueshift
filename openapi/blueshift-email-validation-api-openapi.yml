@@ -9,13 +9,13 @@ servers:
 - url: https://api.getblueshift.com
 - url: https://api.eu.getblueshift.com
 tags:
-- name: Email validation
+- name: Email Validation
   description: Validate single or bulk email addresses to assess deliverability and risk.
 paths:
   /api/v1/emails/bulk_validate:
     post:
       tags:
-      - Email validation
+      - Email Validation
       summary: Validate multiple email addresses
       description: Use this endpoint to validate up to 30 email addresses. This feature requires custom setup. Contact Blueshift Support or your CSM to enable it.
       security:
@@ -160,10 +160,12 @@ paths:
             application/json:
               example:
                 message: Gateway Timeout - Retry with exponential backoff.
+      operationId: postApiV1EmailsBulkValidate
+      x-operation-id-source: derived
   /api/v1/emails/validate:
     get:
       tags:
-      - Email validation
+      - Email Validation
       summary: Validate a single email address
       description: Use this endpoint to validate a single email address and evaluate its deliverability and risk profile.
       security:
@@ -281,6 +283,8 @@ paths:
             application/json:
               example:
                 message: Gateway Timeout - Retry with exponential backoff.
+      operationId: getApiV1EmailsValidate
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

@@ -138,6 +138,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: getApiV1SegmentsList
+      x-operation-id-source: derived
   /api/v1/segments/{segment_uuid}/matching_users.json:
     get:
       summary: Get segment membership counts
@@ -247,6 +249,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: getApiV1SegmentsBySegmentUuidMatchingUsersJson
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

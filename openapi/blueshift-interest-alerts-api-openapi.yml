@@ -119,6 +119,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: postApiV1InterestsAlert
+      x-operation-id-source: derived
   /api/v1/interests/user_subscriptions:
     get:
       tags:
@@ -219,6 +221,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: getApiV1InterestsUserSubscriptions
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

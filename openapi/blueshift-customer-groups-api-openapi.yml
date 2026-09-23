@@ -9,13 +9,13 @@ servers:
 - url: https://api.getblueshift.com
 - url: https://api.eu.getblueshift.com
 tags:
-- name: Customer groups
+- name: Customer Groups
   description: Customer groups link multiple customer profiles to a common parent entity with shared attributes. Use these endpoints to delete a group or remove a user from a group.
 paths:
   /api/v1/customer_group/{group_id}:
     delete:
       tags:
-      - Customer groups
+      - Customer Groups
       summary: Delete customer group
       description: Deletes a customer group. Set `delete_users` to keep or remove the associated users.
       security:
@@ -168,10 +168,12 @@ paths:
           description: Service Unavailable - The service is temporarily unavailable. Try again later.
         '504':
           description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+      operationId: deleteApiV1CustomerGroupByGroupId
+      x-operation-id-source: derived
   /api/v1/customer_group/{group_id}/user/{user_uuid}:
     delete:
       tags:
-      - Customer groups
+      - Customer Groups
       summary: Remove user from customer group
       description: Removes a user from a customer group without deleting the user record.
       security:
@@ -236,6 +238,8 @@ paths:
           description: Service Unavailable - The service is temporarily unavailable. Try again later.
         '504':
           description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+      operationId: deleteApiV1CustomerGroupByGroupIdUserByUserUuid
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

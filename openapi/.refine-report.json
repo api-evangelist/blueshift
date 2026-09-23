@@ -1,0 +1,62 @@
+{
+  "provider": "blueshift",
+  "sources": [
+    "_original/blueshift-openapi.json"
+  ],
+  "outputs": [
+    "blueshift-adapters-api-openapi.yml",
+    "blueshift-campaigns-api-openapi.yml",
+    "blueshift-catalog-api-openapi.yml",
+    "blueshift-custom-user-lists-api-openapi.yml",
+    "blueshift-customer-api-openapi.yml",
+    "blueshift-customer-groups-api-openapi.yml",
+    "blueshift-email-template-api-openapi.yml",
+    "blueshift-email-validation-api-openapi.yml",
+    "blueshift-event-api-openapi.yml",
+    "blueshift-external-fetch-api-openapi.yml",
+    "blueshift-interest-alerts-api-openapi.yml",
+    "blueshift-live-activities-api-openapi.yml",
+    "blueshift-live-content-api-openapi.yml",
+    "blueshift-promotions-api-openapi.yml",
+    "blueshift-push-template-api-openapi.yml",
+    "blueshift-sms-template-api-openapi.yml",
+    "blueshift-search-api-openapi.yml",
+    "blueshift-segments-api-openapi.yml",
+    "blueshift-shared-assets-api-openapi.yml",
+    "blueshift-subscription-groups-api-openapi.yml",
+    "blueshift-tags-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "blueshift-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/blueshift-openapi.yml: archived document superseded by a larger archived document",
+    "blueshift-adapters-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-catalog-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-custom-user-lists-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-customer-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-customer-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-email-template-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-email-validation-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-event-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-external-fetch-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-interest-alerts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-live-activities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-live-content-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-promotions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-push-template-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-segments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-shared-assets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-sms-template-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-subscription-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "blueshift-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

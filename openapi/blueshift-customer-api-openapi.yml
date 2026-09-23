@@ -86,6 +86,8 @@ paths:
           description: Service unavailable, please retry.
         '504':
           description: Service unavailable, please retry. Gateway timeout.
+      operationId: postApiV1CustomerAttributesTriggerImport
+      x-operation-id-source: derived
   /api/v1/customers:
     get:
       tags:
@@ -531,6 +533,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: getApiV1Customers
+      x-operation-id-source: derived
     post:
       tags:
       - Customer
@@ -752,6 +756,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: postApiV1Customers
+      x-operation-id-source: derived
   /api/v1/customers/bulk:
     post:
       tags:
@@ -928,6 +934,8 @@ paths:
           description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
         '504':
           description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+      operationId: postApiV1CustomersBulk
+      x-operation-id-source: derived
   /api/v1/customers/delete:
     post:
       tags:
@@ -1011,6 +1019,8 @@ paths:
           description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
         '504':
           description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+      operationId: postApiV1CustomersDelete
+      x-operation-id-source: derived
   /api/v1/customers/forget:
     post:
       tags:
@@ -1096,6 +1106,8 @@ paths:
           description: Service unavailable, please retry.
         '504':
           description: Service unavailable, please retry. Gateway timeout.
+      operationId: postApiV1CustomersForget
+      x-operation-id-source: derived
   /api/v1/customers/merge:
     post:
       tags:
@@ -1172,6 +1184,8 @@ paths:
           description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
         '504':
           description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+      operationId: postApiV1CustomersMerge
+      x-operation-id-source: derived
   /api/v1/customers/unforget:
     post:
       tags:
@@ -1257,6 +1271,8 @@ paths:
           description: Service unavailable, please retry.
         '504':
           description: Service unavailable, please retry. Gateway timeout.
+      operationId: postApiV1CustomersUnforget
+      x-operation-id-source: derived
   /api/v1/customers/{uuid}:
     get:
       tags:
@@ -1515,6 +1531,8 @@ paths:
           description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
         '504':
           description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+      operationId: getApiV1CustomersByUuid
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

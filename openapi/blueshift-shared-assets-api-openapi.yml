@@ -258,6 +258,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: getApiV1SharedAssetsJson
+      x-operation-id-source: derived
     post:
       summary: Create a shared asset
       description: Use this endpoint to create a shared asset.
@@ -497,6 +499,8 @@ paths:
                   error:
                     type: string
                     example: Internal Server Error
+      operationId: postApiV1SharedAssetsJson
+      x-operation-id-source: derived
   /api/v1/shared_assets/{uuid}.json:
     put:
       summary: Update a shared asset
@@ -718,6 +722,8 @@ paths:
                   error:
                     type: string
                     example: Internal Server Error
+      operationId: putApiV1SharedAssets{uuid}Json
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

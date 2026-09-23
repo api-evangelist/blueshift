@@ -171,6 +171,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1ExternalFetchesJson
+      x-operation-id-source: derived
     post:
       summary: Create an external fetch template
       description: Use this endpoint to create an external fetch template.
@@ -337,6 +339,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1ExternalFetchesJson
+      x-operation-id-source: derived
   /api/v1/external_fetches/{template_uuid}:
     put:
       summary: Update an external fetch template
@@ -502,6 +506,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: putApiV1ExternalFetchesByTemplateUuid
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

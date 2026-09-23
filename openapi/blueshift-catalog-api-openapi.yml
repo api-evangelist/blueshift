@@ -340,6 +340,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: getApiV1Catalogs
+      x-operation-id-source: derived
     post:
       summary: Create a catalog
       description: Create a catalog in Blueshift.
@@ -475,6 +477,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1Catalogs
+      x-operation-id-source: derived
   /api/v1/catalogs/{catalog_uuid}.json:
     get:
       summary: Get catalog details
@@ -599,6 +603,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: getApiV1Catalogs{catalogUuid}Json
+      x-operation-id-source: derived
     put:
       summary: Add items to a catalog
       description: Use this endpoint to add items to a catalog.
@@ -950,6 +956,8 @@ paths:
           description: Service Unavailable - Please retry with exponential backoff.
         '504':
           description: Gateway Timeout - Please retry with exponential backoff.
+      operationId: putApiV1Catalogs{catalogUuid}Json
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

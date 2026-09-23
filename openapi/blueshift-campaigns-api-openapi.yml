@@ -297,6 +297,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1CampaignsJson
+      x-operation-id-source: derived
   /api/v1/campaigns/bulk_archive:
     put:
       summary: Bulk archive campaigns
@@ -451,6 +453,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: putApiV1CampaignsBulkArchive
+      x-operation-id-source: derived
   /api/v1/campaigns/bulk_execute:
     post:
       tags:
@@ -624,6 +628,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1CampaignsBulkExecute
+      x-operation-id-source: derived
   /api/v1/campaigns/bulk_unarchive:
     put:
       summary: Bulk unarchive campaigns
@@ -778,6 +784,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: putApiV1CampaignsBulkUnarchive
+      x-operation-id-source: derived
   /api/v1/campaigns/execute:
     post:
       tags:
@@ -942,6 +950,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1CampaignsExecute
+      x-operation-id-source: derived
   /api/v1/campaigns/{campaign_type}:
     post:
       tags:
@@ -1189,6 +1199,8 @@ paths:
           description: Service Unavailable - The service is temporarily unavailable. Try again later.
         '504':
           description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+      operationId: postApiV1CampaignsByCampaignType
+      x-operation-id-source: derived
   /api/v1/campaigns/{campaign_uuid}.json:
     get:
       summary: Detailed report without stats
@@ -1311,6 +1323,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1Campaigns{campaignUuid}Json
+      x-operation-id-source: derived
   /api/v1/campaigns/{campaign_uuid}/archive:
     put:
       summary: Archive a single campaign
@@ -1419,6 +1433,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: putApiV1CampaignsByCampaignUuidArchive
+      x-operation-id-source: derived
   /api/v1/campaigns/{campaign_uuid}/detail.json:
     get:
       summary: Detailed report with stats
@@ -1557,10 +1573,15 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1CampaignsByCampaignUuidDetailJson
+      x-operation-id-source: derived
   /api/v1/campaigns/{campaign_uuid}/launch:
     patch:
       summary: Launch a campaign
-      description: "Use this endpoint to immediately launch a campaign. \n\nCampaigns that are archived or already completed cannot be launched. The API returns validation errors similar to those shown on the campaign UI."
+      description: 'Use this endpoint to immediately launch a campaign.
+
+
+        Campaigns that are archived or already completed cannot be launched. The API returns validation errors similar to those shown on the campaign UI.'
       tags:
       - Campaigns
       security:
@@ -1616,6 +1637,8 @@ paths:
           description: Service Unavailable - The service is temporarily unavailable. Try again later.
         '504':
           description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+      operationId: patchApiV1CampaignsByCampaignUuidLaunch
+      x-operation-id-source: derived
   /api/v1/campaigns/{campaign_uuid}/pause:
     patch:
       tags:
@@ -1675,6 +1698,8 @@ paths:
           description: Service Unavailable - The service is temporarily unavailable. Try again later.
         '504':
           description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+      operationId: patchApiV1CampaignsByCampaignUuidPause
+      x-operation-id-source: derived
   /api/v1/campaigns/{campaign_uuid}/unarchive:
     put:
       summary: Unarchive a single campaign
@@ -1783,6 +1808,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: putApiV1CampaignsByCampaignUuidUnarchive
+      x-operation-id-source: derived
   /api/v1/campaigns/{campaign_uuid}/update_schedule:
     patch:
       summary: Update campaign schedule
@@ -1891,6 +1918,8 @@ paths:
           description: Service Unavailable - The service is temporarily unavailable. Try again later.
         '504':
           description: Gateway Timeout - The server took too long to respond. Retry the request with exponential backoff.
+      operationId: patchApiV1CampaignsByCampaignUuidUpdateSchedule
+      x-operation-id-source: derived
   /api/v2/campaigns.json:
     get:
       summary: List campaigns
@@ -2131,6 +2160,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV2CampaignsJson
+      x-operation-id-source: derived
   /api/v2/customer_campaign_activity:
     get:
       summary: Get a customer's campaign activity
@@ -2435,6 +2466,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: getApiV2CustomerCampaignActivity
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

@@ -143,6 +143,8 @@ paths:
           description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
         '504':
           description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+      operationId: getApiV1SmsTemplatesJson
+      x-operation-id-source: derived
     post:
       tags:
       - SMS template
@@ -352,6 +354,8 @@ paths:
           description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
         '504':
           description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+      operationId: postApiV1SmsTemplatesJson
+      x-operation-id-source: derived
   /api/v1/sms_templates/test_send.json:
     post:
       tags:
@@ -513,6 +517,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1SmsTemplatesTestSendJson
+      x-operation-id-source: derived
   /api/v1/sms_templates/{template_uuid}:
     put:
       tags:
@@ -696,6 +702,8 @@ paths:
           description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
         '504':
           description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+      operationId: putApiV1SmsTemplatesByTemplateUuid
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

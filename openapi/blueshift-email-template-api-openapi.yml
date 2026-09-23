@@ -9,7 +9,7 @@ servers:
 - url: https://api.getblueshift.com
 - url: https://api.eu.getblueshift.com
 tags:
-- name: Email template
+- name: Email Template
   description: Email template lifecycle management
 paths:
   /api/v1/email_templates.json:
@@ -17,7 +17,7 @@ paths:
       summary: List email templates
       description: Use this endpoint to get the list of email templates.
       tags:
-      - Email template
+      - Email Template
       security:
       - user_api_auth: []
       parameters:
@@ -198,11 +198,13 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1EmailTemplatesJson
+      x-operation-id-source: derived
     post:
       summary: Create email template
       description: Use this endpoint to create an email template.
       tags:
-      - Email template
+      - Email Template
       security:
       - user_api_auth: []
       requestBody:
@@ -414,12 +416,14 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1EmailTemplatesJson
+      x-operation-id-source: derived
   /api/v1/email_templates/test_send.json:
     post:
       summary: Send a test mail
       description: Use this endpoint to send a test mail to a specific email address.
       tags:
-      - Email template
+      - Email Template
       security:
       - user_api_auth: []
       requestBody:
@@ -568,12 +572,14 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1EmailTemplatesTestSendJson
+      x-operation-id-source: derived
   /api/v1/email_templates/{TEMPLATE_UUID}.json:
     get:
       summary: Get template details
       description: Use this endpoint to get a JSON representation of your email template along with a list of campaigns using the template.
       tags:
-      - Email template
+      - Email Template
       security:
       - user_api_auth: []
       parameters:
@@ -753,11 +759,13 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1EmailTemplates{TEMPLATEUUID}Json
+      x-operation-id-source: derived
     put:
       summary: Update email template
       description: Use this endpoint to update an email template.
       tags:
-      - Email template
+      - Email Template
       security:
       - user_api_auth: []
       parameters:
@@ -952,6 +960,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: putApiV1EmailTemplates{TEMPLATEUUID}Json
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

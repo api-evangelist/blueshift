@@ -117,6 +117,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: putApiV1CustomUserListsAddUserToListByListId
+      x-operation-id-source: derived
   /api/v1/custom_user_lists/bulk_add_users_to_list/{list_id}:
     put:
       summary: Bulk add users to list
@@ -247,6 +249,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: putApiV1CustomUserListsBulkAddUsersToListByListId
+      x-operation-id-source: derived
   /api/v1/custom_user_lists/bulk_remove_users_from_list/{list_id}:
     put:
       summary: Bulk remove users from list
@@ -377,6 +381,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: putApiV1CustomUserListsBulkRemoveUsersFromListByListId
+      x-operation-id-source: derived
   /api/v1/custom_user_lists/create:
     post:
       summary: Create empty list
@@ -527,6 +533,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: postApiV1CustomUserListsCreate
+      x-operation-id-source: derived
   /api/v1/custom_user_lists/id/{custom_user_list_id}:
     get:
       summary: Get customer list details
@@ -657,6 +665,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: getApiV1CustomUserListsIdByCustomUserListId
+      x-operation-id-source: derived
   /api/v1/custom_user_lists/overwrite_list/{list_id}:
     put:
       summary: Overwrite users in a list
@@ -736,6 +746,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: putApiV1CustomUserListsOverwriteListByListId
+      x-operation-id-source: derived
   /api/v1/custom_user_lists/remove_user_from_list/{list_id}:
     put:
       summary: Remove user from list
@@ -821,6 +833,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: putApiV1CustomUserListsRemoveUserFromListByListId
+      x-operation-id-source: derived
   /api/v1/custom_user_lists/seed_lists:
     get:
       summary: Get seed lists from your account
@@ -946,6 +960,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff.
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff.
+      operationId: getApiV1CustomUserListsSeedLists
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

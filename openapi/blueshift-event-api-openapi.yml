@@ -208,6 +208,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: postApiV1Bulkevents
+      x-operation-id-source: derived
   /api/v1/data_connectors/{data_connector_uuid}/debug:
     get:
       summary: Debug event exports
@@ -347,6 +349,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1DataConnectorsByDataConnectorUuidDebug
+      x-operation-id-source: derived
   /api/v1/event:
     post:
       summary: Send an event
@@ -517,6 +521,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: postApiV1Event
+      x-operation-id-source: derived
   /api/v1/event/debug:
     get:
       summary: Most recent event
@@ -692,6 +698,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1EventDebug
+      x-operation-id-source: derived
   /api/v1/event/history:
     get:
       tags:
@@ -828,6 +836,8 @@ paths:
           description: Service unavailable – The service is temporarily unavailable. Try again later.
         '504':
           description: Gateway timeout – The server took too long to respond. Retry with exponential backoff.
+      operationId: getApiV1EventHistory
+      x-operation-id-source: derived
   /api/v1/event/summary.json:
     post:
       summary: Summary of events
@@ -1058,6 +1068,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1EventSummaryJson
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

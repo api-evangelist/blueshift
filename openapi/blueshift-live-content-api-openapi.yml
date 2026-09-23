@@ -165,6 +165,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1OnsiteSlotsJson
+      x-operation-id-source: derived
   /live:
     post:
       summary: Live content
@@ -421,6 +423,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postLive
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

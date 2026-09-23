@@ -179,6 +179,8 @@ paths:
           description: Service unavailable, please retry. Service unavailable. Retry with exponential backoff.
         '504':
           description: Service unavailable, please retry. Gateway timeout. Retry with exponential backoff.
+      operationId: getApiV1CustomerSearchShowEvents
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

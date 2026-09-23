@@ -251,6 +251,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: postApiV1LiveActivityStart
+      x-operation-id-source: derived
   /api/v1/live_activity/update:
     post:
       summary: Update a Live Activity
@@ -484,6 +486,8 @@ paths:
           description: Service unavailable, please retry - Service Unavailable, re-try with exponential backoff
         '504':
           description: Service unavailable, please retry - Gateway Timeout, please re-try with exponential backoff
+      operationId: postApiV1LiveActivityUpdate
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:

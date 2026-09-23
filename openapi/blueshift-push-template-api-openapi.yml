@@ -176,6 +176,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: getApiV1PushTemplatesJson
+      x-operation-id-source: derived
     post:
       summary: Create a push template
       description: Use this endpoint to create a push template.
@@ -395,6 +397,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1PushTemplatesJson
+      x-operation-id-source: derived
   /api/v1/push_templates/test_push.json:
     post:
       summary: Push a test message
@@ -530,6 +534,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: postApiV1PushTemplatesTestPushJson
+      x-operation-id-source: derived
   /api/v1/push_templates/{template_uuid}:
     put:
       summary: Update a push template
@@ -725,6 +731,8 @@ paths:
                   message:
                     type: string
                     example: Gateway Timeout
+      operationId: putApiV1PushTemplatesByTemplateUuid
+      x-operation-id-source: derived
 components:
   securitySchemes:
     user_api_auth:
