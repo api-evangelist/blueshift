@@ -64,7 +64,7 @@ tags:
   - Product Catalog
   - MarTech
   - MCP
-  - agent-native
+  - Agent-Native
 tags_raw:
   - customer-data-platform
   - customer-engagement
@@ -101,7 +101,7 @@ apis:
   baseURL: https://app.getblueshift.com/mcp
   tags:
   - MCP
-  - agent-native
+  - Agent-Native
   - Customer Engagement
   - Marketing Automation
   tags_raw:
@@ -367,9 +367,10 @@ apis:
   humanURL: https://developer.blueshift.com/reference/welcome
   baseURL: https://api.getblueshift.com
   tags:
-  - Email Validation
+  - Email Verification
   tags_raw:
   - Email validation
+  - Email Validation
   properties:
   - type: OpenAPI
     url: openapi/blueshift-email-validation-api-openapi.yml
