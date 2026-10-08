@@ -826,6 +826,8 @@ apis:
   - type: APIReference
     url: https://developer.blueshift.com/reference/welcome
 common:
+  - type: RateLimits
+    url: rate-limits/blueshift-rate-limits.yml
   - url: https://blueshift.com/blog/feed/
     type: BlogRSS
   - type: CapabilityMap
