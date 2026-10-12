@@ -1,0 +1,16 @@
+generated: '2026-10-12'
+method: none
+source:
+- https://zapier.com/apps/blueshift/integrations
+- https://n8n.io/integrations/blueshift/
+- https://composio.dev/toolkits/blueshift
+- https://monid.ai/tools/blueshift
+checked:
+- https://composio.dev/toolkits/blueshift
+- https://monid.ai/tools/blueshift
+- https://n8n.io/integrations/blueshift/
+- https://zapier.com/apps/blueshift/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []
