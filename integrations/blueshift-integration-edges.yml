@@ -1,16 +1,33 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/blueshift/integrations
 - https://n8n.io/integrations/blueshift/
 - https://composio.dev/toolkits/blueshift
 - https://monid.ai/tools/blueshift
 checked:
+- https://aws.amazon.com/marketplace/
 - https://composio.dev/toolkits/blueshift
 - https://monid.ai/tools/blueshift
 - https://n8n.io/integrations/blueshift/
 - https://zapier.com/apps/blueshift/integrations
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: AWS Marketplace
+  partner: amazon-web-services
+  partner_match: aggregator
+  type: marketplace
+  marketplace: aws-marketplace
+  channel: distribution
+  relationship: platform-app
+  direction: provider-built
+  evidence: https://aws.amazon.com/marketplace/seller-profile?id=8736c2bb-b8bb-42da-978b-007a8fd455fe
+  listing_count: 2
+  apps:
+  - Customer Data Platform
+  - Cross-Channel Marketing
+  seller_name: Blueshift
+  detected_by: sweep-cloud-marketplaces.py
+  detected: '2026-10-13'
 templates: []
