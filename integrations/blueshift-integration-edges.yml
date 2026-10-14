@@ -8,6 +8,7 @@ source:
 checked:
 - https://aws.amazon.com/marketplace/
 - https://composio.dev/toolkits/blueshift
+- https://docs.mparticle.com/integrations/blueshift/forwarding-dsr/
 - https://monid.ai/tools/blueshift
 - https://n8n.io/integrations/blueshift/
 - https://zapier.com/apps/blueshift/integrations
@@ -30,4 +31,30 @@ edges:
   seller_name: Blueshift
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: mParticle
+  partner: mparticle
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://docs.mparticle.com/integrations/blueshift/forwarding-dsr/
+  coverage_role:
+  - destination
+  - source
+  cdp_signals:
+    destination:
+      catalog_entries:
+      - blueshift
+      integration_types:
+      - event
+      - forwarding-dsr
+    source:
+      catalog_entries:
+      - blueshift
+      integration_types:
+      - feed
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
 templates: []
