@@ -39,3 +39,16 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: blueshift-brightcove-own
+  label: Brightcove (own)
+  partner: brightcove
+  partner_name: Brightcove (own)
+  category: Audience Engagement
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.brightcove.com/partners/blueshift
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null

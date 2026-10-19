@@ -9,6 +9,7 @@ checked:
 - https://aws.amazon.com/marketplace/
 - https://composio.dev/toolkits/blueshift
 - https://docs.mparticle.com/integrations/blueshift/forwarding-dsr/
+- https://marketplace.brightcove.com/llms.txt
 - https://monid.ai/tools/blueshift
 - https://n8n.io/integrations/blueshift/
 - https://zapier.com/apps/blueshift/integrations
@@ -74,4 +75,21 @@ edges:
   listing_count: 1
   detected: '2026-10-15'
   detected_by: mirror-platform-listings.py
+- partner_name: Brightcove (own)
+  partner: brightcove
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.brightcove.com/partners/blueshift
+  mirror_of: brightcove/integrations/brightcove-integration-edges.yml
+  apps:
+  - BlueShift
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Audience Engagement
 templates: []
