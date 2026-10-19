@@ -52,3 +52,52 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: blueshift-maven-central
+  label: Maven Central
+  partner: maven-central
+  partner_name: Maven Central
+  category: official SDK (Java/JVM)
+  type: register
+  channel: package-registry
+  evidence: https://central.sonatype.com/artifact/com.blueshift/android-sdk
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: Maven Central (public registry JSON)
+    spec_file: null
+    language: Java/JVM
+    packages:
+    - name: com.blueshift:android-sdk
+      version: 3.3.1
+      released: '2023-01-19'
+      released_field: lastUpdated
+      lapsed: true
+      page: https://central.sonatype.com/artifact/com.blueshift/android-sdk
+      repo_leg: github-org:blueshift-labs
+      publisher_leg: groupId:blueshift.com
+      matched_by: domain
+    - name: com.blueshift:android-sdk-compose
+      version: 4.2.5
+      released: '2026-09-17'
+      released_field: lastUpdated
+      lapsed: false
+      page: https://central.sonatype.com/artifact/com.blueshift/android-sdk-compose
+      repo_leg: github-org:blueshift-labs
+      publisher_leg: groupId:blueshift.com
+      matched_by: domain
+    - name: com.blueshift:android-sdk-x
+      version: 4.2.5
+      released: '2026-09-17'
+      released_field: lastUpdated
+      lapsed: false
+      page: https://central.sonatype.com/artifact/com.blueshift/android-sdk-x
+      repo_leg: github-org:blueshift-labs
+      publisher_leg: groupId:blueshift.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
