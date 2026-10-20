@@ -6,6 +6,7 @@ source:
 - https://composio.dev/toolkits/blueshift
 - https://monid.ai/tools/blueshift
 checked:
+- brightcove/integrations/brightcove-integration-edges.yml
 - https://api.nuget.org/v3
 - https://aws.amazon.com/marketplace/
 - https://composio.dev/toolkits/blueshift
@@ -40,32 +41,6 @@ edges:
   seller_name: Blueshift
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
-- partner_name: mParticle
-  partner: mparticle
-  partner_match: aggregator
-  marketplace: coverage
-  channel: partner-built
-  direction: partner-built
-  type: coverage
-  relationship: connector-coverage
-  evidence: https://docs.mparticle.com/integrations/blueshift/forwarding-dsr/
-  coverage_role:
-  - destination
-  - source
-  cdp_signals:
-    destination:
-      catalog_entries:
-      - blueshift
-      integration_types:
-      - event
-      - forwarding-dsr
-    source:
-      catalog_entries:
-      - blueshift
-      integration_types:
-      - feed
-  detected_by: sweep-cdp.py
-  first_seen: '2026-10-14'
 - partner_name: Shopify (own)
   partner: shopify
   partner_match: mirror
@@ -147,4 +122,30 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-official-sdks.py
   first_seen: '2026-10-18'
+- partner_name: mParticle
+  partner: mparticle
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://docs.mparticle.com/integrations/blueshift/forwarding-dsr/
+  coverage_role:
+  - destination
+  - source
+  cdp_signals:
+    destination:
+      catalog_entries:
+      - blueshift
+      integration_types:
+      - event
+      - forwarding-dsr
+    source:
+      catalog_entries:
+      - blueshift
+      integration_types:
+      - feed
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
 templates: []
