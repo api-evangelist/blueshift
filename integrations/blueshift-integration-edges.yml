@@ -22,6 +22,7 @@ checked:
 - https://rubygems.org/api/v1
 - https://zapier.com/apps/blueshift/integrations
 - shopify/integrations/shopify-integration-edges.yml
+- adobe-commerce/integrations/adobe-commerce-integration-edges.yml
 summary: null
 marketplace_apps: []
 edges:
@@ -41,39 +42,6 @@ edges:
   seller_name: Blueshift
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
-- partner_name: Shopify (own)
-  partner: shopify
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://apps.shopify.com/blueshift-marketing
-  mirror_of: shopify/integrations/shopify-integration-edges.yml
-  apps:
-  - Blueshift
-  listing_count: 1
-  detected: '2026-10-15'
-  detected_by: mirror-platform-listings.py
-- partner_name: Brightcove (own)
-  partner: brightcove
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://marketplace.brightcove.com/partners/blueshift
-  mirror_of: brightcove/integrations/brightcove-integration-edges.yml
-  apps:
-  - BlueShift
-  listing_count: 1
-  detected: '2026-10-18'
-  detected_by: mirror-platform-listings.py
-  category: Audience Engagement
 - partner_name: Maven Central
   partner: maven-central
   partner_match: register
@@ -148,4 +116,54 @@ edges:
       - feed
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
+- partner_name: Shopify (own)
+  partner: shopify
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://apps.shopify.com/blueshift-marketing
+  mirror_of: shopify/integrations/shopify-integration-edges.yml
+  apps:
+  - Blueshift
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+- partner_name: Brightcove (own)
+  partner: brightcove
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.brightcove.com/partners/blueshift
+  mirror_of: brightcove/integrations/brightcove-integration-edges.yml
+  apps:
+  - BlueShift
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Audience Engagement
+- partner_name: Adobe Commerce (own)
+  partner: adobe-commerce
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://commercemarketplace.adobe.com/blueshift-blueshiftconnect.html
+  mirror_of: adobe-commerce/integrations/adobe-commerce-integration-edges.yml
+  apps:
+  - Blueshift Customer Data Activation Platform
+  listing_count: 1
+  detected: '2026-10-22'
+  detected_by: mirror-platform-listings.py
+  category: Adobe Commerce Marketplace extension
 templates: []
