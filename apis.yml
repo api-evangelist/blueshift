@@ -229,6 +229,8 @@ apis:
   humanURL: https://developer.blueshift.com/reference/welcome
   baseURL: https://api.getblueshift.com
   tags:
+  - Custom User Lists
+  tags_raw:
   - Custom user lists
   properties:
   - type: OpenAPI
