@@ -64,30 +64,161 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Blueshift is an AI-powered customer engagement and customer data platform (CDP) that unifies customer
-profiles, product and content catalogs, and behavioural event streams, then activates them across email,
-SMS, push, in-app messaging, mobile inbox, iOS Live Activities and on-site live content.
+Blueshift is an AI-powered customer engagement and customer data platform (CDP) that unifies customer profiles, product and content catalogs, and behavioural event streams, then activates them across email, SMS, push, in-app messaging, mobile inbox, iOS Live Activities and on-site live content. Its public surface is a REST API on api.getblueshift.com (US) and api.eu.getblueshift.com (EU) covering customers, events, catalogs, segments, custom user lists, campaigns, templates, shared assets, promotions, external fetches, interest alerts, subscription groups and email validation, documented operation-by-operation with a machine-readable OpenAPI 3.0 document behind every reference page. Blueshift also runs an official OAuth 2.0 remote MCP server in public beta, and ships first-party SDKs for iOS, Android, React Native, Flutter and Cordova.
 
-- Website: https://blueshift.com/
-- Developer portal: https://developer.blueshift.com/
-- API reference: https://developer.blueshift.com/reference/welcome
-- Status: https://status.blueshift.com/
-- Trust center: https://trust.blueshift.com/
-- GitHub: https://github.com/blueshift-labs
+**Areas:** Customer Data Platform · Customer Engagement · Marketing Automation · Cross-Channel Messaging · Email · SMS · Push Notifications · Segmentation · Personalization · Product Recommendations · Event Tracking · Product Catalog
 
-## What this profile holds
+## Blueshift on APIs.io
 
-| Artifact | Detail |
+Everything profiled for Blueshift is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/blueshift/](https://apis.io/providers/blueshift/)** — or go straight to one of the APIs or properties below.
+
+### APIs (22)
+
+- [Blueshift MCP Server](https://apis.io/apis/blueshift/blueshift-mcp-server/) — Official hosted remote MCP server, in public beta, exposing a catalogue of 131 tools (97 read, 34 write) across campaigns, segments, customer profiles,…
+- [Blueshift Adapters API](https://apis.io/apis/blueshift/blueshift-adapters-api/) — Adapters are entities that provide integration to various services with Blueshift. For example, we provide adapters for various services such as Mailgun,…
+- [Blueshift Campaigns API](https://apis.io/apis/blueshift/blueshift-campaigns-api/) — Manage your campaigns in Blueshift.
+- [Blueshift Catalog API](https://apis.io/apis/blueshift/blueshift-catalog-api/) — A catalog is a list of items which may include content or products.
+- [Blueshift Custom user lists API](https://apis.io/apis/blueshift/blueshift-custom-user-lists-api/) — A custom user list contains information about the users of your site such as name, email, phone number, and location. You can use this list as a segment and…
+- [Blueshift Customer API](https://apis.io/apis/blueshift/blueshift-customer-api/) — Blueshift hosts 360 degree customer profile for each of your users to represent all of their demographic, behavioral and engagement activity.
+- [Blueshift Customer groups API](https://apis.io/apis/blueshift/blueshift-customer-groups-api/) — Customer groups link multiple customer profiles to a common parent entity with shared attributes. Use these endpoints to delete a group or remove a user…
+- [Blueshift Email template API](https://apis.io/apis/blueshift/blueshift-email-template-api/) — Email template lifecycle management
+- [Blueshift Email validation API](https://apis.io/apis/blueshift/blueshift-email-validation-api/) — Validate single or bulk email addresses to assess deliverability and risk.
+- [Blueshift Event API](https://apis.io/apis/blueshift/blueshift-event-api/) — Use the event APIs to send events from your servers.
+- [Blueshift External fetch API](https://apis.io/apis/blueshift/blueshift-external-fetch-api/) — External fetch is a Blueshift capability that lets you include dynamic content from external servers that is fetched “just in time” before sending a message.
+- [Blueshift Interest alerts API](https://apis.io/apis/blueshift/blueshift-interest-alerts-api/) — Interest alerts store information about users' interests. When an event occurs in an area or topic in which multiple users are interested, you can trigger a…
+- [Blueshift Live Activities API](https://apis.io/apis/blueshift/blueshift-live-activities-api/) — The Live Activities API from Blueshift — 2 operation(s) for live activities.
+- [Blueshift Live content API](https://apis.io/apis/blueshift/blueshift-live-content-api/) — Use the Live content API endpoint to insert content recommendations in your website and mobile apps.
+- [Blueshift Promotions API](https://apis.io/apis/blueshift/blueshift-promotions-api/) — Promotions allows you to manage promo codes that you may wish to send to your customers through Blueshift Campaigns
+- [Blueshift Push template API](https://apis.io/apis/blueshift/blueshift-push-template-api/) — Push template lifecycle management
+- [Blueshift Search API](https://apis.io/apis/blueshift/blueshift-search-api/) — You can use the `customer_search` API to search for events associated with a customer.
+- [Blueshift Segments API](https://apis.io/apis/blueshift/blueshift-segments-api/) — A segment is a list of users that satisfy a criteria. For example, you can create a segment for users who are located in the San Francisco area and run…
+- [Blueshift Shared assets API](https://apis.io/apis/blueshift/blueshift-shared-assets-api/) — Manage reusable assets such as HTML, rich text, subject lines, and visual editor content.
+- [Blueshift SMS template API](https://apis.io/apis/blueshift/blueshift-sms-template-api/) — SMS template lifecycle management
+- [Blueshift Subscription groups API](https://apis.io/apis/blueshift/blueshift-subscription-groups-api/) — Retrieve subscription groups and view detailed information for each subscription group.
+- [Blueshift Tags API](https://apis.io/apis/blueshift/blueshift-tags-api/) — Tags are folder-based entities that you can use to organize your resources. Each tag folder contains its own isolated set of tags.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Blueshift Webhooks](https://apis.io/asyncapis/blueshift/blueshift-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [blueshift](https://apis.io/servers/blueshift/blueshift/)
+
+#### Collections (1)
+
+Postman and Open Collection request collections.
+
+- [Blueshift APIs](https://apis.io/collections/blueshift/open-blueshift/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Blueshift Openapi Overlay](https://apis.io/overlays/blueshift/blueshift-openapi-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Blueshift Authentication](https://apis.io/security/blueshift/blueshift-authentication/)
+- [Blueshift Domain Security](https://apis.io/security/blueshift/blueshift-domain-security/)
+- [Blueshift Trust Center](https://apis.io/security/blueshift/blueshift-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Blueshift Scopes](https://apis.io/scopes/blueshift/blueshift-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Blueshift Plans Pricing](https://apis.io/plans/blueshift/blueshift-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Blueshift Rate Limits](https://apis.io/rate-limits/blueshift/blueshift-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://blueshift.com/)
+- [Documentation](https://developer.blueshift.com/docs/introduction)
+- [Getting started](https://developer.blueshift.com/docs/generate-api-keys)
+- [API reference](https://developer.blueshift.com/reference/welcome)
+- [Pricing](https://blueshift.com/pricing/)
+- [Sign up](https://blueshift.com/request-demo/)
+- [Support](https://help.blueshift.com/hc/en-us)
+- [Blog](https://blueshift.com/blog/)
+- [Terms of service](https://blueshift.com/terms-of-service/)
+- [Privacy policy](https://blueshift.com/privacy-policy/)
+- [GitHub](https://github.com/blueshift-labs)
+- [Status](https://status.blueshift.com/)
+
+## API Evangelist rating
+
+**Kin Score 65.9** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
 |---|---|
-| `openapi/` | OpenAPI 3.0.0, 72 paths / 81 operations / 21 tags. Harvested verbatim from the per-operation OpenAPI documents Blueshift embeds in every `developer.blueshift.com/reference/*.md` page — there is no single downloadable spec. |
-| `overlays/` | Overlay 1.0.0 adding the 81 `operationId`s Blueshift's published spec omits. |
-| `mcp/` | Official OAuth-gated remote MCP server (public beta), plus Blueshift's own 131-tool catalogue and a crosswalk binding those tools to REST operations. |
-| `well-known/` | RFC 8414 + RFC 9728 OAuth discovery documents, served on all four API/app hosts. No security.txt, no api-catalog, no agent card. |
-| `postman/` | Blueshift's first-party public Postman collection — 83 requests across 22 folders. |
-| `skills/` | Four packaged Agent Skills, every `operationId` verified against the spec. |
-| `conventions/`, `errors/`, `rate-limits/`, `authentication/`, `scopes/` | Runtime semantics: idempotency via `transaction_uuid`, the error envelopes, the absent rate-limit headers, the two API-key classes and the eight OAuth scopes. |
-| `conformance/`, `security/` | SOC 2 Type 2, ISO/IEC 27001:2022, HIPAA, GDPR, CCPA, EU-U.S. DPF — plus the standards the API does *not* implement. |
-| `packages/`, `components/`, `sandbox/`, `plans/`, `lifecycle/`, `changelog/`, `data-model/`, `asyncapi/`, `llms/` | SDK currency, client surfaces, the sandbox account model, published pricing, lifecycle gaps, change signals, the entity graph and the webhook surface. |
+| Discoverability | 75.0 |
+| Contract quality | 60.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 73.7 |
+| Developer ergonomics | 55.4 |
+| Access clarity | 92.1 |
 
-No A2A agent card is recorded because Blueshift serves none — `/.well-known/agent-card.json` and the legacy
-`/.well-known/agent.json` return 404 on every host probed.
+**Agent readiness 42.7** — agent-native
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 39.2** — Telecommunications
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/blueshift/](https://apis.io/providers/blueshift/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Blueshift: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/blueshift/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
